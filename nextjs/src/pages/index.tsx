@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps<{
 export default function Home({
   popularMovies,
 }: {
-  popularMovies: MovieItem[];
+  popularMovies?: MovieItem[];
 }) {
   const { data: movies, isLoading } = usePopularMovies(popularMovies);
 
