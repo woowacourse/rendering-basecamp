@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import Head from "next/head";
+import { moviesApi } from "@/api/movies";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
-import { moviesApi } from "@/api/movies";
 import type { MovieItem } from "@/types/Movie.types";
 import type { MovieDetailResponse } from "@/types/MovieDetail.types";
 import type { GetServerSideProps } from "next";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { overlay } from "overlay-kit";
+import { useEffect, useRef, useState } from "react";
 
 interface MovieHomePageProps {
   movies: MovieItem[];
@@ -22,17 +23,21 @@ export default function MovieHomePage({
   const router = useRouter();
   const { openMovieDetailModal } = useMovieDetailModal();
   const isModalOpeningRef = useRef(false);
-  const [currentMovieDetail, setCurrentMovieDetail] = useState<MovieDetailResponse | undefined>(movieDetail);
+  const [currentMovieDetail, setCurrentMovieDetail] = useState<
+    MovieDetailResponse | undefined
+  >(movieDetail);
 
   useEffect(() => {
     const movieId = router.query.movieId as string | undefined;
 
     // 케이스 1: props로 movieDetail이 전달된 경우 (외부 링크 접근)
-    if (movieDetail && !isModalOpeningRef.current) {
+    if (currentMovieDetail && !isModalOpeningRef.current) {
       isModalOpeningRef.current = true;
 
-      openMovieDetailModal(movieDetail)
+      openMovieDetailModal(currentMovieDetail)
         .then(() => {
+          setCurrentMovieDetail(undefined);
+
           router.push("/", undefined, { shallow: true });
         })
         .finally(() => {
@@ -40,7 +45,7 @@ export default function MovieHomePage({
         });
     }
     // 케이스 2: movieId는 있지만 movieDetail이 없는 경우 (앱 내 클릭 - shallow routing)
-    else if (movieId && !movieDetail && !isModalOpeningRef.current) {
+    else if (movieId && !currentMovieDetail && !isModalOpeningRef.current) {
       isModalOpeningRef.current = true;
 
       moviesApi
@@ -63,7 +68,8 @@ export default function MovieHomePage({
       isModalOpeningRef.current = false;
       setCurrentMovieDetail(undefined);
     }
-  }, [movieDetail, router.query.movieId, openMovieDetailModal, router]);
+  }, [currentMovieDetail, router.query.movieId, openMovieDetailModal, router]);
+
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
@@ -89,8 +95,6 @@ export default function MovieHomePage({
   const ogUrl = currentMovieDetail
     ? `https://rendering-basecamp-git-guesung-gueit214s-projects.vercel.app/?movieId=${currentMovieDetail.id}`
     : "https://rendering-basecamp-git-guesung-gueit214s-projects.vercel.app/";
-
-  console.log(currentMovieDetail);
 
   return (
     <>
