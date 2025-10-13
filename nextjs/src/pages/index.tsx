@@ -55,6 +55,7 @@ export default function MovieHomePage({
           return openMovieDetailModal(response.data);
         })
         .then(() => {
+          setCurrentMovieDetail(undefined);
           router.push("/", undefined, { shallow: true });
         })
         .catch((error) => {
