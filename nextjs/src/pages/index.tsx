@@ -16,6 +16,46 @@ interface MovieHomePageProps {
   movieDetail?: MovieDetailResponse;
 }
 
+interface PageMetadata {
+  pageTitle: string;
+  pageDescription: string;
+  ogImageUrl: string;
+  ogType: string;
+  ogImageWidth: string;
+  ogImageHeight: string;
+  ogUrl: string;
+}
+
+const getPageMetadata = (
+  currentMovieDetail: MovieDetailResponse | undefined,
+  movies: MovieItem[]
+): PageMetadata => {
+  if (currentMovieDetail) {
+    return {
+      pageTitle: `${currentMovieDetail.title} - Movie Database`,
+      pageDescription:
+        currentMovieDetail.overview || `${currentMovieDetail.title}의 상세 정보`,
+      ogImageUrl: `https://image.tmdb.org/t/p/original${currentMovieDetail.poster_path}`,
+      ogType: "video.movie",
+      ogImageWidth: "1000",
+      ogImageHeight: "1500",
+      ogUrl: `https://rendering-basecamp-git-guesung-gueit214s-projects.vercel.app/?movieId=${currentMovieDetail.id}`,
+    };
+  }
+
+  return {
+    pageTitle: "인기 영화 - Movie Database",
+    pageDescription: "최신 인기 영화 정보를 확인하세요. TMDB 기반 영화 데이터베이스",
+    ogImageUrl: movies[0]?.backdrop_path
+      ? `https://image.tmdb.org/t/p/original${movies[0].backdrop_path}`
+      : `https://image.tmdb.org/t/p/original${movies[0]?.poster_path}`,
+    ogType: "website",
+    ogImageWidth: "1280",
+    ogImageHeight: "720",
+    ogUrl: "https://rendering-basecamp-git-guesung-gueit214s-projects.vercel.app/",
+  };
+};
+
 export default function MovieHomePage({
   movies,
   movieDetail,
@@ -66,10 +106,6 @@ export default function MovieHomePage({
     }
   }, [currentMovieDetail, router.query.movieId, openMovieDetailModal, router]);
 
-  if (movies == null || movies.length === 0) {
-    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
-  }
-
   const pageTitle = currentMovieDetail
     ? `${currentMovieDetail.title} - Movie Database`
     : "인기 영화 - Movie Database";
@@ -90,6 +126,9 @@ export default function MovieHomePage({
   const ogUrl = currentMovieDetail
     ? `https://rendering-basecamp-git-guesung-gueit214s-projects.vercel.app/?movieId=${currentMovieDetail.id}`
     : "https://rendering-basecamp-git-guesung-gueit214s-projects.vercel.app/";
+
+  if (movies === null || movies.length === 0)
+    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
 
   return (
     <>
@@ -146,7 +185,6 @@ export const getServerSideProps: GetServerSideProps<
     const moviesResponse = await moviesApi.getPopular();
     const movies = moviesResponse.data.results;
 
-    // movieId가 있으면 해당 영화 상세 정보도 가져옴
     if (movieId && typeof movieId === "string") {
       try {
         const movieDetailResponse = await moviesApi.getDetail(Number(movieId));
@@ -158,7 +196,6 @@ export const getServerSideProps: GetServerSideProps<
         };
       } catch (detailError) {
         console.error("영화 상세 정보를 불러오는데 실패했습니다:", detailError);
-        // 상세 정보 로드 실패 시 기본 목록만 반환
         return {
           props: {
             movies,
