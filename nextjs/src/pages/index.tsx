@@ -5,6 +5,7 @@ import { MovieList } from "@/components/MovieList";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import type { MovieItem } from "@/types/Movie.types";
 import type { MovieDetailResponse } from "@/types/MovieDetail.types";
+import { getPageMetadata } from "@/utils/metadata";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -15,46 +16,6 @@ interface MovieHomePageProps {
   movies: MovieItem[];
   movieDetail?: MovieDetailResponse;
 }
-
-interface PageMetadata {
-  pageTitle: string;
-  pageDescription: string;
-  ogImageUrl: string;
-  ogType: string;
-  ogImageWidth: string;
-  ogImageHeight: string;
-  ogUrl: string;
-}
-
-const getPageMetadata = (
-  currentMovieDetail: MovieDetailResponse | undefined,
-  movies: MovieItem[]
-): PageMetadata => {
-  if (currentMovieDetail) {
-    return {
-      pageTitle: `${currentMovieDetail.title} - Movie Database`,
-      pageDescription:
-        currentMovieDetail.overview || `${currentMovieDetail.title}의 상세 정보`,
-      ogImageUrl: `https://image.tmdb.org/t/p/original${currentMovieDetail.poster_path}`,
-      ogType: "video.movie",
-      ogImageWidth: "1000",
-      ogImageHeight: "1500",
-      ogUrl: `https://rendering-basecamp-git-guesung-gueit214s-projects.vercel.app/?movieId=${currentMovieDetail.id}`,
-    };
-  }
-
-  return {
-    pageTitle: "인기 영화 - Movie Database",
-    pageDescription: "최신 인기 영화 정보를 확인하세요. TMDB 기반 영화 데이터베이스",
-    ogImageUrl: movies[0]?.backdrop_path
-      ? `https://image.tmdb.org/t/p/original${movies[0].backdrop_path}`
-      : `https://image.tmdb.org/t/p/original${movies[0]?.poster_path}`,
-    ogType: "website",
-    ogImageWidth: "1280",
-    ogImageHeight: "720",
-    ogUrl: "https://rendering-basecamp-git-guesung-gueit214s-projects.vercel.app/",
-  };
-};
 
 export default function MovieHomePage({
   movies,
@@ -106,26 +67,15 @@ export default function MovieHomePage({
     }
   }, [currentMovieDetail, router.query.movieId, openMovieDetailModal, router]);
 
-  const pageTitle = currentMovieDetail
-    ? `${currentMovieDetail.title} - Movie Database`
-    : "인기 영화 - Movie Database";
-
-  const pageDescription = currentMovieDetail
-    ? currentMovieDetail.overview || `${currentMovieDetail.title}의 상세 정보`
-    : "최신 인기 영화 정보를 확인하세요. TMDB 기반 영화 데이터베이스";
-
-  const ogImageUrl = currentMovieDetail?.poster_path
-    ? `https://image.tmdb.org/t/p/original${currentMovieDetail.poster_path}`
-    : movies[0]?.backdrop_path
-    ? `https://image.tmdb.org/t/p/original${movies[0].backdrop_path}`
-    : `https://image.tmdb.org/t/p/original${movies[0]?.poster_path}`;
-
-  const ogType = currentMovieDetail ? "video.movie" : "website";
-  const ogImageWidth = currentMovieDetail ? "1000" : "1280";
-  const ogImageHeight = currentMovieDetail ? "1500" : "720";
-  const ogUrl = currentMovieDetail
-    ? `https://rendering-basecamp-git-guesung-gueit214s-projects.vercel.app/?movieId=${currentMovieDetail.id}`
-    : "https://rendering-basecamp-git-guesung-gueit214s-projects.vercel.app/";
+  const {
+    pageTitle,
+    pageDescription,
+    ogImageUrl,
+    ogType,
+    ogImageWidth,
+    ogImageHeight,
+    ogUrl,
+  } = getPageMetadata(currentMovieDetail, movies[0]);
 
   if (movies === null || movies.length === 0)
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
