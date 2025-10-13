@@ -31,8 +31,10 @@ export default function MovieHomePage({
   useEffect(() => {
     const movieId = router.query.movieId as string | undefined;
 
+    if (isModalOpeningRef.current) return;
+
     // 외부 링크 접근
-    if (currentMovieDetail && !isModalOpeningRef.current) {
+    if (currentMovieDetail) {
       isModalOpeningRef.current = true;
 
       openMovieDetailModal(currentMovieDetail)
@@ -45,13 +47,13 @@ export default function MovieHomePage({
         });
     }
     // 앱 내 클릭 - shallow routing
-    else if (movieId && !currentMovieDetail && !isModalOpeningRef.current) {
-      isModalOpeningRef.current = true;
-
+    else if (movieId && !currentMovieDetail) {
       moviesApi
         .getDetail(Number(movieId))
         .then((response) => {
           setCurrentMovieDetail(response.data);
+
+          isModalOpeningRef.current = true;
           return openMovieDetailModal(response.data);
         })
         .then(() => {
