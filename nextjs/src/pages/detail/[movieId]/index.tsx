@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -87,6 +88,7 @@ function DetailPageOpenModal({
 }: {
   movieDetail: MovieDetailResponse;
 }) {
+  const router = useRouter();
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
@@ -95,8 +97,10 @@ function DetailPageOpenModal({
       return;
     }
     onceRef.current = true;
-    openMovieDetailModal(movieDetail);
-  }, [movieDetail, openMovieDetailModal]);
+    openMovieDetailModal(movieDetail).then(() => {
+      router.push('/');
+    });
+  }, [movieDetail, openMovieDetailModal, router]);
 
   return null;
 }

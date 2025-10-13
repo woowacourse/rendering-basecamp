@@ -1,7 +1,10 @@
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
+import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import { moviesApi } from "@/api/movies";
 import type { MovieItem } from "@/types/Movie.types";
 import type { GetServerSideProps } from "next";
@@ -11,6 +14,34 @@ interface MovieHomePageProps {
 }
 
 export default function MovieHomePage({ movies }: MovieHomePageProps) {
+  const router = useRouter();
+  const { openMovieDetailModal } = useMovieDetailModal();
+  const isModalOpeningRef = useRef(false);
+
+  useEffect(() => {
+    const movieId = router.query.movieId as string | undefined;
+
+    if (movieId && !isModalOpeningRef.current) {
+      isModalOpeningRef.current = true;
+
+      moviesApi.getDetail(Number(movieId))
+        .then((response) => {
+          return openMovieDetailModal(response.data);
+        })
+        .then(() => {
+          router.push('/', undefined, { shallow: true });
+        })
+        .catch((error) => {
+          console.error("영화 상세 정보를 불러오는데 실패했습니다:", error);
+          router.push('/', undefined, { shallow: true });
+        })
+        .finally(() => {
+          isModalOpeningRef.current = false;
+        });
+    } else if (!movieId) {
+      isModalOpeningRef.current = false;
+    }
+  }, [router.query.movieId, openMovieDetailModal, router]);
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
