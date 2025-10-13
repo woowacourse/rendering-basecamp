@@ -30,21 +30,20 @@ export default function MovieHomePage({
   useEffect(() => {
     const movieId = router.query.movieId as string | undefined;
 
-    // 케이스 1: props로 movieDetail이 전달된 경우 (외부 링크 접근)
+    // 외부 링크 접근
     if (currentMovieDetail && !isModalOpeningRef.current) {
       isModalOpeningRef.current = true;
 
       openMovieDetailModal(currentMovieDetail)
         .then(() => {
           setCurrentMovieDetail(undefined);
-
-          router.push("/", undefined, { shallow: true });
         })
         .finally(() => {
           isModalOpeningRef.current = false;
+          router.push("/", undefined, { shallow: true });
         });
     }
-    // 케이스 2: movieId는 있지만 movieDetail이 없는 경우 (앱 내 클릭 - shallow routing)
+    // 앱 내 클릭 - shallow routing
     else if (movieId && !currentMovieDetail && !isModalOpeningRef.current) {
       isModalOpeningRef.current = true;
 
@@ -56,18 +55,14 @@ export default function MovieHomePage({
         })
         .then(() => {
           setCurrentMovieDetail(undefined);
-          router.push("/", undefined, { shallow: true });
         })
         .catch((error) => {
           console.error("영화 상세 정보를 불러오는데 실패했습니다:", error);
-          router.push("/", undefined, { shallow: true });
         })
         .finally(() => {
+          router.push("/", undefined, { shallow: true });
           isModalOpeningRef.current = false;
         });
-    } else if (!movieId) {
-      isModalOpeningRef.current = false;
-      setCurrentMovieDetail(undefined);
     }
   }, [currentMovieDetail, router.query.movieId, openMovieDetailModal, router]);
 
@@ -75,7 +70,6 @@ export default function MovieHomePage({
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
 
-  // currentMovieDetail이 있으면 해당 영화의 메타 태그, 없으면 기본 메타 태그
   const pageTitle = currentMovieDetail
     ? `${currentMovieDetail.title} - Movie Database`
     : "인기 영화 - Movie Database";
