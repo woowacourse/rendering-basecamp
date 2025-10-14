@@ -4,7 +4,7 @@ import App, { Page } from "./App";
 
 const initialData = window.__INITIAL_DATA__;
 
-const page = window.location.pathname.split("/")[1] as Page;
+const page = (window.location.pathname.split("/")[1] || "home") as Page;
 
 hydrateRoot(
   document.getElementById("root"),
