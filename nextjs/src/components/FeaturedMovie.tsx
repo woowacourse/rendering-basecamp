@@ -1,7 +1,8 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { Button } from './common/Button';
-import type { MovieItem } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
+import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
+import { Button } from "./common/Button";
+import type { MovieItem } from "../types/Movie.types";
+import { moviesApi } from "../api/movies";
+import Image from "next/image";
 
 interface FeaturedMovieProps {
   movie: MovieItem;
@@ -18,7 +19,7 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
   return (
     <div className="top-rated-movie">
       <div className="rate">
-        <img src="/images/star_empty.png" width="32" height="32" />
+        <Image src="/images/star_empty.png" width="32" height="32" alt="star" />
         <span className="text-2xl font-semibold text-yellow">
           {movie.vote_average}
         </span>
