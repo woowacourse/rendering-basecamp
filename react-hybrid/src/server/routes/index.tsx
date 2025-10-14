@@ -1,11 +1,8 @@
-import { Router, Request, Response } from "express";
+import { Request, Response, Router } from "express";
 
 import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
 import { moviesApi } from "../../client/api/movies";
-import { OverlayProvider } from "overlay-kit";
-import MovieHomePage from "../../client/pages/MovieHomePage";
+import App from "../../client/App";
 
 const router = Router();
 

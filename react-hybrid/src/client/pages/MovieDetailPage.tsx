@@ -1,10 +1,9 @@
-import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
 import { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
-import MovieHomePage from "./MovieHomePage";
 import { moviesApi } from "../api/movies";
-import { MovieDetailResponse } from "../types/MovieDetail.types";
+import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
 import { MovieItem } from "../types/Movie.types";
+import { MovieDetailResponse } from "../types/MovieDetail.types";
+import MovieHomePage from "./MovieHomePage";
 
 interface MovieDetailPageProps {
   movie: MovieDetailResponse;
