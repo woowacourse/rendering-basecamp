@@ -5,7 +5,7 @@ import MovieHomePage from "./pages/MovieHomePage";
 function App() {
   return (
     <OverlayProvider>
-      <MovieHomePage />
+      <MovieHomePage moviesServerData={[]} />
     </OverlayProvider>
   );
 }
