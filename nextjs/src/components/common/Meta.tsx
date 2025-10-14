@@ -1,4 +1,3 @@
-import useCurrentUrl from "@/hooks/useCurrentUrl";
 import Head from "next/head";
 
 interface Image {
@@ -10,13 +9,13 @@ interface MetaProps {
   title?: string;
   description?: string;
   image?: Image;
+  currentUrl: string;
 }
 
 const defaultTitle = "Movielist";
 const defaultDescription = "모든 영화를 한눈에, Movielist";
 
-function Meta({ title, description, image }: MetaProps) {
-  const currentUrl = useCurrentUrl();
+function Meta({ title, description, image, currentUrl }: MetaProps) {
   const metaTitle = title ? `${title} | ${defaultTitle}` : defaultTitle;
   const metaDescription = description ? description : defaultDescription;
   const metaImage = image
