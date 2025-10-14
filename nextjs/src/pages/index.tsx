@@ -7,7 +7,10 @@ import type { NextPageWithLayout } from "./_app";
 import type { ReactElement } from "react";
 import Layout from "../components/Layout";
 
-const Home: NextPageWithLayout<{ initialMovies: MovieItem[] | null }> = ({
+const Home: NextPageWithLayout<{
+  initialMovies: MovieItem[] | null;
+  movieForOg?: { title: string; overview: string; ogImage: string } | null;
+}> = ({
   initialMovies,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
@@ -25,10 +28,43 @@ const Home: NextPageWithLayout<{ initialMovies: MovieItem[] | null }> = ({
 
 export const getServerSideProps: GetServerSideProps<{
   initialMovies: MovieItem[] | null;
-}> = async () => {
+  movieForOg?: { title: string; overview: string; ogImage: string } | null;
+}> = async (ctx) => {
   try {
     const res = await moviesApi.getPopular(1);
     const movies = res.data.results ?? null;
+
+    const { movieId } = ctx.query;
+    if (typeof movieId === "string") {
+      try {
+        const detail = await moviesApi.getDetail(Number(movieId));
+        const movie = detail.data;
+        const proto =
+          (ctx.req.headers["x-forwarded-proto"] as string) ?? "http";
+        const host =
+          (ctx.req.headers["x-forwarded-host"] as string) ??
+          ctx.req.headers.host ??
+          "localhost:3000";
+        const origin = `${proto}://${host}`;
+        const ogImage = movie.poster_path
+          ? `https://image.tmdb.org/t/p/w780${movie.poster_path}`
+          : `${origin}/images/no_image.png`;
+        return {
+          props: {
+            initialMovies: movies,
+            movieForOg: {
+              title: movie.title,
+              overview: movie.overview ?? "",
+              ogImage,
+            },
+          },
+        };
+      } catch {
+        // movieId가 유효하지 않으면 기본 홈만 렌더
+        return { props: { initialMovies: movies } };
+      }
+    }
+
     return { props: { initialMovies: movies } };
   } catch {
     return { props: { initialMovies: null } };
