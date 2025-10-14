@@ -43,7 +43,6 @@ export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
         <title>{title} - 영화 상세정보</title>
         <meta name="description" content={overview || "영화 상세 정보"} />
 
-        {/* Open Graph 태그 */}
         <meta property="og:type" content="video.movie" />
         <meta property="og:title" content={title} />
         <meta
