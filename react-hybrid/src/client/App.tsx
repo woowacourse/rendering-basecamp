@@ -4,7 +4,7 @@ import MovieHomePage from "./pages/MovieHomePage";
 import { InitialData } from "./types/global";
 import MovieDetailPage from "./pages/MovieDetailPage";
 
-type Page = "home" | "detail";
+export type Page = "home" | "detail";
 interface AppProps {
   initialData: InitialData;
   page?: Page;

@@ -35,7 +35,7 @@ router.get("/", async (_: Request, res: Response) => {
   const movies = await moviesApi.getPopular();
 
   const renderedApp = renderToString(
-    <App initialData={{ movies: movies.data.results }} />
+    <App initialData={{ movies: movies.data.results }} page="home" />
   );
 
   const renderedHTMLWithInitialData = template.replace(

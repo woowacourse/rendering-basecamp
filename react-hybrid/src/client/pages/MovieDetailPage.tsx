@@ -28,14 +28,16 @@ interface DetailPageOpenModalProps {
 }
 
 function DetailPageOpenModal({ movie }: DetailPageOpenModalProps) {
-  const { movieId } = useParams();
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
   useEffect(() => {
+    const movieId = window.location.pathname.split("/")[2];
+
     if (movieId == null || onceRef.current === true) {
       return;
     }
+
     (async () => {
       onceRef.current = true;
       if (movie) {
@@ -45,7 +47,7 @@ function DetailPageOpenModal({ movie }: DetailPageOpenModalProps) {
         openMovieDetailModal(movieDetail.data);
       }
     })();
-  }, [movieId, openMovieDetailModal]);
+  }, [openMovieDetailModal]);
 
   return null;
 }
