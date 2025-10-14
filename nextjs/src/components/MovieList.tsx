@@ -6,6 +6,15 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
   const router = useRouter();
 
   const handleMovieClick = async (movie: MovieItemType) => {
+    // 홈에서는 shallow routing으로 URL만 업데이트해 스크롤/렌더를 보존
+    if (router.pathname === "/") {
+      await router.replace(
+        { pathname: router.pathname, query: { movieId: movie.id } },
+        undefined,
+        { shallow: true }
+      );
+      return;
+    }
     await router.push(`/detail/${movie.id}`);
   };
 
