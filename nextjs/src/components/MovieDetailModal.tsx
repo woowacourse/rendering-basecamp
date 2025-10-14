@@ -38,8 +38,8 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
           <h1 className="modal-title">{title}</h1>
           <IconButton
             src="/images/modal_button_close.png"
-            width={24}
-            height={24}
+            width="24"
+            height="24"
             onClick={onClose}
             className="modal-close-btn"
           />
@@ -92,8 +92,8 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
                             ? "/images/star_filled.png"
                             : "/images/star_empty.png"
                         }
-                        width={24}
-                        height={24}
+                        width="24"
+                        height="24"
                         onClick={() => handleStarClick(starScore)}
                         alt={`Star ${index + 1}`}
                       />
