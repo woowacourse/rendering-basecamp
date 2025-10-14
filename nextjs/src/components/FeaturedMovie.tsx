@@ -1,7 +1,7 @@
-import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
-import { Button } from "./common/Button";
-import type { MovieItem } from "../types/Movie.types";
-import { moviesApi } from "../api/movies";
+import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
+import { Button } from "@/components/common/Button";
+import type { MovieItem } from "@/types/Movie.types";
+import { moviesApi } from "@/api/movies";
 import Image from "next/image";
 import styles from "./FeaturedMovie.module.css";
 

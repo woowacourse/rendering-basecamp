@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { moviesApi } from '../../api/movies';
-import { MovieItem } from '../../types/Movie.types';
+import { moviesApi } from '@/api/movies';
+import { MovieItem } from '@/types/Movie.types';
 
 /**
  * 영화 상세 정보를 조회하는 훅

@@ -1,6 +1,6 @@
-import type { MovieDetailResponse } from "../types/MovieDetail.types";
-import { useMovieRating } from "../hooks/useMovieRating";
-import { IconButton } from "./common/IconButton";
+import type { MovieDetailResponse } from "@/types/MovieDetail.types";
+import { useMovieRating } from "@/hooks/useMovieRating";
+import { IconButton } from "@/components/common/IconButton";
 import Image from "next/image";
 import styles from "./MovieDetailModal.module.css";
 

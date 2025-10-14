@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
-import { SessionStorage } from '../utils/storage';
-import { STORAGE_KEYS } from '../constants/storage';
+import { SessionStorage } from '@/utils/storage';
+import { STORAGE_KEYS } from '@/constants/storage';
 
 type MovieRating = {
   movieId: number;

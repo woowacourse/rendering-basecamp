@@ -1,7 +1,7 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { MovieItem } from './MovieItem';
-import type { MovieItem as MovieItemType } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
+import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
+import { MovieItem } from '@/components/MovieItem';
+import type { MovieItem as MovieItemType } from '@/types/Movie.types';
+import { moviesApi } from '@/api/movies';
 import styles from './MovieList.module.css';
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {

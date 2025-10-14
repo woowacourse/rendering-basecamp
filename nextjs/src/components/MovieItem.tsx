@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { MovieItem as MovieItemType } from "../types/Movie.types";
+import type { MovieItem as MovieItemType } from "@/types/Movie.types";
 import styles from "./MovieItem.module.css";
 
 interface MovieItemProps {

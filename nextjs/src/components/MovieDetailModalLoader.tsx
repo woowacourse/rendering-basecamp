@@ -1,6 +1,6 @@
-import { useMovieDetail } from '../hooks/queries/useMovieDetail';
-import { MovieDetailModal } from './MovieDetailModal';
-import { Loading } from './common/Loading';
+import { useMovieDetail } from '@/hooks/queries/useMovieDetail';
+import { MovieDetailModal } from '@/components/MovieDetailModal';
+import { Loading } from '@/components/common/Loading';
 
 interface MovieDetailModalLoaderProps {
   movieId: number;

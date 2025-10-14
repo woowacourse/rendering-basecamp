@@ -1,8 +1,8 @@
-import { useMovieDetailModal } from "../../hooks/useMovieDetailModal";
+import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import Home from "../index";
-import { moviesApi } from "../../api/movies";
+import Home from "@/pages/index";
+import { moviesApi } from "@/api/movies";
 
 export default function MovieDetailPage() {
   return (
