@@ -78,7 +78,6 @@ export const getServerSideProps: GetServerSideProps<{
           },
         };
       } catch {
-        // movieId가 유효하지 않으면 기본 홈만 렌더
         return { props: { initialMovies: movies } };
       }
     }

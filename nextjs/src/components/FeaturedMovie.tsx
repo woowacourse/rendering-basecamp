@@ -1,19 +1,25 @@
-import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
 import { Button } from "./common/Button";
 import type { MovieItem } from "../types/Movie.types";
-import { moviesApi } from "../api/movies";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 interface FeaturedMovieProps {
   movie: MovieItem;
 }
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
-  const { openMovieDetailModal } = useMovieDetailModal();
+  const router = useRouter();
 
   const handleDetailClick = async () => {
-    const movieDetail = await moviesApi.getDetail(movie.id);
-    await openMovieDetailModal(movieDetail.data);
+    if (router.pathname === "/") {
+      await router.replace(
+        { pathname: router.pathname, query: { movieId: movie.id } },
+        undefined,
+        { shallow: true }
+      );
+      return;
+    }
+    await router.push(`/detail/${movie.id}`);
   };
 
   return (
