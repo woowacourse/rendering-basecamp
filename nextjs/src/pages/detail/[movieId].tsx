@@ -146,8 +146,7 @@ export const getServerSideProps: GetServerSideProps<
         movie,
       },
     };
-  } catch (error) {
-    console.error("Failed to fetch movie detail:", error);
+  } catch {
     return {
       notFound: true,
     };
