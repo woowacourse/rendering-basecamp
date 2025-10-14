@@ -1,6 +1,6 @@
 import Head from "next/head";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import MovieHomePage from "./MovieHomePage";
+import HomeView from "../components/HomeView";
 import { moviesApi } from "../api/movies";
 import type { MovieItem } from "../types/Movie.types";
 import type { NextPageWithLayout } from "./_app";
@@ -18,7 +18,7 @@ const Home: NextPageWithLayout<{ initialMovies: MovieItem[] | null }> = ({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MovieHomePage initialMovies={initialMovies} />
+      <HomeView initialMovies={initialMovies} />
     </>
   );
 };

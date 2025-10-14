@@ -2,7 +2,7 @@ import { useEffect, useRef, type ReactElement } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import MovieHomePage from "../MovieHomePage";
+import HomeView from "../../components/HomeView";
 import { moviesApi } from "../../api/movies";
 import { useMovieDetailModal } from "../../hooks/useMovieDetailModal";
 import Layout from "../../components/Layout";
@@ -26,7 +26,7 @@ const MovieDetailPage: NextPageWithLayout<{
         <meta property="twitter:description" content={movieForOg.overview} />
         <meta property="twitter:image" content={movieForOg.ogImage} />
       </Head>
-      <MovieHomePage />
+      <HomeView />
       <DetailPageOpenModal />
     </>
   );

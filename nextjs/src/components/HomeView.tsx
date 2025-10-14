@@ -1,11 +1,10 @@
-import { Header } from "../components/Header";
-import { MovieList } from "../components/MovieList";
-import { Footer } from "../components/Footer";
+import { Header } from "./Header";
+import { MovieList } from "./MovieList";
+import { Loading } from "./common/Loading";
 import { usePopularMovies } from "../hooks/queries/usePopularMovies";
-import { Loading } from "../components/common/Loading";
 import type { MovieItem } from "../types/Movie.types";
 
-export default function MovieHomePage({
+export default function HomeView({
   initialMovies,
 }: {
   initialMovies?: MovieItem[] | null;
@@ -23,10 +22,9 @@ export default function MovieHomePage({
   }
 
   return (
-    <div id="wrap">
+    <>
       <Header featuredMovie={movies[0]} />
       <MovieList movies={movies} />
-      <Footer />
-    </div>
+    </>
   );
 }
