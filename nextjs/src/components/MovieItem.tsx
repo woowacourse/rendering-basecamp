@@ -1,4 +1,5 @@
-import type { MovieItem as MovieItemType } from '../types/Movie.types';
+import type { MovieItem as MovieItemType } from "../types/Movie.types";
+import Image from "next/image";
 
 interface MovieItemProps {
   movie: MovieItemType;
@@ -11,7 +12,7 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
 
   const imageUrl = poster_path
     ? `https://image.tmdb.org/t/p/w500${poster_path}`
-    : '/images/no_image.png';
+    : "/images/no_image.png";
 
   const handleClick = () => {
     onClick(movie);
@@ -25,10 +26,15 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
       data-index={movie.id}
     >
       <div className="item">
-        <img className="thumbnail" src={imageUrl} alt={title} loading="lazy" />
+        <Image
+          className="thumbnail"
+          src={imageUrl}
+          alt={title}
+          loading="lazy"
+        />
         <div className="item-desc">
           <p className="rate">
-            <img src="/images/star_empty.png" className="star" />
+            <Image src="/images/star_empty.png" className="star" alt="" />
             <span>{vote_average.toFixed(1)}</span>
           </p>
           <strong>{title}</strong>
@@ -38,4 +44,4 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
   );
 };
 
-MovieItem.displayName = 'MovieItem';
+MovieItem.displayName = "MovieItem";

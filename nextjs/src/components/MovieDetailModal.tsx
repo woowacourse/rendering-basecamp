@@ -1,6 +1,7 @@
 import type { MovieDetailResponse } from "../types/MovieDetail.types";
 import { useMovieRating } from "../hooks/useMovieRating";
 import { IconButton } from "./common/IconButton";
+import Image from "next/image";
 
 interface MovieDetailModalProps {
   movie: MovieDetailResponse;
@@ -37,21 +38,21 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
           <h1 className="modal-title">{title}</h1>
           <IconButton
             src="/images/modal_button_close.png"
-            width="24"
-            height="24"
+            width={24}
+            height={24}
             onClick={onClose}
             className="modal-close-btn"
           />
         </div>
 
         <div className="modal-container">
-          <img src={imageUrl} alt={title} className="modal-image" />
+          <Image src={imageUrl} alt={title} className="modal-image" />
           <div className="modal-description">
             {/* 영화 정보 섹션 */}
             <div className="movie-info-line">
               <span className="movie-meta">{genreNames}</span>
               <div className="movie-rating">
-                <img
+                <Image
                   src="/images/star_filled.png"
                   width="16"
                   height="16"
@@ -85,8 +86,8 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
                             ? "/images/star_filled.png"
                             : "/images/star_empty.png"
                         }
-                        width="24"
-                        height="24"
+                        width={24}
+                        height={24}
                         onClick={() => handleStarClick(starScore)}
                         alt={`Star ${index + 1}`}
                       />
