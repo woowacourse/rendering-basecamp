@@ -12,8 +12,6 @@ export const usePopularMovies = (moviesServerData: MovieItem[] | null) => {
 
   useEffect(() => {
     const fetchPopularMovies = async () => {
-      console.log({ data });
-
       if (data) return;
 
       setIsLoading(true);
