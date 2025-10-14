@@ -3,10 +3,13 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import MovieHomePage from "./MovieHomePage";
 import { moviesApi } from "../api/movies";
 import type { MovieItem } from "../types/Movie.types";
+import type { NextPageWithLayout } from "./_app";
+import type { ReactElement } from "react";
+import Layout from "../components/Layout";
 
-export default function Home({
+const Home: NextPageWithLayout<{ initialMovies: MovieItem[] | null }> = ({
   initialMovies,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <>
       <Head>
@@ -18,7 +21,7 @@ export default function Home({
       <MovieHomePage initialMovies={initialMovies} />
     </>
   );
-}
+};
 
 export const getServerSideProps: GetServerSideProps<{
   initialMovies: MovieItem[] | null;
@@ -31,3 +34,9 @@ export const getServerSideProps: GetServerSideProps<{
     return { props: { initialMovies: null } };
   }
 };
+
+Home.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
+};
+
+export default Home;

@@ -1,14 +1,18 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactElement } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import MovieHomePage from "../MovieHomePage";
 import { moviesApi } from "../../api/movies";
 import { useMovieDetailModal } from "../../hooks/useMovieDetailModal";
+import Layout from "../../components/Layout";
+import type { NextPageWithLayout } from "../_app";
 
-export default function MovieDetailPage({
+const MovieDetailPage: NextPageWithLayout<{
+  movieForOg: { title: string; overview: string; ogImage: string };
+}> = ({
   movieForOg,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <>
       <Head>
@@ -26,7 +30,7 @@ export default function MovieDetailPage({
       <DetailPageOpenModal />
     </>
   );
-}
+};
 
 function DetailPageOpenModal() {
   const router = useRouter();
@@ -84,3 +88,9 @@ export const getServerSideProps: GetServerSideProps<{
     return { notFound: true };
   }
 };
+
+MovieDetailPage.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
+};
+
+export default MovieDetailPage;

@@ -1,6 +1,6 @@
-import type { MovieDetailResponse } from '../types/MovieDetail.types';
-import { useMovieRating } from '../hooks/useMovieRating';
-import { IconButton } from './common/IconButton';
+import type { MovieDetailResponse } from "../types/MovieDetail.types";
+import { useMovieRating } from "../hooks/useMovieRating";
+import { IconButton } from "./common/IconButton";
 
 interface MovieDetailModalProps {
   movie: MovieDetailResponse;
@@ -8,11 +8,11 @@ interface MovieDetailModalProps {
 }
 
 const SCORE_TEXT: Record<number, string> = {
-  2: '최악이에요',
-  4: '별로예요',
-  6: '보통이에요',
-  8: '재미있어요',
-  10: '명작이에요',
+  2: "최악이에요",
+  4: "별로예요",
+  6: "보통이에요",
+  8: "재미있어요",
+  10: "명작이에요",
 };
 
 export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
@@ -20,10 +20,10 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
 
   const { title, genres, overview, vote_average, poster_path } = movie;
 
-  const genreNames = genres.map(genre => genre.name).join(', ');
+  const genreNames = genres.map((genre) => genre.name).join(", ");
   const imageUrl = poster_path
     ? `https://image.tmdb.org/t/p/original${poster_path}`
-    : '/images/no_image.png';
+    : "/images/no_image.png";
 
   const handleStarClick = (score: number) => {
     setRating(score);
@@ -51,7 +51,12 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
             <div className="movie-info-line">
               <span className="movie-meta">{genreNames}</span>
               <div className="movie-rating">
-                <img src="/images/star_filled.png" width="16" height="16" />
+                <img
+                  src="/images/star_filled.png"
+                  width="16"
+                  height="16"
+                  alt="별점 아이콘"
+                />
                 <span className="rating-value">{vote_average.toFixed(1)}</span>
               </div>
             </div>
@@ -59,7 +64,7 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
             {/* 줄거리 */}
             <div className="overview-section">
               <p className="overview-text">
-                {overview || '줄거리 정보가 없습니다.'}
+                {overview || "줄거리 정보가 없습니다."}
               </p>
             </div>
 
@@ -77,8 +82,8 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
                         key={index}
                         src={
                           isFilled
-                            ? '/images/star_filled.png'
-                            : '/images/star_empty.png'
+                            ? "/images/star_filled.png"
+                            : "/images/star_empty.png"
                         }
                         width="24"
                         height="24"
@@ -88,7 +93,7 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
                     );
                   })}
                   <span className="rating-text">
-                    {rating} {SCORE_TEXT[rating] ?? '별점을 남겨주세요'}
+                    {rating} {SCORE_TEXT[rating] ?? "별점을 남겨주세요"}
                   </span>
                 </div>
               </div>
