@@ -47,7 +47,7 @@ export default function MovieDetailPage({ movieDetail }: MovieDetailPageProps) {
       <Meta
         title={movieDetail.title}
         description={movieDetail.overview}
-        imgUrl={imageUrl}
+        image={{ url: imageUrl, alt: movieDetail.title }}
       />
     </>
   );
