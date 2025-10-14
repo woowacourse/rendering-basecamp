@@ -1,11 +1,27 @@
 import React from "react";
 import { OverlayProvider } from "overlay-kit";
 import MovieHomePage from "./pages/MovieHomePage";
+import { InitialData } from "./types/global";
+import MovieDetailPage from "./pages/MovieDetailPage";
 
-function App() {
+type Page = "home" | "detail";
+interface AppProps {
+  initialData: InitialData;
+  page?: Page;
+}
+
+function App({ initialData, page = "home" }: AppProps) {
   return (
     <OverlayProvider>
-      <MovieHomePage moviesServerData={[]} />
+      {page === "home" && (
+        <MovieHomePage moviesServerData={initialData.movies} />
+      )}
+      {page === "detail" && (
+        <MovieDetailPage
+          moviesServerData={initialData.movies}
+          movie={initialData.movie}
+        />
+      )}
     </OverlayProvider>
   );
 }

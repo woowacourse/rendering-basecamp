@@ -35,9 +35,7 @@ router.get("/", async (_: Request, res: Response) => {
   const movies = await moviesApi.getPopular();
 
   const renderedApp = renderToString(
-    <OverlayProvider>
-      <MovieHomePage moviesServerData={movies.data.results} />
-    </OverlayProvider>
+    <App initialData={{ movies: movies.data.results }} />
   );
 
   const renderedHTMLWithInitialData = template.replace(

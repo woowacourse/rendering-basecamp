@@ -6,21 +6,22 @@ import { MovieItem } from "../../types/Movie.types";
  * 영화 상세 정보를 조회하는 훅
  */
 export const usePopularMovies = (moviesServerData: MovieItem[] | null) => {
-  const [data, setData] = useState<MovieItem[] | null>(null);
+  const [data, setData] = useState<MovieItem[] | null>(moviesServerData);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchPopularMovies = async () => {
+      console.log({ data });
+
+      if (data) return;
+
       setIsLoading(true);
       setError(null);
 
       try {
-        const movieDetail = moviesServerData
-          ? moviesServerData
-          : (await moviesApi.getPopular()).data.results;
-
-        setData(movieDetail);
+        const movies = await moviesApi.getPopular();
+        setData(movies.data.results);
       } catch (err) {
         setError(
           err instanceof Error

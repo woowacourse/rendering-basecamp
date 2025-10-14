@@ -6,7 +6,7 @@ import { Loading } from "../components/common/Loading";
 import { MovieItem } from "../types/Movie.types";
 
 interface MovieHomePageProps {
-  moviesServerData: MovieItem[];
+  moviesServerData: MovieItem[] | null;
 }
 
 export default function MovieHomePage({
