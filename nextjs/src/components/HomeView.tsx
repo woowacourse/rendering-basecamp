@@ -26,17 +26,8 @@ export default function HomeView({
     ogImage: string;
   } | null>(null);
 
-  if (isLoading === true) {
-    return <Loading />;
-  }
-
-  if (movies == null || movies.length === 0) {
-    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
-  }
-
-  // shallow query로 들어온 movieId를 감지해 모달만 띄운다 (스크롤 유지)
+  const { movieId } = router.query;
   useEffect(() => {
-    const { movieId } = router.query;
     if (typeof movieId !== "string" || onceRef.current === true) {
       return;
     }
@@ -53,7 +44,6 @@ export default function HomeView({
         ogImage,
       });
       await openMovieDetailModal(movieDetail.data);
-      // 닫히면 쿼리만 제거 (shallow) → URL/OG는 홈으로, 스크롤 유지
       await router.replace(
         { pathname: router.pathname, query: {} },
         undefined,
@@ -62,7 +52,15 @@ export default function HomeView({
       setMovieForHead(null);
       onceRef.current = false;
     })();
-  }, [router.query.movieId, openMovieDetailModal]);
+  }, [movieId, openMovieDetailModal, router]);
+
+  if (isLoading === true) {
+    return <Loading />;
+  }
+
+  if (movies == null || movies.length === 0) {
+    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
+  }
 
   return (
     <>
