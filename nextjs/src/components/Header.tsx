@@ -1,10 +1,13 @@
-import { MovieItem } from '../types/Movie.types';
-import { IconButton } from './common/IconButton';
-import { FeaturedMovie } from './FeaturedMovie';
+import { useRouter } from "next/router";
+import { MovieItem } from "../types/Movie.types";
+import { IconButton } from "./common/IconButton";
+import { FeaturedMovie } from "./FeaturedMovie";
 
 export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
+  const router = useRouter();
+
   const handleLogoClick = () => {
-    window.location.reload();
+    router.push("/");
   };
 
   return (
