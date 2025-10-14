@@ -1,4 +1,5 @@
 import { moviesApi } from "@/api/movies";
+import Meta from "@/components/common/Meta";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import MovieHomePage from "@/pages";
 import { useRouter } from "next/router";
@@ -7,6 +8,7 @@ import { useRef, useEffect } from "react";
 export default function MovieDetailPage() {
   return (
     <>
+      <Meta title="영화 상세" />
       <MovieHomePage />
       <DetailPageOpenModal />
     </>
