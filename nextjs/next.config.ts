@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
     locales: ["ko"],
     defaultLocale: "ko",
   },
+  images: {
+    domains: ["image.tmdb.org"],
+  },
 };
 
 export default nextConfig;
