@@ -2,6 +2,7 @@ import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
 import { MovieItem } from './MovieItem';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
 import { moviesApi } from '../api/movies';
+import styles from './MovieList.module.css';
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
   const { openMovieDetailModal } = useMovieDetailModal();
@@ -13,9 +14,9 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
 
   return (
     <main>
-      <section className="container">
+      <section className={styles.container}>
         <h2 className="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
-        <ul className="thumbnail-list">
+        <ul className={styles.thumbnailList}>
           {movies.map(movie => (
             <MovieItem
               key={movie.id}

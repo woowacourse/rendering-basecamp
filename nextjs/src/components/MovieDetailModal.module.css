@@ -1,6 +1,4 @@
-@import './colors.css';
-
-.modal-background {
+.modalBackground {
   position: fixed;
   top: 0;
   left: 0;
@@ -19,7 +17,7 @@
     visibility 0.3s ease;
 }
 
-.modal-background.active {
+.modalBackground.active {
   visibility: visible;
   opacity: 1;
 }
@@ -36,8 +34,7 @@
   overflow: hidden;
 }
 
-/* 모달 헤더 */
-.modal-header {
+.modalHeader {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,7 +43,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.modal-title {
+.modalTitle {
   font-size: 1.5rem;
   font-weight: 600;
   color: white;
@@ -54,7 +51,7 @@
   text-align: center;
 }
 
-.modal-close-btn {
+.modalCloseBtn {
   position: absolute;
   top: 50%;
   right: 24px;
@@ -65,8 +62,7 @@
   padding: 4px;
 }
 
-/* 모달 컨테이너 */
-.modal-container {
+.modalContainer {
   display: flex;
   gap: 32px;
   padding: 32px;
@@ -74,7 +70,7 @@
   max-height: calc(90vh - 80px);
 }
 
-.modal-image {
+.modalImage {
   width: 280px;
   height: 420px;
   border-radius: 12px;
@@ -82,76 +78,73 @@
   flex-shrink: 0;
 }
 
-.modal-description {
+.modalDescription {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-/* 영화 정보 라인 */
-.movie-info-line {
+.movieInfoLine {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.movie-meta {
+.movieMeta {
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.8);
   font-weight: 400;
 }
 
-.movie-rating {
+.movieRating {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.rating-value {
+.ratingValue {
   font-size: 1rem;
   color: var(--color-yellow);
   font-weight: 600;
 }
 
-/* 줄거리 섹션 */
-.overview-section {
+.overviewSection {
   flex: 1;
 }
 
-.overview-text {
+.overviewText {
   font-size: 1rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.9);
   margin: 0;
 }
 
-/* 내 별점 섹션 */
-.my-rating-section {
+.myRatingSection {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   padding: 20px;
 }
 
-.rating-header {
+.ratingHeader {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.rating-label {
+.ratingLabel {
   font-size: 1.1rem;
   font-weight: 600;
   color: white;
 }
 
-.star-rating {
+.starRating {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.star-rating button {
+.starRating button {
   background: none;
   border: none;
   cursor: pointer;
@@ -159,99 +152,67 @@
   transition: transform 0.2s ease;
 }
 
-.star-rating button:hover {
+.starRating button:hover {
   transform: scale(1.1);
 }
 
-.rating-text {
+.ratingText {
   font-size: 1rem;
   color: white;
   font-weight: 500;
   margin-left: 8px;
 }
 
-/* 반응형 디자인 */
 @media (max-width: 768px) {
   .modal {
     width: 95%;
     max-height: 95vh;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    max-height: 80%;
+    border-radius: 16px 16px 0 0;
+    animation: slideUp 300ms ease-out forwards;
+    overflow-y: auto;
   }
 
-  .modal-container {
+  .modalContainer {
     flex-direction: column;
     gap: 20px;
     padding: 20px;
+    align-items: center;
   }
 
-  .modal-image {
-    width: 200px;
-    height: 300px;
-    align-self: center;
+  .modalImage {
+    width: 550px;
+    max-width: 30%;
+    height: auto;
+    max-height: 50vh;
+    object-fit: cover;
   }
 
-  .modal-title {
+  .modalTitle {
     font-size: 1.2rem;
   }
+
+  .modalDescription {
+    margin-left: 0;
+    margin-top: 16px;
+  }
 }
 
-/* 기존 클래스들 (호환성을 위해 유지) */
-.close-modal {
-  position: absolute;
-  margin: 0;
-  padding: 0;
-  top: 24px;
-  right: 24px;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
+@media (max-width: 680px) {
+  .movieRating img {
+    width: 24px;
+    height: 24px;
+  }
 }
 
-.modal-col {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.modal-info {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.modal-description .rate > img {
-  position: relative;
-  top: 5px;
-}
-
-.modal-description > *:not(:last-child) {
-  margin-bottom: 8px;
-}
-
-.modal-rate {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  flex-wrap: wrap;
-}
-
-.modal-rate p {
-  margin-top: 4px;
-}
-
-.detail {
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.modal-my-rate {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  margin-top: 16px;
+@media (max-width: 480px) {
+  .modalImage {
+    display: none;
+  }
 }

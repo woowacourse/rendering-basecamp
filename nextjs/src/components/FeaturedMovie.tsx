@@ -3,6 +3,7 @@ import { Button } from "./common/Button";
 import type { MovieItem } from "../types/Movie.types";
 import { moviesApi } from "../api/movies";
 import Image from "next/image";
+import styles from "./FeaturedMovie.module.css";
 
 interface FeaturedMovieProps {
   movie: MovieItem;
@@ -17,8 +18,8 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
   };
 
   return (
-    <div className="top-rated-movie">
-      <div className="rate">
+    <div className={styles.topRatedMovie}>
+      <div className={styles.rate}>
         <Image
           src="/images/star_empty.png"
           width={32}

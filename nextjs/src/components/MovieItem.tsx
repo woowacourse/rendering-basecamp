@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { MovieItem as MovieItemType } from "../types/Movie.types";
+import styles from "./MovieItem.module.css";
 
 interface MovieItemProps {
   movie: MovieItemType;
@@ -21,23 +22,27 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
   return (
     <li
       ref={ref}
-      className="movie-item"
+      className={styles.movieItem}
       onClick={handleClick}
       data-index={movie.id}
     >
-      <div className="item">
+      <div className={styles.item}>
         <Image
-          className="thumbnail"
+          className={styles.thumbnail}
           src={imageUrl}
           alt={title}
           loading="lazy"
+          width={200}
+          height={300}
         />
-        <div className="item-desc">
-          <p className="rate">
+        <div className={styles.itemDesc}>
+          <p className={styles.rate}>
             <Image
               src="/images/star_empty.png"
-              className="star"
+              className={styles.star}
               alt="empty star"
+              width={16}
+              height={16}
             />
             <span>{vote_average.toFixed(1)}</span>
           </p>

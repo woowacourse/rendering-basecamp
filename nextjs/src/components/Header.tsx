@@ -1,6 +1,7 @@
 import { MovieItem } from "../types/Movie.types";
 import { IconButton } from "./common/IconButton";
 import { FeaturedMovie } from "./FeaturedMovie";
+import styles from "./Header.module.css";
 
 export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
   const handleLogoClick = () => {
@@ -10,16 +11,16 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
   return (
     <header>
       <div
-        className={`background-container`}
+        className={styles.backgroundContainer}
         style={
           featuredMovie && {
             backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path})`,
           }
         }
       >
-        <div className="overlay" />
+        <div className={styles.overlay} />
 
-        <div className="top-rated-container">
+        <div className={styles.topRatedContainer}>
           {/* 헤더 섹션 (로고 + 검색바) */}
           <IconButton
             src="/images/logo.png"

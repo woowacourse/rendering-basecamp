@@ -2,6 +2,7 @@ import type { MovieDetailResponse } from "../types/MovieDetail.types";
 import { useMovieRating } from "../hooks/useMovieRating";
 import { IconButton } from "./common/IconButton";
 import Image from "next/image";
+import styles from "./MovieDetailModal.module.css";
 
 interface MovieDetailModalProps {
   movie: MovieDetailResponse;
@@ -31,49 +32,55 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
   };
 
   return (
-    <div className="modal-background active">
-      <div className="modal">
+    <div className={`${styles.modalBackground} ${styles.active}`}>
+      <div className={styles.modal}>
         {/* 모달 헤더 */}
-        <div className="modal-header">
-          <h1 className="modal-title">{title}</h1>
+        <div className={styles.modalHeader}>
+          <h1 className={styles.modalTitle}>{title}</h1>
           <IconButton
             src="/images/modal_button_close.png"
             width={24}
             height={24}
             onClick={onClose}
-            className="modal-close-btn"
+            className={styles.modalCloseBtn}
           />
         </div>
 
-        <div className="modal-container">
-          <Image src={imageUrl} alt={title} className="modal-image" />
-          <div className="modal-description">
+        <div className={styles.modalContainer}>
+          <Image
+            src={imageUrl}
+            alt={title}
+            className={styles.modalImage}
+            width={280}
+            height={420}
+          />
+          <div className={styles.modalDescription}>
             {/* 영화 정보 섹션 */}
-            <div className="movie-info-line">
-              <span className="movie-meta">{genreNames}</span>
-              <div className="movie-rating">
+            <div className={styles.movieInfoLine}>
+              <span className={styles.movieMeta}>{genreNames}</span>
+              <div className={styles.movieRating}>
                 <Image
                   src="/images/star_filled.png"
                   width={16}
                   height={16}
                   alt="filled star"
                 />
-                <span className="rating-value">{vote_average.toFixed(1)}</span>
+                <span className={styles.ratingValue}>{vote_average.toFixed(1)}</span>
               </div>
             </div>
 
             {/* 줄거리 */}
-            <div className="overview-section">
-              <p className="overview-text">
+            <div className={styles.overviewSection}>
+              <p className={styles.overviewText}>
                 {overview || "줄거리 정보가 없습니다."}
               </p>
             </div>
 
             {/* 내 별점 섹션 */}
-            <div className="my-rating-section">
-              <div className="rating-header">
-                <span className="rating-label">내 별점</span>
-                <div className="star-rating">
+            <div className={styles.myRatingSection}>
+              <div className={styles.ratingHeader}>
+                <span className={styles.ratingLabel}>내 별점</span>
+                <div className={styles.starRating}>
                   {Array.from({ length: 5 }, (_, index) => {
                     const starScore = (index + 1) * 2;
                     const isFilled = starScore <= rating;
@@ -93,7 +100,7 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
                       />
                     );
                   })}
-                  <span className="rating-text">
+                  <span className={styles.ratingText}>
                     {rating} {SCORE_TEXT[rating] ?? "별점을 남겨주세요"}
                   </span>
                 </div>

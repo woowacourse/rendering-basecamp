@@ -1,0 +1,25 @@
+.topRatedMovie {
+  margin-top: 128px;
+}
+
+.topRatedMovie > *:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.rate {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+@media (max-width: 1024px) {
+  .topRatedMovie {
+    margin-top: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .topRatedMovie {
+    margin-top: 35px;
+  }
+}
