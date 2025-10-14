@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { moviesApi } from '../../api/movies';
-import { MovieDetailResponse } from '../../types/MovieDetail.types';
+import { useState, useEffect } from "react";
+import { moviesApi } from "../../api/movies";
+import { MovieDetailResponse } from "../../types/MovieDetail.types";
 
 /**
  * 영화 상세 정보를 조회하는 훅
@@ -24,7 +24,7 @@ export const useMovieDetail = (id: number) => {
         setError(
           err instanceof Error
             ? err
-            : new Error('영화 상세 정보를 불러오는데 실패했습니다.')
+            : new Error("영화 상세 정보를 불러오는데 실패했습니다.")
         );
       } finally {
         setIsLoading(false);

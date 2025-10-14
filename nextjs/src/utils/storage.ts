@@ -4,7 +4,7 @@ export const SessionStorage = {
       const storedData = sessionStorage.getItem(key);
       return storedData ? JSON.parse(storedData) : [];
     } catch (error) {
-      console.error('Failed to get items from sessionStorage:', error);
+      console.error("Failed to get items from sessionStorage:", error);
       return [];
     }
   },
@@ -13,7 +13,7 @@ export const SessionStorage = {
     try {
       sessionStorage.setItem(key, JSON.stringify(items));
     } catch (error) {
-      console.error('Failed to save items to sessionStorage:', error);
+      console.error("Failed to save items to sessionStorage:", error);
     }
   },
 };
