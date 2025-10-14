@@ -5,13 +5,13 @@ interface SkeletonProps {
 }
 
 export const Skeleton = ({
-  width = '100%',
-  height = '20px',
-  className = '',
+  width = "100%",
+  height = "20px",
+  className = "",
 }: SkeletonProps) => {
   const style = {
-    width: typeof width === 'number' ? `${width}px` : width,
-    height: typeof height === 'number' ? `${height}px` : height,
+    width: typeof width === "number" ? `${width}px` : width,
+    height: typeof height === "number" ? `${height}px` : height,
   };
 
   return <div className={`skeleton-gradient ${className}`} style={style} />;
