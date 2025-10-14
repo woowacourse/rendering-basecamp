@@ -26,7 +26,14 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
       data-index={movie.id}
     >
       <div className="item">
-        <img className="thumbnail" src={imageUrl} alt={title} loading="lazy" />
+        <Image
+          className="thumbnail"
+          src={imageUrl}
+          alt={title}
+          loading="lazy"
+          width={200}
+          height={300}
+        />
         <div className="item-desc">
           <p className="rate">
             <Image

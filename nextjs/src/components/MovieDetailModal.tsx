@@ -46,7 +46,13 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
         </div>
 
         <div className="modal-container">
-          <img src={imageUrl} alt={title} className="modal-image" />
+          <Image
+            src={imageUrl}
+            alt={title}
+            className="modal-image"
+            width={280}
+            height={420}
+          />
           <div className="modal-description">
             {/* 영화 정보 섹션 */}
             <div className="movie-info-line">
