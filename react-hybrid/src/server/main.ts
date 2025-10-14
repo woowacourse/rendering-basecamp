@@ -1,6 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -19,7 +16,6 @@ app.use("/static", express.static(path.join(__dirname, "../../dist/static")));
 app.use("/", movieRouter);
 app.use("/detail", detailRouter);
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
