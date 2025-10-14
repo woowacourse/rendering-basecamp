@@ -3,9 +3,16 @@ import { MovieList } from "../components/MovieList";
 import { Footer } from "../components/Footer";
 import { usePopularMovies } from "../hooks/queries/usePopularMovies";
 import { Loading } from "../components/common/Loading";
+import type { MovieItem } from "../types/Movie.types";
 
-export default function MovieHomePage() {
-  const { data: movies, isLoading } = usePopularMovies();
+export default function MovieHomePage({
+  initialMovies,
+}: {
+  initialMovies?: MovieItem[] | null;
+}) {
+  const { data: movies, isLoading } = usePopularMovies(initialMovies, {
+    enabled: initialMovies == null,
+  });
 
   if (isLoading === true) {
     return <Loading />;
