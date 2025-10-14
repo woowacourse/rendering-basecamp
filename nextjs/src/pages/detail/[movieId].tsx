@@ -46,6 +46,8 @@ function DetailPageOpenModal() {
       onceRef.current = true;
       const movieDetail = await moviesApi.getDetail(Number(movieId));
       await openMovieDetailModal(movieDetail.data);
+      // 모달이 닫히면 홈으로 이동하여 URL/메타 OG를 원복
+      router.push("/");
     })();
   }, [movieId, openMovieDetailModal]);
 
