@@ -7,8 +7,9 @@ export const Footer = () => {
       <p>
         <Image
           src="/images/woowacourse_logo.png"
-          width="180"
           alt="우아한테크코스"
+          width={180}
+          height={26.5}
         />
       </p>
     </footer>
