@@ -28,6 +28,7 @@ function Meta({ title, description, image, currentUrl }: MetaProps) {
   return (
     <Head>
       <title>{metaTitle}</title>
+      <link rel="canonical" href={currentUrl} />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       <meta name="title" content={metaTitle} />
       <meta
@@ -44,6 +45,7 @@ function Meta({ title, description, image, currentUrl }: MetaProps) {
       <meta property="og:image" content={metaImage.url} />
       <meta property="og:image:alt" content={metaImage.alt} />
       <meta property="og:locale" content="ko_KR" />
+      <meta property="og:site_name" content="Movielist" />
 
       {/* Twitter */}
       <meta property="twitter:title" content={metaTitle} />
