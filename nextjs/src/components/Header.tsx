@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { MovieItem } from "../types/Movie.types";
 import { IconButton } from "./common/IconButton";
 import { FeaturedMovie } from "./FeaturedMovie";
@@ -7,20 +8,44 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
     window.location.reload();
   };
 
+  const bgSrc = featuredMovie?.backdrop_path
+    ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.backdrop_path}`
+    : featuredMovie?.poster_path
+    ? `https://image.tmdb.org/t/p/w1280${featuredMovie.poster_path}`
+    : undefined;
+
   return (
     <header>
       <div
-        className={`background-container`}
-        style={
-          featuredMovie && {
-            backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path})`,
-          }
-        }
+        className='background-container'
+        style={{
+          position: "relative",
+          minHeight: "56vw",
+          maxHeight: 800,
+          overflow: "hidden",
+        }}
       >
-        <div className='overlay' />
+        {bgSrc && (
+          <Image
+            src={bgSrc}
+            alt={featuredMovie.title}
+            fill
+            priority
+            sizes='100vw'
+            style={{ objectFit: "cover" }}
+          />
+        )}
+        <div
+          className='overlay'
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to top, rgba(0,0,0,.7) 0%, rgba(0,0,0,.25) 40%, rgba(0,0,0,0) 100%)",
+          }}
+        />
 
-        <div className='top-rated-container'>
-          {/* 헤더 섹션 (로고 + 검색바) */}
+        <div className='top-rated-container' style={{ position: "relative" }}>
           <IconButton
             src='/images/logo.png'
             width='117'
@@ -29,8 +54,6 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
             className='logo'
             alt='MovieLogo'
           />
-
-          {/* 추천 영화 섹션 (검색 모드가 아닐 때만 표시) */}
           {featuredMovie && <FeaturedMovie movie={featuredMovie} />}
         </div>
       </div>
