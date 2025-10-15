@@ -1,6 +1,6 @@
 import { MovieItem } from "./MovieItem";
 import type { MovieItem as MovieItemType } from "../types/Movie.types";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
   const router = useRouter();
