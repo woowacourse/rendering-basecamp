@@ -14,8 +14,8 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
         <Image
           src={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path}`}
           alt={featuredMovie.title || "Featured Movie Poster"}
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: "cover" }}
           priority
         />
         <div className="overlay" />
