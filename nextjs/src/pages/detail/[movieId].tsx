@@ -1,9 +1,9 @@
-import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
+import { useMovieDetailModal } from "../../hooks/useMovieDetailModal";
 import { useEffect, useRef } from "react";
-import { moviesApi } from "../api/movies";
-import MovieHomePage, { fetchMoviesForSSR } from "./MovieHomePage";
-import type { MovieItem } from "../types/Movie.types";
-import type { MovieDetailResponse } from "../types/MovieDetail.types";
+import { moviesApi } from "../../api/movies";
+import MovieHomePage, { fetchMoviesForSSR } from "../MovieHomePage";
+import type { MovieItem } from "../../types/Movie.types";
+import type { MovieDetailResponse } from "../../types/MovieDetail.types";
 import type { GetServerSidePropsContext } from "next/types";
 
 interface MovieDetailPageProps {
