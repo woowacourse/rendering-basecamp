@@ -27,6 +27,42 @@ export default function MovieDetailPage({
       <Head>
         <title>{movieDetail.title}</title>
         <meta name="description" content={movieDetail.overview} />
+
+        <meta property="og:type" content="video.movie" />
+        <meta property="og:title" content={movieDetail.title} />
+        <meta property="og:description" content={movieDetail.overview} />
+        <meta
+          property="og:image"
+          content={`https://image.tmdb.org/t/p/w1200${movieDetail.poster_path}`}
+        />
+        <meta
+          property="og:url"
+          content={`https://rendering-basecamp-xi.vercel.app/detail/${movieDetail.id}`}
+        />
+        <meta property="og:site_name" content="영화 추천 사이트" />
+
+        <meta
+          property="video:duration"
+          content={
+            movieDetail.runtime ? `${movieDetail.runtime * 60}` : undefined
+          }
+        />
+        <meta
+          property="video:release_date"
+          content={movieDetail.release_date}
+        />
+        <meta
+          property="video:tag"
+          content={movieDetail.genres.map((genre) => genre.name).join(", ")}
+        />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={movieDetail.title} />
+        <meta name="twitter:description" content={movieDetail.overview} />
+        <meta
+          name="twitter:image"
+          content={`https://image.tmdb.org/t/p/w1200${movieDetail.poster_path}`}
+        />
       </Head>
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
