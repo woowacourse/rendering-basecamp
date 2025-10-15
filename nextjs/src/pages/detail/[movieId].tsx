@@ -12,6 +12,10 @@ export default function Detail({ movies, movieDetail }: InferGetServerSidePropsT
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
 
+  const imageUrl = movieDetail.poster_path
+    ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
+    : "https://rendering-basecamp-eosin.vercel.app/images/no_image.png";
+
   return (
     <>
       <Head>
@@ -19,7 +23,7 @@ export default function Detail({ movies, movieDetail }: InferGetServerSidePropsT
         <meta name="description" content={movieDetail.overview || '영화 상세 정보'} />
         <meta property="og:title" content={movieDetail.title} />
         <meta property="og:description" content={movieDetail.overview || '영화 상세 정보'} />
-        <meta property="og:image" content={movieDetail.poster_path} />
+        <meta property="og:image" content={imageUrl} />
         <meta property="og:url" content={`https://rendering-basecamp-eosin.vercel.app/detail/${movieDetail.id}`} />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
