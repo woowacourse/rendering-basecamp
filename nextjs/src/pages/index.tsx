@@ -1,40 +1,41 @@
 import Head from "next/head";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
+
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MovieList } from "@/components/MovieList";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import type { MovieItem } from "@/types/Movie.types";
+import type { MovieDetailResponse } from "@/types/MovieDetail.types";
 import { moviesApi } from "@/api/movies";
 import type { GetServerSideProps } from "next";
+import { buildOgMeta, OgMeta } from "@/utils/og";
 
 type PageProps = {
   movies: MovieItem[];
+  movieDetail?: MovieDetailResponse;
+  og: OgMeta;
 };
 
-export default function HomePage({ movies }: PageProps) {
+export default function HomePage({ movies, movieDetail, og }: PageProps) {
   const router = useRouter();
   const { openMovieDetailModal } = useMovieDetailModal();
-
   const isOpeningRef = useRef(false);
 
   useEffect(() => {
     const movieId = router.query.movieId as string | undefined;
+    if (!movieId || isOpeningRef.current) return;
 
-    if (isOpeningRef.current) return;
-
-    if (movieId) {
-      isOpeningRef.current = true;
-      moviesApi
-        .getDetail(Number(movieId))
-        .then(({ data }) => Promise.resolve(openMovieDetailModal(data)))
-        .catch((e) => console.error("open modal (shallow) failed:", e))
-        .finally(() => {
-          isOpeningRef.current = false;
-          router.replace("/", undefined, { shallow: true });
-        });
-    }
+    isOpeningRef.current = true;
+    moviesApi
+      .getDetail(Number(movieId))
+      .then(({ data }) => Promise.resolve(openMovieDetailModal(data)))
+      .catch((e) => console.error("open modal (shallow) failed:", e))
+      .finally(() => {
+        isOpeningRef.current = false;
+        router.replace("/", undefined, { shallow: true });
+      });
   }, [router.query.movieId, openMovieDetailModal, router]);
 
   if (!movies?.length) return <div>영화 정보를 불러오는데 실패했습니다.</div>;
@@ -44,8 +45,19 @@ export default function HomePage({ movies }: PageProps) {
   return (
     <>
       <Head>
-        <title>영화 홈</title>
-        <meta name="description" content="인기 영화 모아보기" />
+        <title>{og.pageTitle}</title>
+        <meta name="description" content={og.pageDescription} />
+
+        <meta property="og:url" content={og.ogUrl} />
+        <meta property="og:title" content={og.pageTitle} />
+        <meta property="og:description" content={og.pageDescription} />
+        <meta property="og:type" content={og.ogType} />
+        {og.ogImageUrl && <meta property="og:image" content={og.ogImageUrl} />}
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={og.pageTitle} />
+        <meta name="twitter:description" content={og.pageDescription} />
+        <meta name="twitter:image" content={og.ogImageUrl} />
       </Head>
 
       <div id="wrap">
@@ -57,25 +69,45 @@ export default function HomePage({ movies }: PageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<PageProps> = async (
-  ctx
-) => {
+export const getServerSideProps: GetServerSideProps<{
+  movies: MovieItem[];
+  og: OgMeta;
+  movieDetail?: MovieDetailResponse;
+}> = async (ctx) => {
   try {
     const popularRes = await moviesApi.getPopular();
     const movies = popularRes.data.results as MovieItem[];
 
-    const movieId = ctx.query.movieId;
-    if (movieId && typeof movieId === "string") {
+    let movieDetail: MovieDetailResponse | undefined;
+    const q = ctx.query.movieId;
+    if (typeof q === "string") {
       try {
-        const detailRes = await moviesApi.getDetail(Number(movieId));
-        return { props: { movies, movieDetail: detailRes.data } };
-      } catch {
-        return { props: { movies } };
-      }
+        const r = await moviesApi.getDetail(Number(q));
+        movieDetail = r.data;
+      } catch {}
     }
-    return { props: { movies } };
+
+    const origin =
+      process.env.NEXT_PUBLIC_APP_ORIGIN ??
+      `${ctx.req.headers["x-forwarded-proto"] ?? "https"}://${
+        ctx.req.headers.host
+      }`;
+    const path = ctx.resolvedUrl || "/";
+
+    const og = buildOgMeta({ origin, path, detail: movieDetail });
+
+    return {
+      props: {
+        movies,
+        ...(movieDetail ? { movieDetail } : {}),
+        og,
+      },
+    };
   } catch (e) {
-    console.error("인기 영화 실패:", e);
-    return { props: { movies: [] } };
+    const origin =
+      process.env.NEXT_PUBLIC_APP_ORIGIN ??
+      "https://vercel.com/yeji0214s-projects/rendering-basecamp";
+    const og = buildOgMeta({ origin, path: "/" });
+    return { props: { movies: [], og } };
   }
 };
