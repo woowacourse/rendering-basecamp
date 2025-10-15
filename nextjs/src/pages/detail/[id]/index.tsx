@@ -23,7 +23,7 @@ export default function MovieDetailPage({
   }
 
   const ogImage = `https://image.tmdb.org/t/p/w1280${movieDetail.backdrop_path}`;
-  const ogUrl = `https://my-movie-app.com/detail/${movieDetail.id}`;
+  const ogUrl = `https://rendering-basecamp-p53f-j8uw934wj-horse6953-7600s-projects.vercel.app//detail/${movieDetail.id}`;
 
   return (
     <>

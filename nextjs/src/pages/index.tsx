@@ -24,7 +24,7 @@ export default function Home({ movies }: MoviesPageProps) {
         title="인기 영화 추천"
         description="지금 인기 있는 영화들을 만나보세요."
         image={`https://image.tmdb.org/t/p/w1280${featured.backdrop_path}`}
-        url="https://my-movie-app.com"
+        url="https://rendering-basecamp-p53f-j8uw934wj-horse6953-7600s-projects.vercel.app/"
       />
 
       <div id="wrap">
