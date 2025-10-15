@@ -1,3 +1,6 @@
+import { Footer } from "@/components/Footer"
+import { Header } from "@/components/Header"
+import { MovieList } from "@/components/MovieList"
 import Head from "next/head"
 
 const movies = [
@@ -361,7 +364,11 @@ export default function Home() {
           href="/favicon.ico"
         />
       </Head>
-      <div id="wrap"></div>
+      <div id="wrap">
+        <Header featuredMovie={movies[0]} />
+        <MovieList movies={movies} />
+        <Footer />
+      </div>
     </>
   )
 }
