@@ -2,20 +2,16 @@ import { Loading } from '@/components/common/Loading';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { MovieList } from '@/components/MovieList';
-import { usePopularMovies } from '@/hooks/queries/usePopularMovies';
+import { moviesApi } from '@/api/movies';
+import type { MovieItem } from '@/types/Movie.types';
+import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
-export default function Home() {
-  const { data: movies, isLoading } = usePopularMovies();
+interface HomeProps {
+  movies: MovieItem[];
+}
 
-  if (isLoading === true) {
-    return <Loading />;
-  }
-
-  if (movies == null || movies.length === 0) {
-    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
-  }
-
+export default function Home({ movies }: HomeProps) {
   return (
     <>
       <Head>
@@ -33,3 +29,21 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const response = await moviesApi.getPopular();
+    return {
+      props: {
+        movies: response.data.results,
+      },
+    };
+  } catch (error) {
+    console.error('Failed to fetch popular movies:', error);
+    return {
+      props: {
+        movies: [],
+      },
+    };
+  }
+};
