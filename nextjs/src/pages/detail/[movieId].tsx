@@ -14,19 +14,28 @@ export default function Detail({ movies, movieDetail }: InferGetServerSidePropsT
 
   const imageUrl = movieDetail.poster_path
     ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
-    : "https://rendering-basecamp-eosin.vercel.app/images/no_image.png";
+    : "/no_image.png";
+  const pageUrl = `https://rendering-basecamp-eosin.vercel.app/detail/${movieDetail.id}`;
+  const title = movieDetail.title;
+  const description = movieDetail.overview || '영화 상세 정보';
 
   return (
     <>
       <Head>
-        <title>{movieDetail.title}</title>
-        <meta name="description" content={movieDetail.overview || '영화 상세 정보'} />
-        <meta property="og:title" content={movieDetail.title} />
-        <meta property="og:description" content={movieDetail.overview || '영화 상세 정보'} />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
         <meta property="og:image" content={imageUrl} />
-        <meta property="og:url" content={`https://rendering-basecamp-eosin.vercel.app/detail/${movieDetail.id}`} />
+        <meta property="og:url" content={pageUrl} />
         <meta property="og:type" content="website" />
+
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={imageUrl} />
+        <meta name="twitter:url" content={pageUrl} />
       </Head>
       <div id="wrap">
         <Home movies={movies} />
