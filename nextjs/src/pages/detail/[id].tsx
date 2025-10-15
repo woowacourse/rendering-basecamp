@@ -21,7 +21,10 @@ export default function MovieDetailPage({
 
   return (
     <>
-      <MovieHomePage movies={movies} />
+      <MovieHomePage
+        movies={movies}
+        pageTitle={`${movieDetail.title} - MovieList`}
+      />
       <DetailPageOpenModal initialMovieDetail={movieDetail} />
     </>
   );
@@ -46,15 +49,15 @@ function DetailPageOpenModal({
   return null;
 }
 
-export const fetchDetailForSSR = async (context: GetServerSidePropsContext) => {
+const fetchDetailForSSR = async (context: GetServerSidePropsContext) => {
   try {
-    const { movieId } = context.params as { movieId: string | null };
+    const { id } = context.params as { id: string | null };
 
-    if (movieId == null) {
+    if (id == null) {
       return { props: {} };
     }
 
-    const movieDetail = await moviesApi.getDetail(Number(movieId));
+    const movieDetail = await moviesApi.getDetail(Number(id));
 
     return {
       props: {
