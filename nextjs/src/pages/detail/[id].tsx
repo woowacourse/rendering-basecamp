@@ -2,19 +2,30 @@ import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { moviesApi } from '@/api/movies';
 import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
 import { useRef, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import type { MovieDetailResponse } from '@/types/MovieDetail.types';
+import type { MovieItem } from '@/types/Movie.types';
+import { Header } from '@/components/Header';
+import { MovieList } from '@/components/MovieList';
+import { Footer } from '@/components/Footer';
 
 export const getServerSideProps = (async (context) => {
   const { id } = context.params as { id: string };
 
   try {
-    const movieDetailResponse = await moviesApi.getDetail(Number(id));
+    const [movieDetailResponse, moviesResponse] = await Promise.all([
+      moviesApi.getDetail(Number(id)),
+      moviesApi.getPopular(),
+    ]);
+
     const movieDetail = movieDetailResponse.data;
+    const movies = moviesResponse.data.results;
 
     return {
       props: {
         movieDetail,
+        movies,
       },
     };
   } catch (error) {
@@ -25,10 +36,12 @@ export const getServerSideProps = (async (context) => {
   }
 }) satisfies GetServerSideProps<{
   movieDetail: MovieDetailResponse;
+  movies: MovieItem[];
 }>;
 
 export default function MovieDetailPage({
   movieDetail,
+  movies,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
@@ -45,6 +58,11 @@ export default function MovieDetailPage({
         <meta name="twitter:title" content={movieDetail.title} />
         <meta name="twitter:description" content={movieDetail.overview} />
       </Head>
+      <div id="wrap">
+        <Header featuredMovie={movies[0]} />
+        <MovieList movies={movies} />
+        <Footer />
+      </div>
       <DetailPageOpenModal movieDetail={movieDetail} />
     </>
   );
@@ -56,15 +74,21 @@ function DetailPageOpenModal({
   movieDetail: MovieDetailResponse;
 }) {
   const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
+  const router = useRouter();
+  const hasOpenedRef = useRef(false);
 
   useEffect(() => {
-    if (onceRef.current === true) {
+    if (hasOpenedRef.current) {
       return;
     }
-    onceRef.current = true;
-    openMovieDetailModal(movieDetail);
-  }, [movieDetail, openMovieDetailModal]);
+
+    hasOpenedRef.current = true;
+
+    openMovieDetailModal(movieDetail).then(() => {
+      // 모달이 닫히면 메인 페이지로 이동
+      router.push('/');
+    });
+  }, [movieDetail, openMovieDetailModal, router]);
 
   return null;
 }

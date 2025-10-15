@@ -19,7 +19,7 @@ const SCORE_TEXT: Record<number, string> = {
 export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
   const { rating, setRating } = useMovieRating(movie.id, movie.title);
 
-  const { title, genres, overview, vote_average, poster_path } = movie;
+  const { title, genres, overview, vote_average, poster_path, popularity } = movie;
 
   const genreNames = genres.map((genre) => genre.name).join(', ');
   const imageUrl = poster_path
@@ -59,6 +59,10 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
                   alt=""
                 />
                 <span className="rating-value">{vote_average.toFixed(1)}</span>
+              </div>
+              <div className="movie-popularity">
+                <span className="popularity-label">인기도: </span>
+                <span className="popularity-value">{popularity.toFixed(1)}</span>
               </div>
             </div>
 
