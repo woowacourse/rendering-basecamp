@@ -37,6 +37,21 @@ export default function MovieDetailPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
+      <Head>
+        <title>{movieDetail.title}</title>
+        <meta
+          property="og:title"
+          content={movieDetail.title}
+        />
+        <meta
+          property="og:description"
+          content={movieDetail.overview}
+        />
+        <meta
+          property="og:image"
+          content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
+        />
+      </Head>
       <Home movies={movies} />
       <DetailPageOpenModal movieDetail={movieDetail} />
     </>
