@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { moviesApi } from "@/api/movies";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { MovieItem } from "@/types/Movie.types";
@@ -14,8 +14,12 @@ export default function MovieDetailPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const { openMovieDetailModal } = useMovieDetailModal();
+  const onceRef = useRef(false);
 
   useEffect(() => {
+    if (onceRef.current) return;
+    onceRef.current = true;
+
     (async () => {
       await openMovieDetailModal(detail);
       router.push("/");
