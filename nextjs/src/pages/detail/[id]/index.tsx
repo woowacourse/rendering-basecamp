@@ -1,7 +1,10 @@
 import { moviesApi } from "@/api/movies";
 import Meta from "@/components/common/Meta";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { MovieList } from "@/components/MovieList";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
-import MovieHomePage from "@/pages";
+import { extractCurrentUrlByRequest } from "@/utils/extractCurrentUrlByContext";
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
@@ -13,16 +16,19 @@ export const getServerSideProps = async (
 ) => {
   try {
     const { req } = context;
-    const host = req.headers.host;
-    const url = req.url;
-    const movieDetailResponse = await moviesApi.getDetail(
-      Number(context.query?.id)
-    );
+
+    const [movieDetailResponse, movieResponse] = await Promise.all([
+      moviesApi.getDetail(Number(context.query?.id)),
+      moviesApi.getPopular(),
+    ]);
+
+    const movies = movieResponse.data.results;
 
     return {
       props: {
+        movies,
         movieDetail: movieDetailResponse.data,
-        currentUrl: `${host}${url}`,
+        currentUrl: extractCurrentUrlByRequest(req),
       },
     };
   } catch (error) {
@@ -37,6 +43,7 @@ type MovieDetailPageProps = InferGetServerSidePropsType<
 >;
 
 export default function MovieDetailPage({
+  movies,
   movieDetail,
   currentUrl,
 }: MovieDetailPageProps) {
@@ -54,13 +61,17 @@ export default function MovieDetailPage({
 
   return (
     <>
-      <MovieHomePage />
       <Meta
         title={movieDetail.title}
         description={movieDetail.overview}
         image={{ url: imageUrl, alt: movieDetail.title }}
         currentUrl={currentUrl}
       />
+      <div id="wrap">
+        <Header featuredMovie={movies[0]} />
+        <MovieList movies={movies} />
+        <Footer />
+      </div>
     </>
   );
 }
