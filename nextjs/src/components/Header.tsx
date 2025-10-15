@@ -23,8 +23,8 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
           {/* 헤더 섹션 (로고 + 검색바) */}
           <IconButton
             src="/images/logo.png"
-            width="117"
-            height="20"
+            width={16}
+            height={16}
             onClick={handleLogoClick}
             className="logo"
             alt="MovieLogo"
