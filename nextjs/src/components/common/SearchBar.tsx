@@ -29,14 +29,14 @@ export const SearchBar = ({
       <input
         type="text"
         value={value}
-        onChange={e => setValue(e.target.value)}
+        onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
         className="search-input"
       />
       <IconButton
         src="/images/search.png"
-        width="16"
-        height="16"
+        width={16}
+        height={16}
         onClick={handleIconClick}
         type="button"
       />
