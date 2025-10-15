@@ -1,34 +1,35 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef } from 'react';
 
-import { moviesApi } from "@/api/movies"
-import Home from "@/pages"
+import { moviesApi } from '@/api/movies';
+import Home from '@/pages';
 
-import { MovieItem } from "@/types/Movie.types"
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next"
+import { MovieItem } from '@/types/Movie.types';
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 
-import { useMovieDetailModal } from "@/hooks/useMovieDetailModal"
-import { MovieDetailResponse } from "@/types/MovieDetail.types"
+import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
+import { MovieDetailResponse } from '@/types/MovieDetail.types';
+import Head from 'next/head';
 
 export const getServerSideProps = (async (context) => {
-  const { movieId } = context.query
-  if (!movieId || typeof movieId !== "string") {
-    return { notFound: true }
+  const { movieId } = context.query;
+  if (!movieId || typeof movieId !== 'string') {
+    return { notFound: true };
   }
 
   try {
-    const movies = await moviesApi.getPopular()
-    const movieDetail = await moviesApi.getDetail(Number(movieId))
+    const movies = await moviesApi.getPopular();
+    const movieDetail = await moviesApi.getDetail(Number(movieId));
 
     return {
       props: { movies: movies.data.results, movieDetail: movieDetail.data },
-    }
+    };
   } catch (error) {
-    return { notFound: true }
+    return { notFound: true };
   }
 }) satisfies GetServerSideProps<{
-  movies: MovieItem[]
-  movieDetail: MovieDetailResponse
-}>
+  movies: MovieItem[];
+  movieDetail: MovieDetailResponse;
+}>;
 
 export default function MovieDetailPage({
   movies,
@@ -39,26 +40,22 @@ export default function MovieDetailPage({
       <Home movies={movies} />
       <DetailPageOpenModal movieDetail={movieDetail} />
     </>
-  )
+  );
 }
 
-function DetailPageOpenModal({
-  movieDetail,
-}: {
-  movieDetail: MovieDetailResponse
-}) {
-  const { openMovieDetailModal } = useMovieDetailModal()
-  const onceRef = useRef(false)
+function DetailPageOpenModal({ movieDetail }: { movieDetail: MovieDetailResponse }) {
+  const { openMovieDetailModal } = useMovieDetailModal();
+  const onceRef = useRef(false);
 
   useEffect(() => {
     if (onceRef.current === true) {
-      return
+      return;
     }
-    ;(async () => {
-      onceRef.current = true
-      openMovieDetailModal(movieDetail)
-    })()
-  }, [openMovieDetailModal])
+    (async () => {
+      onceRef.current = true;
+      openMovieDetailModal(movieDetail);
+    })();
+  }, [openMovieDetailModal]);
 
-  return null
+  return null;
 }
