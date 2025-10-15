@@ -1,4 +1,4 @@
-export interface MovieItem {
+export interface MovieItemType {
   adult: boolean;
   backdrop_path: string | null;
   genre_ids: number[];
@@ -17,7 +17,7 @@ export interface MovieItem {
 
 export interface MovieResponse {
   page: number;
-  results: MovieItem[];
+  results: MovieItemType[];
   total_pages: number;
   total_results: number;
 }
