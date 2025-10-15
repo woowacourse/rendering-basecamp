@@ -43,6 +43,10 @@ export default function MovieDetailPage({
   movieDetail,
   movies,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const imageUrl = movieDetail.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`
+    : '/images/no_image.png';
+
   return (
     <>
       <Head>
@@ -52,11 +56,13 @@ export default function MovieDetailPage({
         <meta property="og:type" content="video.movie" />
         <meta property="og:title" content={movieDetail.title} />
         <meta property="og:description" content={movieDetail.overview} />
+        <meta property="og:image" content={imageUrl} />
         <meta property="og:site_name" content="영화 추천 사이트" />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={movieDetail.title} />
         <meta name="twitter:description" content={movieDetail.overview} />
+        <meta name="twitter:image" content={imageUrl} />
       </Head>
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
