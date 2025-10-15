@@ -1,6 +1,6 @@
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { moviesApi } from '@/api/movies';
 import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
-import { useRouter } from 'next/router';
 import { useRef, useEffect } from 'react';
 import Head from 'next/head';
 import type { MovieDetailResponse } from '@/types/MovieDetail.types';
@@ -27,31 +27,44 @@ export const getServerSideProps = (async (context) => {
   movieDetail: MovieDetailResponse;
 }>;
 
-export default function MovieDetailPage() {
+export default function MovieDetailPage({
+  movieDetail,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
+      <Head>
+        <title>{movieDetail.title} - 영화 추천 사이트</title>
+        <meta name="description" content={movieDetail.overview} />
+
+        <meta property="og:type" content="video.movie" />
+        <meta property="og:title" content={movieDetail.title} />
+        <meta property="og:description" content={movieDetail.overview} />
+        <meta property="og:site_name" content="영화 추천 사이트" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={movieDetail.title} />
+        <meta name="twitter:description" content={movieDetail.overview} />
+      </Head>
+      <DetailPageOpenModal movieDetail={movieDetail} />
     </>
   );
 }
 
-function DetailPageOpenModal() {
-  const { query } = useRouter();
-  const id = query?.id;
+function DetailPageOpenModal({
+  movieDetail,
+}: {
+  movieDetail: MovieDetailResponse;
+}) {
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
   useEffect(() => {
-    if (id == null || onceRef.current === true) {
+    if (onceRef.current === true) {
       return;
     }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(id));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [id, openMovieDetailModal]);
+    onceRef.current = true;
+    openMovieDetailModal(movieDetail);
+  }, [movieDetail, openMovieDetailModal]);
 
   return null;
 }
