@@ -42,7 +42,7 @@ export default function MovieDetail({
           property="og:image"
           content={
             movieDetail.poster_path
-              ? `https://image.tmdb.org/t/p/originals${movieDetail.poster_path}`
+              ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
               : ''
           }
         />
