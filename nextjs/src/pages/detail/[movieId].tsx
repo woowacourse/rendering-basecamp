@@ -1,19 +1,12 @@
 import { moviesApi } from '@/api/movies';
-import { Loading } from '@/components/common/Loading';
 import { MovieDetailModal } from '@/components/MovieDetailModal';
-import { usePopularMovies } from '@/hooks/queries/usePopularMovies';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from "next/head";
 import { useRouter } from 'next/router';
 import Home from '..';
 
-export default function Detail({ movieDetail }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Detail({ movies, movieDetail }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
-  const { data: movies, isLoading } = usePopularMovies();
-
-  if (isLoading === true) {
-    return <Loading />;
-  }
 
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
@@ -28,7 +21,7 @@ export default function Detail({ movieDetail }: InferGetServerSidePropsType<type
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div id="wrap">
-        <Home />
+        <Home movies={movies} />
         <MovieDetailModal
           movie={movieDetail}
           onClose={() => {
@@ -42,11 +35,13 @@ export default function Detail({ movieDetail }: InferGetServerSidePropsType<type
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { movieId } = context.params as { movieId: string };
-  const movieDetail = await moviesApi.getDetail(Number(movieId));
+  const popularResponse = await moviesApi.getPopular()
+  const detailResponse = await moviesApi.getDetail(Number(movieId));
 
   return {
     props: {
-      movieDetail: movieDetail.data,
+      movies: popularResponse.data.results,
+      movieDetail: detailResponse.data,
     },
   };
 };
