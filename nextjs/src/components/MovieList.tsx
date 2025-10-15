@@ -1,7 +1,17 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { MovieItem } from './MovieItem';
-import type { MovieItem as MovieItemType } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
+import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
+import { MovieItem } from "./MovieItem";
+import type { MovieItem as MovieItemType } from "../types/Movie.types";
+import { moviesApi } from "../api/movies";
+import { GetServerSideProps } from "next";
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const res = await moviesApi.getPopular();
+  return {
+    props: {
+      movies: res.data,
+    },
+  };
+};
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
   const { openMovieDetailModal } = useMovieDetailModal();
@@ -16,7 +26,7 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
       <section className="container">
         <h2 className="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
         <ul className="thumbnail-list">
-          {movies.map(movie => (
+          {movies.map((movie) => (
             <MovieItem
               key={movie.id}
               movie={movie}
