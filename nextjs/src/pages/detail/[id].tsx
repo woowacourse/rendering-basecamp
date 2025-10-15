@@ -4,6 +4,7 @@ import { MovieDetailResponse } from "@/types/MovieDetail.types";
 import { IconButton } from "@/components/common/IconButton";
 import { useMovieRating } from "@/hooks/useMovieRating";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 type Props = {
   movie: MovieDetailResponse;
@@ -48,6 +49,12 @@ export default function MovieDetailPage({
     setRating(score);
   };
 
+  const router = useRouter();
+
+  const handleNavigateBack = () => {
+    router.back();
+  };
+
   return (
     <div className="modal-background active">
       <Head>
@@ -65,6 +72,13 @@ export default function MovieDetailPage({
       <div className="modal">
         <div className="modal-header">
           <h1 className="modal-title">{title}</h1>
+          <IconButton
+            src="/images/modal_button_close.png"
+            width="24"
+            height="24"
+            onClick={handleNavigateBack}
+            className="modal-close-btn"
+          />
         </div>
 
         <div className="modal-container">
