@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from 'react';
-import { SessionStorage } from '../utils/storage';
-import { STORAGE_KEYS } from '../constants/storage';
+import { useState, useCallback, useEffect } from "react";
+import { SessionStorage } from "../utils/storage";
+import { STORAGE_KEYS } from "../constants/storage";
 
 type MovieRating = {
   movieId: number;
@@ -22,15 +22,19 @@ export const useMovieRating = (movieId: number, movieName: string) => {
 
   const setRating = useCallback(
     (rate: number) => {
+      if (!movieId || movieId === 0) return;
+
       const ratings = getRatings();
-      const existingIndex = ratings.findIndex(item => item.movieId === movieId);
+      const existingIndex = ratings.findIndex(
+        (item) => item.movieId === movieId
+      );
 
       if (existingIndex > -1) {
         ratings[existingIndex].rate = rate;
       } else if (rate > 0) {
         ratings.push({
           movieId,
-          movieName,
+          movieName: movieName || "Unknown Movie",
           rate,
           rateDate: new Date(),
         });
@@ -43,8 +47,10 @@ export const useMovieRating = (movieId: number, movieName: string) => {
   );
 
   useEffect(() => {
+    if (!movieId || movieId === 0) return;
+
     const ratings = getRatings();
-    const movieRating = ratings.find(item => item.movieId === movieId);
+    const movieRating = ratings.find((item) => item.movieId === movieId);
     setRatingState(movieRating?.rate ?? 0);
   }, [movieId, getRatings]);
 
