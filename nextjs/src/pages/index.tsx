@@ -4,10 +4,10 @@ import { MovieList } from "../components/MovieList";
 import { Footer } from "../components/Footer";
 import { moviesApi } from "../api/movies";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import type { MovieItem } from "../types/Movie.types";
+import type { MovieItemType } from "../types/Movie.types";
 
 type Props = {
-  movies: MovieItem[];
+  movies: MovieItemType[];
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
