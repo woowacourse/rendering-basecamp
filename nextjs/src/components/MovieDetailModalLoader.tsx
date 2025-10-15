@@ -1,4 +1,4 @@
-import { useMovieDetail } from '../hooks/queries/useMovieDetail';
+import { useMovieDetail } from '@/hooks/queries/useMovieDetail';
 import { MovieDetailModal } from './MovieDetailModal';
 import { Loading } from './common/Loading';
 

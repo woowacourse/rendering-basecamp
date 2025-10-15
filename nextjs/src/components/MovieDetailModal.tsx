@@ -1,5 +1,5 @@
-import type { MovieDetailResponse } from '../types/MovieDetail.types';
-import { useMovieRating } from '../hooks/useMovieRating';
+import type { MovieDetailResponse } from '@/types/MovieDetail.types';
+import { useMovieRating } from '@/hooks/useMovieRating';
 import { IconButton } from './common/IconButton';
 
 interface MovieDetailModalProps {

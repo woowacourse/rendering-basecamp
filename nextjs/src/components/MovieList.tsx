@@ -1,7 +1,7 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
+import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
 import { MovieItem } from './MovieItem';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
+import { moviesApi } from '@/api/movies';
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
   const { openMovieDetailModal } = useMovieDetailModal();

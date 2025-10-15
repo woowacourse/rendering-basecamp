@@ -1,4 +1,4 @@
-import { MovieItem } from '../types/Movie.types';
+import { MovieItem } from '@/types/Movie.types';
 import { IconButton } from './common/IconButton';
 import { FeaturedMovie } from './FeaturedMovie';
 

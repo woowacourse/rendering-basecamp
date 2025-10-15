@@ -1,6 +1,6 @@
 import { overlay } from 'overlay-kit';
-import { MovieDetailResponse } from '../types/MovieDetail.types';
-import { MovieDetailModal } from '../components/MovieDetailModal';
+import { MovieDetailResponse } from '@/types/MovieDetail.types';
+import { MovieDetailModal } from '@/components/MovieDetailModal';
 
 export const useMovieDetailModal = () => {
   const openMovieDetailModal = (movie: MovieDetailResponse) => {
