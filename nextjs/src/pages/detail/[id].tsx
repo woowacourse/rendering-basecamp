@@ -1,6 +1,6 @@
 import { moviesApi } from '@/api/movies';
 import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
-import { useParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useRef, useEffect } from 'react';
 import MovieHomePage from '..';
 
@@ -14,20 +14,21 @@ export default function MovieDetailPage() {
 }
 
 function DetailPageOpenModal() {
-  const { movieId } = useParams();
+  const { query } = useRouter();
+  const id = query?.id;
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
   useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
+    if (id == null || onceRef.current === true) {
       return;
     }
     (async () => {
       onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
+      const movieDetail = await moviesApi.getDetail(Number(id));
       openMovieDetailModal(movieDetail.data);
     })();
-  }, [movieId, openMovieDetailModal]);
+  }, [id, openMovieDetailModal]);
 
   return null;
 }
