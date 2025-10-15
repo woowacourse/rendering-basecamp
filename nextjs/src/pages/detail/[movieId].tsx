@@ -47,6 +47,10 @@ export default function MovieDetail({
           }
         />
         <meta property="og:description" content={movieDetail.overview} />
+        <meta
+          property="og:url"
+          content={`https://rendering-basecamp-s2k7-git-minji2219-minji2219s-projects.vercel.app/detail/${movieDetail.id}`}
+        />
       </Head>
       <div id="wrap">
         <Home movieDetail={moviesDetail} />
