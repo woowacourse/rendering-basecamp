@@ -3,6 +3,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { MovieDetailResponse } from "@/types/MovieDetail.types";
 import { MovieDetailModal } from "@/components/MovieDetailModal";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 interface MovieDetailPageProps {
   movieDetail: MovieDetailResponse;
@@ -34,8 +35,19 @@ export default function MovieDetailPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
+  const imageUrl = movieDetail.poster_path
+    ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
+    : "/images/no_image.png";
+
   return (
     <>
+      <Head>
+        <title>{movieDetail.title}</title>
+        <meta property="og:title" content={movieDetail.title} />
+        <meta property="og:type" content="website" />
+        <meta property="og:description" content={movieDetail.overview} />
+        {imageUrl && <meta property="og:image" content={imageUrl} />}
+      </Head>
       <MovieDetailModal movie={movieDetail} onClose={() => router.back()} />
     </>
   );
