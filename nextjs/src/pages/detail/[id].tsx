@@ -1,21 +1,23 @@
 import { moviesApi } from "@/api/movies";
-import { Loading } from "@/components/common/Loading";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
-import { usePopularMovies } from "@/hooks/queries/usePopularMovies";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
+import type { MovieItem } from "@/types/Movie.types";
+import type { MovieDetailResponse } from "@/types/MovieDetail.types";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 
-export default function MovieDetailPage() {
-  const { data: movies, isLoading } = usePopularMovies();
+interface MovieDetailPageProps {
+  movies: MovieItem[];
+  movieDetail: MovieDetailResponse;
+}
 
-  if (isLoading === true) {
-    return <Loading />;
-  }
-
+export default function MovieDetailPage({
+  movies,
+  movieDetail,
+}: MovieDetailPageProps) {
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
@@ -23,34 +25,56 @@ export default function MovieDetailPage() {
   return (
     <>
       <Head>
-        <title>영화 상세 - 영화 추천 사이트</title>
+        <title>{movieDetail.title}</title>
+        <meta name="description" content={movieDetail.overview} />
       </Head>
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
         <MovieList movies={movies} />
         <Footer />
-        <DetailPageOpenModal />
+        <DetailPageOpenModal movieDetail={movieDetail} />
       </div>
     </>
   );
 }
 
-function DetailPageOpenModal() {
-  const router = useRouter();
-  const { id: movieId } = router.query;
+interface DetailPageOpenModalProps {
+  movieDetail: MovieDetailResponse;
+}
+
+function DetailPageOpenModal({ movieDetail }: DetailPageOpenModalProps) {
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
   useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
-      return;
-    }
+    if (onceRef.current === true) return;
     (async () => {
       onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
+      openMovieDetailModal(movieDetail);
     })();
-  }, [movieId, openMovieDetailModal]);
+  }, [movieDetail, openMovieDetailModal]);
 
   return null;
 }
+
+export const getServerSideProps: GetServerSideProps<
+  MovieDetailPageProps
+> = async (context) => {
+  const { id } = context.params!;
+  const movieId = id as string;
+
+  try {
+    const [popularResponse, detailResponse] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(Number(movieId)),
+    ]);
+
+    const movies = popularResponse.data.results;
+    const movieDetail = detailResponse.data;
+
+    return { props: { movies, movieDetail } };
+  } catch (error) {
+    console.error("영화 정보를 불러오는 데 실패했습니다:", error);
+    return { notFound: true };
+  }
+};
