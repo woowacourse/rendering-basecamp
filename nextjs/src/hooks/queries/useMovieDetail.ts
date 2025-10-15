@@ -7,7 +7,7 @@ import { MovieDetailResponse } from '@/types/MovieDetail.types';
  */
 export const useMovieDetail = (id: number) => {
   const [data, setData] = useState<MovieDetailResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
