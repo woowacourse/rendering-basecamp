@@ -1,18 +1,21 @@
+import Home from '../index';
 import {useEffect, useRef} from "react";
 import {moviesApi} from "@/api/movies";
 import {useMovieDetailModal} from "@/hooks/useMovieDetailModal";
+import {useRouter} from "next/router";
 
 export default function MovieDetailPage() {
   return (
     <>
-      {/*<MovieHomePage/>*/}
-      <DetailPageOpenModal/>
+      <Home />
+      <DetailPageOpenModal />
     </>
   );
 }
 
 function DetailPageOpenModal() {
-  const {movieId} = useParams();
+  const router = useRouter();
+  const {movieId} = router.query;
   const {openMovieDetailModal} = useMovieDetailModal();
   const onceRef = useRef(false);
 
