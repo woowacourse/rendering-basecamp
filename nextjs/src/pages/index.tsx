@@ -1,25 +1,31 @@
-import { Header } from "../components/Header";
-import { MovieList } from "../components/MovieList";
-import { Footer } from "../components/Footer";
-import { usePopularMovies } from "../hooks/queries/usePopularMovies";
-import { Loading } from "../components/common/Loading";
+import Head from "next/head";
 
-export default function MovieHomePage() {
-  const { data: movies, isLoading } = usePopularMovies();
+import MovieHomePage from "./MovieHomePage";
+import { GetServerSideProps } from "next";
+import { moviesApi } from "@/api/movies";
+import { MovieItem } from "@/types/Movie.types";
 
-  if (isLoading === true) {
-    return <Loading />;
-  }
+type HomeProps = {
+  popularMovies: MovieItem[];
+};
 
-  if (movies == null || movies.length === 0) {
-    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
-  }
-
-  return (
-    <div id="wrap">
-      <Header featuredMovie={movies[0]} />
-      <MovieList movies={movies} />
-      <Footer />
-    </div>
-  );
+export default function Home({ popularMovies }: HomeProps) {
+  return <MovieHomePage initialMovies={popularMovies} />;
 }
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  try {
+    const res = await moviesApi.getPopular();
+    return {
+      props: {
+        popularMovies: res.data.results,
+      },
+    };
+  } catch (e) {
+    return {
+      props: {
+        popularMovies: [],
+      },
+    };
+  }
+};
