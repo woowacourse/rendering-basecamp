@@ -1,11 +1,12 @@
 import { moviesApi } from "@/api/movies";
 import { Header } from "@/components/Header";
+import { MovieList } from "@/components/MovieList";
 import { MovieItem } from "@/types/Movie.types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 
 export default function MovieHomePage({
-  data,
+  movies,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
@@ -16,15 +17,16 @@ export default function MovieHomePage({
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <div id='wrap'>
-        <Header featuredMovie={data[0]} />
+        <Header featuredMovie={movies[0]} />
+        <MovieList movies={movies} />
       </div>
     </>
   );
 }
 
 export const getServerSideProps = (async () => {
-  const movieDetail = await moviesApi.getPopular();
-  const data = movieDetail.data.results;
+  const response = await moviesApi.getPopular();
+  const movies = response.data.results;
 
-  return { props: { data } };
-}) satisfies GetServerSideProps<{ data: MovieItem[] }>;
+  return { props: { movies } };
+}) satisfies GetServerSideProps<{ movies: MovieItem[] }>;
