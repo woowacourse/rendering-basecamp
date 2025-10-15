@@ -43,12 +43,13 @@ export default function MovieDetailPage({movies, detail, error}: DetailProps) {
   return (
     <>
       <Head>
+        <title>{detail?.title || '영화 상세'}</title>
         <meta property="og:type" content="website"/>
         <meta property="og:site_name" content="인기 영화 목록"/>
         <meta property="og:url" content={`https://rendering-basecamp-shinjungoh.vercel.app/detail/${detail?.id}`}/>
-        <meta property="og:title" content={`${detail?.title}`}/>
-        <meta property="og:description" content={`${detail?.overview}`}/>
-        <meta property="og:image" content={`${detail?.poster_path}`}/>
+        <meta property="og:title" content={`${detail?.title}` || '영화 정보'}/>
+        <meta property="og:description" content={`${detail?.overview}` || '줄거리 정보가 없습니다.'}/>
+        <meta property="og:image" content={`https://image.tmdb.org/t/p/w500${detail?.poster_path}`}/>
         <meta property="og:locale" content="ko_KR"/>
       </Head>
       <Home movies={movies} error={error}/>
