@@ -14,7 +14,7 @@ interface DetailProps {
 }
 
 export const getServerSideProps: GetServerSideProps<DetailProps> = async (context) => {
-  const {id} = context.params as {id: string};
+  const {id} = context.params as { id: string };
 
   try {
     const moviesResponse = await moviesApi.getPopular();
@@ -44,6 +44,7 @@ export default function MovieDetailPage({movies, detail, error}: DetailProps) {
     <>
       <Head>
         <title>{detail?.title || '영화 상세'}</title>
+        <meta name="description" content={detail?.overview || '영화 정보를 확인하세요'}/>
         <meta property="og:type" content="website"/>
         <meta property="og:site_name" content="인기 영화 목록"/>
         <meta property="og:url" content={`https://rendering-basecamp-shinjungoh.vercel.app/detail/${detail?.id}`}/>
@@ -51,6 +52,7 @@ export default function MovieDetailPage({movies, detail, error}: DetailProps) {
         <meta property="og:description" content={`${detail?.overview}` || '줄거리 정보가 없습니다.'}/>
         <meta property="og:image" content={`https://image.tmdb.org/t/p/w500${detail?.poster_path}`}/>
         <meta property="og:locale" content="ko_KR"/>
+        <link rel="canonical" href={`https://rendering-basecamp-shinjungoh.vercel.app/detail/${detail?.id}`}/>
       </Head>
       <Home movies={movies} error={error}/>
       <DetailPageOpenModal detail={detail}/>
