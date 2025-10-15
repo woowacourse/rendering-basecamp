@@ -1,10 +1,10 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { Button } from './common/Button';
-import type { MovieItem } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
+import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
+import { Button } from "./common/Button";
+import { moviesApi } from "../api/movies";
+import { MovieItemType } from "@/types/Movie.types";
 
 interface FeaturedMovieProps {
-  movie: MovieItem;
+  movie: MovieItemType;
 }
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
