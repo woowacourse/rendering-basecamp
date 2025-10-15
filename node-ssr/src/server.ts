@@ -12,14 +12,15 @@ const PORT = 8080;
 app.use(express.json());
 
 app.get("/", async (_req: Request, res: Response) => {
-  res.send(getIndexHtml());
+  const indexHtml = await getIndexHtml();
+  res.send(indexHtml);
 });
 app.get("/detail/:movieId", async (req: Request, res: Response) => {
   const { movieId } = req.params;
-  res.send(getDetailHtml(Number(movieId)));
+  const detailHtml = await getDetailHtml(Number(movieId));
+  res.send(detailHtml);
 });
 
-// public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
 app.use(express.static(path.join(__dirname, "../public")));
 
 app.listen(PORT, (): void => {
