@@ -1,8 +1,8 @@
-import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
-import { useEffect, useRef } from "react";
 import { moviesApi } from "@/api/movies";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { MovieDetailResponse } from "@/types/MovieDetail.types";
+import { MovieDetailModal } from "@/components/MovieDetailModal";
+import { useRouter } from "next/router";
 
 interface MovieDetailPageProps {
   movieDetail: MovieDetailResponse;
@@ -32,28 +32,11 @@ export const getServerSideProps: GetServerSideProps<
 export default function MovieDetailPage({
   movieDetail,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
+
   return (
     <>
-      <DetailPageOpenModal movieDetail={movieDetail} />
+      <MovieDetailModal movie={movieDetail} onClose={() => router.back()} />
     </>
   );
-}
-
-function DetailPageOpenModal({
-  movieDetail,
-}: {
-  movieDetail: MovieDetailResponse;
-}) {
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
-
-  useEffect(() => {
-    if (onceRef.current === true) {
-      return;
-    }
-    onceRef.current = true;
-    openMovieDetailModal(movieDetail);
-  }, [movieDetail, openMovieDetailModal]);
-
-  return null;
 }
