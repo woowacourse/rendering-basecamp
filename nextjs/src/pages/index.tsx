@@ -10,19 +10,12 @@ interface HomeProps {
   movies: MovieItem[];
 }
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async (
-  context
-) => {
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
   try {
     const response = await moviesApi.getPopular();
     const movies = Array.isArray(response?.data?.results)
       ? response.data.results
       : [];
-
-    context.res.setHeader(
-      "Cache-Control",
-      "public, s-maxage=60, stale-while-revalidate=300"
-    );
 
     return { props: { movies } };
   } catch {
@@ -30,7 +23,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (
   }
 };
 
-export default function Home({ movies }: HomeProps) {
+export default function MovieHomePage({ movies }: HomeProps) {
   if (movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
