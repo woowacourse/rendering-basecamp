@@ -1,18 +1,37 @@
-import { Loading } from "@/components/common/Loading";
+import Head from "next/head";
+import type { GetServerSideProps } from "next";
 import { Footer } from "@/components/Footer";
+import { moviesApi } from "@/api/movies";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
-import { usePopularMovies } from "@/hooks/queries/usePopularMovies";
-import Head from "next/head";
+import type { MovieItem } from "@/types/Movie.types";
 
-export default function Home() {
-  const { data: movies, isLoading } = usePopularMovies();
+interface HomeProps {
+  movies: MovieItem[];
+}
 
-  if (isLoading === true) {
-    return <Loading />;
+export const getServerSideProps: GetServerSideProps<HomeProps> = async (
+  context
+) => {
+  try {
+    const response = await moviesApi.getPopular();
+    const movies = Array.isArray(response?.data?.results)
+      ? response.data.results
+      : [];
+
+    context.res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=60, stale-while-revalidate=300"
+    );
+
+    return { props: { movies } };
+  } catch {
+    return { props: { movies: [] } };
   }
+};
 
-  if (movies == null || movies.length === 0) {
+export default function Home({ movies }: HomeProps) {
+  if (movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
   return (
