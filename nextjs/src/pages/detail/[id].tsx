@@ -51,6 +51,7 @@ export default function MovieDetailPage({
 
   const router = useRouter();
 
+  // 닫기 버튼 클릭 시 뒤로 가기
   const handleNavigateBack = () => {
     router.back();
   };
