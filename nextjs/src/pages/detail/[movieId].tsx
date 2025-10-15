@@ -40,7 +40,11 @@ export default function MovieDetail({
         <meta property="og:title" content={movieDetail.title} />
         <meta
           property="og:image"
-          content={movieDetail.poster_path ? movieDetail.poster_path : ''}
+          content={
+            movieDetail.poster_path
+              ? `https://image.tmdb.org/t/p/originals${movieDetail.poster_path}`
+              : ''
+          }
         />
         <meta property="og:description" content={movieDetail.overview} />
       </Head>
