@@ -32,6 +32,10 @@ export default function MovieHomePage({
         <title>기린의 영화 리뷰 사이트</title>
         <meta name='description' content='영화 목록' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta
+          name='google-site-verification'
+          content='svRRSyuqs46NE4VOZsQ0QyUG7CjnqFI5WMIOe1_cJmc'
+        />
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <div id='wrap'>
