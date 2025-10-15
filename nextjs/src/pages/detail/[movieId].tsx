@@ -29,10 +29,25 @@ export default function MovieDetailPage({
   return (
     <>
       <Head>
-        <title>Detail</title>
-        <meta name='description' content='Detail' />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-        <link rel='icon' href='/favicon.ico' />
+        <title>{detail.title}</title>
+        <meta name='description' content={detail.overview} />
+
+        <meta property='og:type' content='website' />
+        <meta property='og:title' content={detail.title} />
+        <meta property='og:description' content={detail.overview} />
+        <meta
+          property='og:image'
+          content={
+            detail.poster_path
+              ? `https://image.tmdb.org/t/p/w500${detail.poster_path}`
+              : "/default-thumbnail.png"
+          }
+        />
+        {/* 추후 수정 예정 */}
+        {/* <meta
+          property='og:url'
+          content={`https://hoyychoi.com/detail/${detail.id}`}
+        /> */}
       </Head>
       <div id='wrap'>
         <Header featuredMovie={movies[0]} />
