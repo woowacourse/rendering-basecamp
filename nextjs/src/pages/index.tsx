@@ -30,7 +30,11 @@ export default function Home({ movies }: HomeProps) {
         <meta property="og:description" content={homeDescription} />
         <meta
           property="og:image"
-          content={`https://image.tmdb.org/t/p/w1200${movies[0]?.poster_path}`}
+          content={
+            movies[0]?.poster_path
+              ? `https://image.tmdb.org/t/p/original${movies[0].poster_path}`
+              : "https://rendering-basecamp-xi.vercel.app/images/no_image.png"
+          }
         />
         <meta
           property="og:url"
@@ -43,7 +47,11 @@ export default function Home({ movies }: HomeProps) {
         <meta name="twitter:description" content={homeDescription} />
         <meta
           name="twitter:image"
-          content={`https://image.tmdb.org/t/p/w1200${movies[0]?.poster_path}`}
+          content={
+            movies[0]?.poster_path
+              ? `https://image.tmdb.org/t/p/original${movies[0].poster_path}`
+              : "https://rendering-basecamp-xi.vercel.app/images/no_image.png"
+          }
         />
       </Head>
       <div id="wrap">

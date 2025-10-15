@@ -31,9 +31,16 @@ export default function MovieDetailPage({
         <meta property="og:type" content="video.movie" />
         <meta property="og:title" content={movieDetail.title} />
         <meta property="og:description" content={movieDetail.overview} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/jpeg" />
         <meta
           property="og:image"
-          content={`https://image.tmdb.org/t/p/w1200${movieDetail.poster_path}`}
+          content={
+            movieDetail.poster_path
+              ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
+              : "https://rendering-basecamp-xi.vercel.app/images/no_image.png"
+          }
         />
         <meta
           property="og:url"
@@ -61,7 +68,11 @@ export default function MovieDetailPage({
         <meta name="twitter:description" content={movieDetail.overview} />
         <meta
           name="twitter:image"
-          content={`https://image.tmdb.org/t/p/w1200${movieDetail.poster_path}`}
+          content={
+            movieDetail.poster_path
+              ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
+              : "https://rendering-basecamp-xi.vercel.app/images/no_image.png"
+          }
         />
       </Head>
       <div id="wrap">
