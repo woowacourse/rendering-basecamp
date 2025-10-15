@@ -12,7 +12,7 @@ export const getServerSideProps: GetServerSideProps<
   MovieDetailPageProps
 > = async context => {
   try {
-    const movieId = context.params?.movieId as string;
+    const movieId = context.params?.movieId;
     const response = await moviesApi.getDetail(Number(movieId));
     const movieDetail = response.data;
 
