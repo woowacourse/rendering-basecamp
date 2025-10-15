@@ -20,8 +20,8 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
         className='background-container'
         style={{
           position: "relative",
-          minHeight: "56vw",
-          maxHeight: 800,
+          minHeight: 200,
+          maxHeight: 500,
           overflow: "hidden",
         }}
       >

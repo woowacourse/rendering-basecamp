@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { moviesApi } from '../../api/movies';
-import { MovieItem } from '../../types/Movie.types';
+import { useState, useEffect } from "react";
+import { moviesApi } from "../../api/movies";
+import type { MovieItem } from "../../types/Movie.types";
 
 /**
  * 영화 상세 정보를 조회하는 훅
@@ -22,7 +22,7 @@ export const usePopularMovies = () => {
         setError(
           err instanceof Error
             ? err
-            : new Error('영화 정보를 불러오는데 실패했습니다.')
+            : new Error("영화 정보를 불러오는데 실패했습니다.")
         );
       } finally {
         setIsLoading(false);
