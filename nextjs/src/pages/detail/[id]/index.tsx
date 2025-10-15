@@ -6,7 +6,6 @@ import { SeoHead } from "@/components/SeoHead";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import { MovieItem } from "@/types/Movie.types";
 import { GetServerSideProps } from "next";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 
