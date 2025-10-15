@@ -20,7 +20,7 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
 
   const { title, genres, overview, vote_average, poster_path } = movie;
 
-  const genreNames = genres.map(genre => genre.name).join(', ');
+  const genreNames = genres.map((genre) => genre.name).join(', ');
   const imageUrl = poster_path
     ? `https://image.tmdb.org/t/p/original${poster_path}`
     : '/images/no_image.png';
