@@ -1,17 +1,16 @@
-import { Loading } from "@/components/common/Loading";
+import { moviesApi } from "@/api/movies";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
-import { usePopularMovies } from "@/hooks/queries/usePopularMovies";
+import { MovieItem } from "@/types/Movie.types";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 
-export default function Home() {
-  const { data: movies, isLoading } = usePopularMovies();
+interface MoviesPageProps {
+  movies: MovieItem[];
+}
 
-  if (isLoading === true) {
-    return <Loading />;
-  }
-
+export default function Home({ movies }: MoviesPageProps) {
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
@@ -32,3 +31,23 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const res = await moviesApi.getPopular();
+    const movies = res.data.results;
+
+    return {
+      props: {
+        movies,
+      },
+    };
+  } catch (error) {
+    console.error("영화 데이터 패칭 실패:", error);
+    return {
+      props: {
+        movies: [],
+      },
+    };
+  }
+};
