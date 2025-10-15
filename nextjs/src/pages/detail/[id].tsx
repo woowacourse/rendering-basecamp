@@ -45,7 +45,7 @@ export default function MovieDetailPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const imageUrl = movieDetail.poster_path
     ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`
-    : '/images/no_image.png';
+    : 'https://rendering-basecamp-jurung.vercel.app/images/no_image.png';
 
   return (
     <>
