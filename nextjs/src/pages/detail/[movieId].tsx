@@ -1,11 +1,16 @@
+import { moviesApi } from '@/api/movies';
 import { Loading } from '@/components/common/Loading';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { MovieList } from '@/components/MovieList';
 import { usePopularMovies } from '@/hooks/queries/usePopularMovies';
+import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
 import Head from "next/head";
+import { useParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
+import Home from '..';
 
-export default function Home() {
+export default function Detail() {
     const { data: movies, isLoading } = usePopularMovies();
 
   if (isLoading === true) {
@@ -24,11 +29,29 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-    <div id="wrap">
-      <Header featuredMovie={movies[0]} />
-      <MovieList movies={movies} />
-      <Footer />
-    </div>
+      <div id="wrap">
+        <Home />
+        <DetailPageOpenModal />
+      </div>
     </>
   );
+}
+
+function DetailPageOpenModal() {
+  const { movieId } = useParams();
+  const { openMovieDetailModal } = useMovieDetailModal();
+  const onceRef = useRef(false);
+
+  useEffect(() => {
+    if (movieId == null || onceRef.current === true) {
+      return;
+    }
+    (async () => {
+      onceRef.current = true;
+      const movieDetail = await moviesApi.getDetail(Number(movieId));
+      openMovieDetailModal(movieDetail.data);
+    })();
+  }, [movieId, openMovieDetailModal]);
+
+  return null;
 }
