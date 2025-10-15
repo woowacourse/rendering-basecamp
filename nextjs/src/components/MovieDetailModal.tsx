@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { MovieDetailResponse } from '../types/MovieDetail.types';
 import { useMovieRating } from '../hooks/useMovieRating';
 import { IconButton } from './common/IconButton';
@@ -45,13 +46,25 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
         </div>
 
         <div className="modal-container">
-          <img src={imageUrl} alt={title} className="modal-image" />
+          <Image
+            src={imageUrl}
+            alt={title}
+            className="modal-image"
+            width={280}
+            height={420}
+            priority
+          />
           <div className="modal-description">
             {/* 영화 정보 섹션 */}
             <div className="movie-info-line">
               <span className="movie-meta">{genreNames}</span>
               <div className="movie-rating">
-                <img src="/images/star_filled.png" width="16" height="16" />
+                <Image
+                  src="/images/star_filled.png"
+                  width={16}
+                  height={16}
+                  alt=""
+                />
                 <span className="rating-value">{vote_average.toFixed(1)}</span>
               </div>
             </div>

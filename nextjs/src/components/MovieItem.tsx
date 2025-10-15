@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
 
 interface MovieItemProps {
@@ -25,10 +26,23 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
       data-index={movie.id}
     >
       <div className="item">
-        <img className="thumbnail" src={imageUrl} alt={title} loading="lazy" />
+        <Image
+          className="thumbnail"
+          src={imageUrl}
+          alt={title}
+          width={500}
+          height={750}
+          priority={false}
+        />
         <div className="item-desc">
           <p className="rate">
-            <img src="/images/star_empty.png" className="star" />
+            <Image
+              src="/images/star_empty.png"
+              className="star"
+              width={16}
+              height={16}
+              alt=""
+            />
             <span>{vote_average.toFixed(1)}</span>
           </p>
           <strong>{title}</strong>

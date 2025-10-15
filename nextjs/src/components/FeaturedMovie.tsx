@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { Button } from './common/Button';
 import type { MovieItem } from '../types/Movie.types';
 
@@ -16,7 +17,7 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
   return (
     <div className="top-rated-movie">
       <div className="rate">
-        <img src="/images/star_empty.png" width="32" height="32" />
+        <Image src="/images/star_empty.png" width={32} height={32} alt="" />
         <span className="text-2xl font-semibold text-yellow">
           {movie.vote_average}
         </span>
