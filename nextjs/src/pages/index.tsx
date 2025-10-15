@@ -20,7 +20,10 @@ export default function Home() {
     <>
       <Head>
         <title>영화 리뷰</title>
-        <meta name="description" content="인기 영화를 확인하고 평점을 남겨보세요" />
+        <meta
+          name="description"
+          content="인기 영화를 확인하고 평점을 남겨보세요"
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
