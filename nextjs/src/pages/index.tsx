@@ -1,17 +1,38 @@
 import Head from "next/head";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
 import { Footer } from "@/components/Footer";
-import { usePopularMovies } from "@/hooks/queries/usePopularMovies";
-import { Loading } from "@/components/common/Loading";
+import { moviesApi } from "@/api/movies";
+import { MovieItem } from "@/types/Movie.types";
 
-export default function Home() {
-  const { data: movies, isLoading } = usePopularMovies();
+interface HomeProps {
+  movies: MovieItem[];
+}
 
-  if (isLoading === true) {
-    return <Loading />;
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  try {
+    const response = await moviesApi.getPopular();
+    const movies = response.data.results;
+
+    return {
+      props: {
+        movies,
+      },
+    };
+  } catch (error) {
+    console.error(error ?? "영화 정보를 불러오는데 실패했습니다.");
+    return {
+      props: {
+        movies: [],
+      },
+    };
   }
+};
 
+export default function Home({
+  movies,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
