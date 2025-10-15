@@ -6,7 +6,7 @@ import type {
   InferGetServerSidePropsType,
 } from "next/types";
 import { moviesApi } from "@/api/movies";
-import { extractCurrentUrlByRequest } from "@/utils/extractCurrentUrlByContext";
+import { extractCurrentUrlByRequest } from "@/utils/extractCurrentUrlByRequest";
 import Meta from "@/components/common/Meta";
 
 export const getServerSideProps = async (

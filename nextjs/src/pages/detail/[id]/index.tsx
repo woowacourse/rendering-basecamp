@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
-import { extractCurrentUrlByRequest } from "@/utils/extractCurrentUrlByContext";
+import { extractCurrentUrlByRequest } from "@/utils/extractCurrentUrlByRequest";
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
