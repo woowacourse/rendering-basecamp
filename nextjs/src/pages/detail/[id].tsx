@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import { useMovieDetailModal } from '../../hooks/useMovieDetailModal';
 import MovieHomePage from '../index';
 import { moviesApi } from '../../api/movies';
@@ -49,6 +50,23 @@ export default function MovieDetailPage({ movies, detail }: DetailProps) {
 
   return (
     <>
+      <Head>
+        <title>{detail.title} - Movie App</title>
+        <meta property="og:title" content={detail.title} />
+        <meta property="og:description" content={detail.overview} />
+        <meta
+          property="og:image"
+          content={`https://image.tmdb.org/t/p/w500${detail.poster_path}`}
+        />
+        <meta property="og:type" content="website" />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content={detail.title} />
+        <meta property="twitter:description" content={detail.overview} />
+        <meta
+          property="twitter:image"
+          content={`https://image.tmdb.org/t/p/w500${detail.poster_path}`}
+        />
+      </Head>
       <MovieHomePage movies={movies} />
     </>
   );
