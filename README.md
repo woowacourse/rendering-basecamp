@@ -17,8 +17,8 @@
 
 ## 💻 프로그래밍 요구사항
 
-- [ ] `/react-csr` 코드를 그대로 `/nextjs`로 마이그레이션 한다.
-- [ ] 배포는 vercel로 진행한다.
+- [x] `/react-csr` 코드를 그대로 `/nextjs`로 마이그레이션 한다.
+- [x] 배포는 vercel로 진행한다.
 - Next.js 에서 아래 개념들을 학습하고 적용한다.
   - [getServerSideProps](https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props)
   - [page router가 사용하는 file-system based router](https://nextjs.org/docs/pages/building-your-application/routing/pages-and-layouts)
