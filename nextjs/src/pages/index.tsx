@@ -53,5 +53,11 @@ export const getServerSideProps = (async () => {
   const response = await moviesApi.getPopular();
   const movies = response.data.results;
 
+  if (!movies || movies.length === 0) {
+    return {
+      notFound: true,
+    };
+  }
+
   return { props: { movies } };
 }) satisfies GetServerSideProps<{ movies: MovieItem[] }>;
