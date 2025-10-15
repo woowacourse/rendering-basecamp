@@ -2,11 +2,13 @@ import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
 import { MovieItem } from './MovieItem';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
 import { moviesApi } from '../api/movies';
+import router from 'next/router';
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
   const { openMovieDetailModal } = useMovieDetailModal();
 
   const handleMovieClick = async (movie: MovieItemType) => {
+    router.push(`/?detail=${movie.id}`, undefined, { shallow: true });
     const movieDetail = await moviesApi.getDetail(movie.id);
     await openMovieDetailModal(movieDetail.data);
   };
