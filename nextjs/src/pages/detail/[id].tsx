@@ -5,6 +5,7 @@ import MovieHomePage, { fetchMoviesForSSR } from "../MovieHomePage";
 import type { MovieItem } from "../../types/Movie.types";
 import type { MovieDetailResponse } from "../../types/MovieDetail.types";
 import type { GetServerSidePropsContext } from "next/types";
+import Head from "next/head";
 
 interface MovieDetailPageProps {
   movies: MovieItem[] | null;
@@ -21,6 +22,11 @@ export default function MovieDetailPage({
 
   return (
     <>
+      <Head>
+        <meta property="og:title" content={movieDetail.title} />
+        <meta property="og:description" content={movieDetail.overview} />
+        <meta property="og:image" content={movieDetail.poster_path ?? ""} />
+      </Head>
       <MovieHomePage
         movies={movies}
         pageTitle={`${movieDetail.title} - MovieList`}
