@@ -38,7 +38,7 @@ export default function MovieDetailPage({
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/detail/${movieDetail.id}`;
   const imageUrl = movieDetail.poster_path
     ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
-    : "/images/no_image.png";
+    : "";
 
   return (
     <>
