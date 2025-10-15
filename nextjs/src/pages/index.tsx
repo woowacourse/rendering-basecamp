@@ -36,8 +36,6 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
     return { props: { movies } };
   } catch (error) {
     console.error("영화 정보를 불러오는 데 실패했습니다:", error);
-    return {
-      props: { movies: [] },
-    };
+    return { props: { movies: [] } };
   }
 };
