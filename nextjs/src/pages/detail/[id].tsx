@@ -5,6 +5,7 @@ import { IconButton } from "@/components/common/IconButton";
 import { useMovieRating } from "@/hooks/useMovieRating";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { apiClient } from "@/lib/apiClient";
 
 type Props = {
   movie: MovieDetailResponse;
@@ -67,7 +68,7 @@ export default function MovieDetailPage({
         <meta property="og:type" content="video.movie" />
         <meta
           property="og:url"
-          content={`https://yourdomain.com/detail/${movie.id}`}
+          content={`${process.env.NEXT_DOMAIN_URL}/detail/${movie.id}`}
         />
       </Head>
       <div className="modal">
