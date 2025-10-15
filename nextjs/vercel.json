@@ -1,0 +1,11 @@
+
+{
+  "version": 2,
+  "builds": [
+    { "src": "next.config.js", "use": "@vercel/next" }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/.*", "status": 404, "dest": "/404" }
+  ]
+}
