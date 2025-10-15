@@ -26,8 +26,10 @@ export default function DetailPageOpenModal({ movieDetail }: DetailPageProps) {
     })();
   }, [movieDetail, openMovieDetailModal, router]);
 
+  console.log(movieDetail.poster_path);
+
   const ogImage = movieDetail.poster_path
-    ? `https://image.tmdb.org/t/p/w1200${movieDetail.poster_path}`
+    ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
     : '/images/no_image.png';
 
   return (
@@ -49,7 +51,7 @@ export default function DetailPageOpenModal({ movieDetail }: DetailPageProps) {
         <meta property="og:image" content={ogImage} />
         <meta
           property="og:url"
-          content={`https://yourdomain.com/detail/${movieDetail.id}`}
+          content={`https://https://rendering-basecamp-zl46.vercel.app/detail/${movieDetail.id}`}
         />
         <meta property="og:type" content="video.movie" />
       </Head>
