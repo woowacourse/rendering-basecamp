@@ -30,11 +30,13 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
           className="thumbnail"
           src={imageUrl}
           alt={title}
+          width={500}
+          height={750}
           loading="lazy"
         />
         <div className="item-desc">
           <p className="rate">
-            <Image src="/images/star_empty.png" className="star" alt="" />
+            <Image src="/images/star_empty.png" className="star" alt="" width={20} height={20} />
             <span>{vote_average.toFixed(1)}</span>
           </p>
           <strong>{title}</strong>
