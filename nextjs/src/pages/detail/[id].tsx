@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Home from '../index';
 import {useEffect, useRef} from "react";
 import {moviesApi} from "@/api/movies";
@@ -41,6 +42,15 @@ export const getServerSideProps: GetServerSideProps<DetailProps> = async (contex
 export default function MovieDetailPage({movies, detail, error}: DetailProps) {
   return (
     <>
+      <Head>
+        <meta property="og:type" content="website"/>
+        <meta property="og:site_name" content="인기 영화 목록"/>
+        <meta property="og:url" content={`https://rendering-basecamp-shinjungoh.vercel.app/detail/${detail?.id}`}/>
+        <meta property="og:title" content={`${detail?.title}`}/>
+        <meta property="og:description" content={`${detail?.overview}`}/>
+        <meta property="og:image" content={`${detail?.poster_path}`}/>
+        <meta property="og:locale" content="ko_KR"/>
+      </Head>
       <Home movies={movies} error={error}/>
       <DetailPageOpenModal detail={detail}/>
     </>
