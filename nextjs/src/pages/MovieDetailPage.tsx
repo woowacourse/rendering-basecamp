@@ -1,33 +1,87 @@
 import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
 import { useEffect, useRef } from "react";
-import { useRouter } from "next/router";
 import { moviesApi } from "../api/movies";
-import MovieHomePage from "./MovieHomePage";
+import MovieHomePage, { fetchMoviesForSSR } from "./MovieHomePage";
+import type { MovieItem } from "../types/Movie.types";
+import type { MovieDetailResponse } from "../types/MovieDetail.types";
+import type { GetServerSidePropsContext } from "next/types";
 
-export default function MovieDetailPage() {
+interface MovieDetailPageProps {
+  movies: MovieItem[] | null;
+  movieDetail: MovieDetailResponse | null;
+}
+
+export default function MovieDetailPage({
+  movies,
+  movieDetail,
+}: MovieDetailPageProps) {
+  if (movies == null || movieDetail == null) {
+    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
+  }
+
   return (
     <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
+      <MovieHomePage movies={movies} />
+      <DetailPageOpenModal initialMovieDetail={movieDetail} />
     </>
   );
 }
 
-function DetailPageOpenModal() {
-  const { query } = useRouter();
+function DetailPageOpenModal({
+  initialMovieDetail,
+}: {
+  initialMovieDetail: MovieDetailResponse;
+}) {
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
   useEffect(() => {
-    if (query.movieId == null || onceRef.current === true) {
+    if (initialMovieDetail == null || onceRef.current === true) {
       return;
     }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(query.movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [query.movieId, openMovieDetailModal]);
+    onceRef.current = true;
+    openMovieDetailModal(initialMovieDetail);
+  }, [initialMovieDetail, openMovieDetailModal]);
 
   return null;
 }
+
+export const fetchDetailForSSR = async (context: GetServerSidePropsContext) => {
+  try {
+    const { movieId } = context.params as { movieId: string | null };
+
+    if (movieId == null) {
+      return { props: {} };
+    }
+
+    const movieDetail = await moviesApi.getDetail(Number(movieId));
+
+    return {
+      props: {
+        movieDetail: movieDetail.data,
+      },
+    };
+  } catch {
+    return { props: {} };
+  }
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+): Promise<{ props: MovieDetailPageProps }> => {
+  try {
+    const [moviesRes, detailRes] = await Promise.all([
+      fetchMoviesForSSR(),
+      fetchDetailForSSR(context),
+    ]);
+
+    return {
+      props: {
+        movies: moviesRes.props.movies,
+        movieDetail: detailRes.props.movieDetail ?? null,
+      },
+    };
+  } catch {
+    return { props: { movies: null, movieDetail: null } };
+  }
+};
