@@ -35,6 +35,7 @@ export default function MovieDetailPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
+  const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/detail/${movieDetail.id}`;
   const imageUrl = movieDetail.poster_path
     ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
     : "/images/no_image.png";
@@ -46,6 +47,7 @@ export default function MovieDetailPage({
         <meta property="og:title" content={movieDetail.title} />
         <meta property="og:type" content="website" />
         <meta property="og:description" content={movieDetail.overview} />
+        <meta property="og:url" content={pageUrl} />
         {imageUrl && <meta property="og:image" content={imageUrl} />}
       </Head>
       <MovieDetailModal movie={movieDetail} onClose={() => router.back()} />
