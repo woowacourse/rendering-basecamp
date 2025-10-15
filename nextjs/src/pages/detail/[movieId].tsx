@@ -1,16 +1,14 @@
 import { moviesApi } from '@/api/movies';
 import { Loading } from '@/components/common/Loading';
+import { MovieDetailModal } from '@/components/MovieDetailModal';
 import { usePopularMovies } from '@/hooks/queries/usePopularMovies';
-import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from "next/head";
-import { useEffect, useRef } from 'react';
-import Home from '..';
-import { MovieDetailResponse } from '@/types/MovieDetail.types';
-import { overlay } from 'overlay-kit';
 import { useRouter } from 'next/router';
+import Home from '..';
 
 export default function Detail({ movieDetail }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
   const { data: movies, isLoading } = usePopularMovies();
 
   if (isLoading === true) {
@@ -31,40 +29,15 @@ export default function Detail({ movieDetail }: InferGetServerSidePropsType<type
       </Head>
       <div id="wrap">
         <Home />
-        <DetailPageOpenModal movieDetail={movieDetail} />
+        <MovieDetailModal
+          movie={movieDetail}
+          onClose={() => {
+            router.back();
+          }}
+        />
       </div>
     </>
   );
-}
-
-function DetailPageOpenModal({movieDetail}: {movieDetail: MovieDetailResponse}) {
-  const router = useRouter();
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
-
-  useEffect(() => {
-    if (!movieDetail || onceRef.current === true) {
-      return;
-    }
-    
-    (async () => {
-      onceRef.current = true;
-      openMovieDetailModal(movieDetail);
-    })();
-  }, [movieDetail, openMovieDetailModal]);
-
-  useEffect(() => {
-    const handleRouteChange = () => {
-      overlay.closeAll();
-    };
-
-    router.events.on('routeChangeStart', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
-    };
-  }, [router]);
-
-  return null;
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
