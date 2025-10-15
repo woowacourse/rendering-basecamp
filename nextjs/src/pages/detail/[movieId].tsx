@@ -4,6 +4,7 @@ import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
 import { moviesApi } from '@/api/movies';
 import type { MovieDetailResponse } from '@/types/MovieDetail.types';
 import type { GetServerSideProps } from 'next';
+import Head from 'next/head';
 
 interface DetailPageProps {
   movieDetail: MovieDetailResponse;
@@ -21,12 +22,39 @@ export default function DetailPageOpenModal({ movieDetail }: DetailPageProps) {
     (async () => {
       onceRef.current = true;
       await openMovieDetailModal(movieDetail);
-      // 모달이 닫히면 이전 페이지로 돌아가기
       router.back();
     })();
   }, [movieDetail, openMovieDetailModal, router]);
 
-  return null;
+  const ogImage = movieDetail.poster_path
+    ? `https://image.tmdb.org/t/p/w1200${movieDetail.poster_path}`
+    : '/images/no_image.png';
+
+  return (
+    <>
+      <Head>
+        <title>{movieDetail.title} | 영화 상세</title>
+        <meta
+          name="description"
+          content={movieDetail.overview || '영화 상세 정보'}
+        />
+        <meta
+          property="og:title"
+          content={`${movieDetail.title} | 영화 상세`}
+        />
+        <meta
+          property="og:description"
+          content={movieDetail.overview || '영화 상세 정보'}
+        />
+        <meta property="og:image" content={ogImage} />
+        <meta
+          property="og:url"
+          content={`https://yourdomain.com/detail/${movieDetail.id}`}
+        />
+        <meta property="og:type" content="video.movie" />
+      </Head>
+    </>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
