@@ -6,12 +6,12 @@ import { useRouter } from "next/router";
 export const useMovieDetailModal = () => {
   const router = useRouter();
   const openMovieDetailModal = (movie: MovieDetailResponse) => {
-    router.push(`/detail/${movie.id}`, undefined, { shallow: true });
     return new Promise<void>((resolve) => {
       overlay.open(({ unmount }) => (
         <MovieDetailModal
           movie={movie}
           onClose={() => {
+            router.push("/", undefined, { shallow: true });
             resolve();
             unmount();
           }}
