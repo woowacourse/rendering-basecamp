@@ -20,12 +20,15 @@ export default function MovieDetailPage({
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
 
+  const imageUrl = movieDetail.poster_path
+    ? "https://image.tmdb.org/t/p/w500/" + movieDetail.poster_path
+    : "/images/no_image.png";
   return (
     <>
       <Head>
         <meta property="og:title" content={movieDetail.title} />
         <meta property="og:description" content={movieDetail.overview} />
-        <meta property="og:image" content={movieDetail.poster_path ?? ""} />
+        <meta property="og:image" content={imageUrl} />
       </Head>
       <MovieHomePage
         movies={movies}
