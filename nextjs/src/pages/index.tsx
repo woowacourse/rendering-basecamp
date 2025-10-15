@@ -1,9 +1,10 @@
 import type { GetServerSideProps } from "next";
-import Head from "next/head";
 import { moviesApi } from "../api/movies";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { MovieList } from "../components/MovieList";
+import { OGMetaTags } from "../components/OGMetaTags";
+import { HOME_URL, getTMDBImageUrl } from "../constants/urls";
 import type { MovieItem } from "../types/Movie.types";
 
 interface HomeProps {
@@ -21,39 +22,12 @@ export default function Home({ movies }: HomeProps) {
 
   return (
     <>
-      <Head>
-        <title>{homeTitle}</title>
-        <meta name="description" content={homeDescription} />
-
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={homeTitle} />
-        <meta property="og:description" content={homeDescription} />
-        <meta
-          property="og:image"
-          content={
-            movies[0]?.poster_path
-              ? `https://image.tmdb.org/t/p/original${movies[0].poster_path}`
-              : "https://rendering-basecamp-xi.vercel.app/images/no_image.png"
-          }
-        />
-        <meta
-          property="og:url"
-          content="https://rendering-basecamp-xi.vercel.app/"
-        />
-        <meta property="og:site_name" content={homeTitle} />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={homeTitle} />
-        <meta name="twitter:description" content={homeDescription} />
-        <meta
-          name="twitter:image"
-          content={
-            movies[0]?.poster_path
-              ? `https://image.tmdb.org/t/p/original${movies[0].poster_path}`
-              : "https://rendering-basecamp-xi.vercel.app/images/no_image.png"
-          }
-        />
-      </Head>
+      <OGMetaTags
+        title={homeTitle}
+        description={homeDescription}
+        url={HOME_URL}
+        image={getTMDBImageUrl(movies[0]?.poster_path, "original")}
+      />
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
         <MovieList movies={movies} />

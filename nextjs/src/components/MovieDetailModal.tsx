@@ -2,6 +2,7 @@ import type { MovieDetailResponse } from "../types/MovieDetail.types";
 import { useMovieRating } from "../hooks/useMovieRating";
 import { IconButton } from "./common/IconButton";
 import Image from "next/image";
+import { getTMDBImageUrl } from "../constants/urls";
 
 interface MovieDetailModalProps {
   movie: MovieDetailResponse;
@@ -22,9 +23,7 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
   const { title, genres, overview, vote_average, poster_path } = movie;
 
   const genreNames = genres.map((genre) => genre.name).join(", ");
-  const imageUrl = poster_path
-    ? `https://image.tmdb.org/t/p/original${poster_path}`
-    : "/images/no_image.png";
+  const imageUrl = getTMDBImageUrl(poster_path, "original");
 
   const handleStarClick = (score: number) => {
     setRating(score);

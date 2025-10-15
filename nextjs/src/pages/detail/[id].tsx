@@ -2,11 +2,12 @@ import { moviesApi } from "@/api/movies";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
+import { OGMetaTags } from "@/components/OGMetaTags";
+import { getMovieDetailUrl, getTMDBImageUrl } from "@/constants/urls";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import type { MovieItem } from "@/types/Movie.types";
 import type { MovieDetailResponse } from "@/types/MovieDetail.types";
 import { GetServerSideProps } from "next";
-import Head from "next/head";
 import { useEffect, useRef } from "react";
 
 interface MovieDetailPageProps {
@@ -24,57 +25,18 @@ export default function MovieDetailPage({
 
   return (
     <>
-      <Head>
-        <title>{movieDetail.title}</title>
-        <meta name="description" content={movieDetail.overview} />
-
-        <meta property="og:type" content="video.movie" />
-        <meta property="og:title" content={movieDetail.title} />
-        <meta property="og:description" content={movieDetail.overview} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta
-          property="og:image"
-          content={
-            movieDetail.poster_path
-              ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
-              : "https://rendering-basecamp-xi.vercel.app/images/no_image.png"
-          }
-        />
-        <meta
-          property="og:url"
-          content={`https://rendering-basecamp-xi.vercel.app/detail/${movieDetail.id}`}
-        />
-        <meta property="og:site_name" content="영화 추천 사이트" />
-
-        <meta
-          property="video:duration"
-          content={
-            movieDetail.runtime ? `${movieDetail.runtime * 60}` : undefined
-          }
-        />
-        <meta
-          property="video:release_date"
-          content={movieDetail.release_date}
-        />
-        <meta
-          property="video:tag"
-          content={movieDetail.genres.map((genre) => genre.name).join(", ")}
-        />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={movieDetail.title} />
-        <meta name="twitter:description" content={movieDetail.overview} />
-        <meta
-          name="twitter:image"
-          content={
-            movieDetail.poster_path
-              ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
-              : "https://rendering-basecamp-xi.vercel.app/images/no_image.png"
-          }
-        />
-      </Head>
+      <OGMetaTags
+        title={movieDetail.title}
+        description={movieDetail.overview}
+        url={getMovieDetailUrl(movieDetail.id)}
+        type="video.movie"
+        image={getTMDBImageUrl(movieDetail.poster_path, "original")}
+        movieDuration={
+          movieDetail.runtime ? `${movieDetail.runtime * 60}` : undefined
+        }
+        movieReleaseDate={movieDetail.release_date}
+        movieTags={movieDetail.genres.map((genre) => genre.name).join(", ")}
+      />
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
         <MovieList movies={movies} />

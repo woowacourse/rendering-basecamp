@@ -1,5 +1,6 @@
 import type { MovieItem as MovieItemType } from "../types/Movie.types";
 import Image from "next/image";
+import { getTMDBImageUrl } from "../constants/urls";
 
 interface MovieItemProps {
   movie: MovieItemType;
@@ -10,9 +11,7 @@ interface MovieItemProps {
 export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
   const { title, poster_path, vote_average } = movie;
 
-  const imageUrl = poster_path
-    ? `https://image.tmdb.org/t/p/w500${poster_path}`
-    : "/images/no_image.png";
+  const imageUrl = getTMDBImageUrl(poster_path, "w500");
 
   const handleClick = () => {
     onClick(movie);
