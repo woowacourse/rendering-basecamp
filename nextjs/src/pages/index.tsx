@@ -29,7 +29,9 @@ export default function Home({ movies }: HomeProps) {
         <meta
           property="og:image"
           content={
-            `https://image.tmdb.org/t/p/original${movies[0].poster_path}` || ''
+            `https://image.tmdb.org/t/p/original${
+              movies[0]?.poster_path || ''
+            }` || ''
           }
         />
         <meta
