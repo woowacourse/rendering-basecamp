@@ -5,6 +5,7 @@ import { MovieDetailResponse } from '@/types/MovieDetail.types';
 import { GetServerSideProps } from 'next';
 import { useEffect, useRef } from 'react';
 import MovieHomePage from '..';
+import Head from 'next/head';
 
 export const getServerSideProps: GetServerSideProps<{
   movies: MovieItem[];
@@ -39,8 +40,19 @@ export default function MovieDetailPage({
   movies,
   movieDetail,
 }: MovieDetailPageProps) {
+  const { title, overview, poster_path } = movieDetail;
+  const imageUrl = poster_path
+    ? `https://image.tmdb.org/t/p/w500${poster_path}`
+    : '/images/no_image.png';
+
   return (
     <>
+      <Head>
+        <meta property='og:title' content={title} />
+        <meta property='og:description' content={overview} />
+        <meta property='og:image' content={imageUrl!} />
+      </Head>
+
       <MovieHomePage movies={movies} />
       <DetailPageOpenModal movieDetail={movieDetail} />
     </>
