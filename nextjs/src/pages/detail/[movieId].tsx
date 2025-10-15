@@ -45,6 +45,7 @@ export default function MovieDetailPage({ movie, origin }: MovieDetailPage) {
         <meta property="og:image" content={imageUrl} />
         <meta property="og:url" content={`${origin}/${id}`} />
         <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Movie App" />
       </Head>
 
       <MovieHomePage />
