@@ -26,8 +26,11 @@ export default function Home({ movies }: HomeProps) {
           property="og:description"
           content="지금 가장 인기 있는 영화들을 확인해보세요"
         />
-        <meta property="og:image" content="/images/logo.png" />
-        <meta property="og:url" content="https://yourdomain.com" />
+        <meta property="og:image" content={movies[0].poster_path || ''} />
+        <meta
+          property="og:url"
+          content="https://rendering-basecamp-zl46.vercel.app/"
+        />
         <meta property="og:type" content="website" />
       </Head>
 
