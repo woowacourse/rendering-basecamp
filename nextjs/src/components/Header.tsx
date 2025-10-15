@@ -1,6 +1,7 @@
 import { MovieItem } from "../types/Movie.types";
 import { IconButton } from "./common/IconButton";
 import { FeaturedMovie } from "./FeaturedMovie";
+import Image from "next/image";
 
 export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
   const handleLogoClick = () => {
@@ -9,14 +10,14 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
 
   return (
     <header>
-      <div
-        className={`background-container`}
-        style={
-          featuredMovie && {
-            backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path})`,
-          }
-        }
-      >
+      <div className={`background-container`}>
+        <Image
+          src={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path}`}
+          alt={featuredMovie.title || "Featured Movie Poster"}
+          layout="fill"
+          objectFit="cover"
+          priority
+        />
         <div className="overlay" />
 
         <div className="top-rated-container">
