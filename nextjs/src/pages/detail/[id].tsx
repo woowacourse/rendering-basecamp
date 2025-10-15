@@ -84,7 +84,6 @@ export default function MovieDetailPage({
         <div className="modal-container">
           <img src={imageUrl} alt={title} className="modal-image" />
           <div className="modal-description">
-            {/* 영화 정보 섹션 */}
             <div className="movie-info-line">
               <span className="movie-meta">{genreNames}</span>
               <div className="movie-rating">
@@ -93,14 +92,12 @@ export default function MovieDetailPage({
               </div>
             </div>
 
-            {/* 줄거리 */}
             <div className="overview-section">
               <p className="overview-text">
                 {overview || "줄거리 정보가 없습니다."}
               </p>
             </div>
 
-            {/* 내 별점 섹션 */}
             <div className="my-rating-section">
               <div className="rating-header">
                 <span className="rating-label">내 별점</span>
