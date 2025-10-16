@@ -2,6 +2,7 @@ import { moviesApi } from "@/api/movies";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
+import { OGMetaTags } from "@/components/OGMetaTags";
 import type { MovieItem } from "@/types/Movie.types";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -17,6 +18,13 @@ export default function MovieHomePage({ movies }: MovieHomePageProps) {
 
   return (
     <>
+      <OGMetaTags
+        title="Movielist"
+        description="인기 영화 목록"
+        url={`https://rendering-basecamp-mu.vercel.app/`}
+        image={`https://image.tmdb.org/t/p/w500${movies[0].poster_path}`}
+      />
+
       <Head>
         <title>Movielist</title>
         <meta name="description" content="인기 영화 목록" />

@@ -4,10 +4,10 @@ import { moviesApi } from "@/api/movies";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
-import Head from "next/head";
 import type { MovieDetailResponse } from "@/types/MovieDetail.types";
 import type { MovieItem } from "@/types/Movie.types";
 import type { GetServerSideProps } from "next";
+import { OGMetaTags } from "@/components/OGMetaTags";
 
 interface MovieDetailPageProps {
   movies: MovieItem[] | null;
@@ -24,16 +24,22 @@ export default function MovieDetailPage({
 
   return (
     <>
-      <Head>
-        <title>{movieDetail.title}</title>
-        <meta name="description" content={movieDetail.overview} />
-      </Head>
+      <OGMetaTags
+        title={movieDetail.title}
+        description={movieDetail.overview}
+        url={`https://rendering-basecamp-mu.vercel.app/detail/${movieDetail.id}`}
+        siteName="Movielist"
+        type="video.movie"
+        movieDuration={movieDetail.runtime.toString()}
+        movieReleaseDate={movieDetail.release_date}
+        movieTags={movieDetail.genres.map((g) => g.name).join(", ")}
+        image={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
+      />
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
         <MovieList movies={movies} />
         <Footer />
       </div>
-
       <DetailPageOpenModal movieDetail={movieDetail} />
     </>
   );
