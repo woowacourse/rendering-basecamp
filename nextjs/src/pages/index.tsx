@@ -57,7 +57,7 @@ export default function HomePage({ movies, movieDetail, og }: PageProps) {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={og.pageTitle} />
         <meta name="twitter:description" content={og.pageDescription} />
-        <meta name="twitter:image" content={og.ogImageUrl} />
+        {og.ogImageUrl && <meta name="twitter:image" content={og.ogImageUrl} />}
       </Head>
 
       <div id="wrap">
@@ -87,11 +87,7 @@ export const getServerSideProps: GetServerSideProps<{
       } catch {}
     }
 
-    const origin =
-      process.env.NEXT_PUBLIC_APP_ORIGIN ??
-      `${ctx.req.headers["x-forwarded-proto"] ?? "https"}://${
-        ctx.req.headers.host
-      }`;
+    const origin = process.env.NEXT_PUBLIC_APP_ORIGIN!;
     const path = ctx.resolvedUrl || "/";
 
     const og = buildOgMeta({ origin, path, detail: movieDetail });
@@ -104,9 +100,7 @@ export const getServerSideProps: GetServerSideProps<{
       },
     };
   } catch (e) {
-    const origin =
-      process.env.NEXT_PUBLIC_APP_ORIGIN ??
-      "https://vercel.com/yeji0214s-projects/rendering-basecamp";
+    const origin = process.env.NEXT_PUBLIC_APP_ORIGIN!;
     const og = buildOgMeta({ origin, path: "/" });
     return { props: { movies: [], og } };
   }
