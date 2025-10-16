@@ -37,8 +37,8 @@ const DetailPage = ({ movies, movieDetail }: DetailPageProps) => {
   return (
     <>
       <OGHead
-        title="영화 상세 정보"
-        description="영화 상세 정보를 확인해보세요."
+        title={`${movieDetail.title} - 영화 상세 정보`}
+        description={movieDetail.overview}
         imageUrl={
           movieDetail.poster_path
             ? `${TMDB_IMAGE_URL}original${movieDetail.poster_path}`
