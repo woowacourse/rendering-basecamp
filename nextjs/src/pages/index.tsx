@@ -15,6 +15,10 @@ export default function Home({ movies }: HomeMoviesProps) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
 
+  const movieImage = movies[0].poster_path
+    ? `https://image.tmdb.org/t/p/w500${movies[0].poster_path}`
+    : '/images/dizzy_planet.png';
+
   return (
     <>
       <Head>
@@ -22,6 +26,16 @@ export default function Home({ movies }: HomeMoviesProps) {
         <meta name="description" content="영화 정보를 확인할 수 있습니다." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+
+        <meta property="og:type" content="article" />
+        <meta property="og:site_name" content="movieList" />
+        <meta property="og:title" content={movies[0].title} />
+        <meta property="og:description" content={movies[0].overview} />
+        <meta property="og:image" content={movieImage} />
+        <meta
+          property="og:image:alt"
+          content={`${movies[0].title} 포스터 이미지`}
+        />
       </Head>
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
