@@ -1,22 +1,30 @@
 import { MovieItem } from '../types/Movie.types';
 import { IconButton } from './common/IconButton';
 import { FeaturedMovie } from './FeaturedMovie';
+import Image from 'next/image';
 
 export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
   const handleLogoClick = () => {
     window.location.reload();
   };
 
+  const backgroundImageUrl = featuredMovie
+    ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path}`
+    : '';
+
   return (
     <header>
-      <div
-        className={`background-container`}
-        style={
-          featuredMovie && {
-            backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path})`,
-          }
-        }
-      >
+      <div className={`background-container`}>
+        {featuredMovie && (
+          <Image
+            src={backgroundImageUrl}
+            alt={featuredMovie.title}
+            fill
+            style={{ objectFit: 'cover' }}
+            priority
+            quality={85}
+          />
+        )}
         <div className="overlay" />
 
         <div className="top-rated-container">
