@@ -19,7 +19,7 @@ export const getServerSideProps = (async ({ res }) => {
   return {
     props: {},
   };
-}) satisfies GetServerSideProps<{}>;
+}) satisfies GetServerSideProps;
 
 const wrapWithXmlStructure = (xmlContent: string) => {
   return `<?xml version="1.0" encoding="UTF-8"?>
