@@ -87,7 +87,7 @@ export const getServerSideProps: GetServerSideProps<{
       } catch {}
     }
 
-    const origin = process.env.NEXT_PUBLIC_APP_ORIGIN!;
+    const origin = "https://vercel.com/yeji0214s-projects/rendering-basecamp";
     const path = ctx.resolvedUrl || "/";
 
     const og = buildOgMeta({ origin, path, detail: movieDetail });
@@ -100,7 +100,7 @@ export const getServerSideProps: GetServerSideProps<{
       },
     };
   } catch (e) {
-    const origin = process.env.NEXT_PUBLIC_APP_ORIGIN!;
+    const origin = "https://vercel.com/yeji0214s-projects/rendering-basecamp";
     const og = buildOgMeta({ origin, path: "/" });
     return { props: { movies: [], og } };
   }
