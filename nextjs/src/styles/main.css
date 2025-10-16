@@ -31,7 +31,7 @@ button.primary {
   padding: 8px 16px;
   color: var(--color-white);
   font-weight: bold;
-  background-color: var(--color-lightblue-90);
+  background-color: var(--color-lightblue-dark);
   border-radius: 4px;
 }
 
