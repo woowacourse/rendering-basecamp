@@ -1,23 +1,31 @@
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/router";
+import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import MetaTags from "@/components/common/MetaTags";
 import Home from "..";
 import { moviesApi } from "@/api/movies";
+import { MovieDetailResponse } from "@/types/MovieDetail.types";
 
 interface MovieDetailPageProps {
-  movie: {
-    id: number;
-    title: string;
-    overview: string;
-    poster_path: string;
-  };
+  movie: MovieDetailResponse;
 }
-
 export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
+  const { openMovieDetailModal } = useMovieDetailModal();
+  const onceRef = useRef(false);
+
+  useEffect(() => {
+    if (!onceRef.current) {
+      openMovieDetailModal(movie);
+      onceRef.current = true;
+    }
+  }, [movie, openMovieDetailModal]);
+
   return (
     <>
       <MetaTags
         title={`${movie.title} | 영화 리뷰`}
         description={movie.overview}
-        image={movie.poster_path}
+        image={movie.poster_path ?? "/logo.png"}
         url={`https://rendering-basecamp-blue.vercel.app/detail/${movie.id}`}
       />
       <Home />
