@@ -7,7 +7,6 @@ import { HOME_URL, TMDB_IMAGE_URL, TMDB_NO_IMAGE_URL } from '@/constants/url';
 import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
 import { MovieItem } from '@/types/Movie.types';
 import { MovieDetailResponse } from '@/types/MovieDetail.types';
-import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next/types';
 import { useEffect, useRef } from 'react';
 
@@ -45,8 +44,6 @@ const DetailPage = ({ movies, movieDetail }: DetailPageProps) => {
             : TMDB_NO_IMAGE_URL
         }
         url={`${HOME_URL}detail/${movieDetail.id}`}
-        width={1920}
-        height={800}
         alt={movieDetail.title}
       />
       <div id="wrap">

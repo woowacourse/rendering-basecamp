@@ -5,13 +5,21 @@ interface OGHeadProps {
   description: string;
   imageUrl: string;
   url: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   alt: string;
 }
 
 export const OGHead = (props: OGHeadProps) => {
-  const { title, description, imageUrl, url, width, height, alt } = props;
+  const {
+    title,
+    description,
+    imageUrl,
+    url,
+    width = 1200,
+    height = 630,
+    alt,
+  } = props;
 
   return (
     <Head>
