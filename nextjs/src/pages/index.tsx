@@ -40,7 +40,7 @@ export default function Home({
         title="영화 리뷰 웹"
         description="영화 리뷰 웹 입니다"
         image="/logo.png"
-        url="https://rendering-basecamp-blue.vercel.app"
+        url="https://rendering-basecamp-37yf3ei60-beomtaes-projects.vercel.app/"
       />
       <Header featuredMovie={movies[0]} />
       <MovieList movies={movies} />
