@@ -36,12 +36,11 @@ export default function Home({ movies }: HomeMoviesProps) {
         <meta property="og:description" content={movies[0].overview} />
         <meta property="og:image" content={movieImage} />
 
-        <meta property="twitter:image" content={movieImage} />
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:title" content="Movielist" />
         <meta
-          property="twitter:description"
-          content="영화 정보를 확인할 수 있습니다. 여러 최신 영화의 정보를 평점과 함께 확인해보세요"
+          property="og:url"
+          content={`${
+            process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+          }`}
         />
       </Head>
       <div id="wrap">

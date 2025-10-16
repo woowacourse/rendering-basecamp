@@ -51,11 +51,12 @@ export default function MovieDetailPage({
           property="og:image:alt"
           content={`${movies[0].title} 포스터 이미지`}
         />
-
-        <meta property="twitter:image" content={movieImage} />
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:title" content={`${movie.title} 영화 정보`} />
-        <meta property="twitter:description" content={movie.overview} />
+        <meta
+          property="og:url"
+          content={`${
+            process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+          }/detail/${movie.id}`}
+        />
       </Head>
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
