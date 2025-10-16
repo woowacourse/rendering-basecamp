@@ -17,12 +17,16 @@ export default function Detail({
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
 
+  const posterUrl = movieDetail.poster_path
+    ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
+    : '/images/no_image.png'
+
   return (
     <>
       <Head>
         <meta property="og:title" content={movieDetail.title} />
         <meta property="og:description" content={movieDetail.overview} />
-        <meta property="og:image" content={movieDetail.poster_path ?? ''} />
+        <meta property="og:image" content={posterUrl} />
       </Head>
       <Home movies={movies} />
       <MovieDetailModal
