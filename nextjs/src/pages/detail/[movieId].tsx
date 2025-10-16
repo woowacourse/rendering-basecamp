@@ -27,22 +27,18 @@ export default function MovieDetailPage({ movies, movieDetail }: MovieDetailPage
     ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
     : '/images/no_image.png';
 
-  const backdropUrl = movieDetail.backdrop_path
-    ? `https://image.tmdb.org/t/p/original${movieDetail.backdrop_path}`
-    : posterUrl;
   return (
     <>
       <Head>
-        <title>{movieDetail.title} - Movie Review</title>
+        <title>{movieDetail.title}</title>
         <meta name="description" content={movieDetail.overview || `${movieDetail.title} 영화 정보`} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <meta property="og:type" content="video.movie" />
         <meta property="og:title" content={`${movieDetail.title} - Movie Review`} />
         <meta property="og:description" content={movieDetail.overview || `${movieDetail.title} 영화 정보`} />
-        <meta property="og:image" content={backdropUrl} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        <meta property="og:image" content={posterUrl} />
+
         <meta
           property="og:url"
           content={`https://rendering-basecamp-pink-seven.vercel.app//detail/${movieDetail.id}`}
