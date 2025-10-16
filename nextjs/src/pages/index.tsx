@@ -1,6 +1,5 @@
 import { moviesApi } from "@/api/movies";
 import { Loading } from "@/components/common/Loading";
-import MetaTags from "@/components/common/MetaTags";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";

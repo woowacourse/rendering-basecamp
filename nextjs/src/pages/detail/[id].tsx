@@ -4,7 +4,6 @@ import type { MovieDetailResponse } from "@/types/MovieDetail.types";
 import type { MovieItem } from "@/types/Movie.types";
 import { useEffect, useRef } from "react";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
-import MetaTags from "@/components/common/MetaTags";
 import Home from "..";
 import Head from "next/head";
 
