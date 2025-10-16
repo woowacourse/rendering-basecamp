@@ -20,9 +20,9 @@ export default function Detail({
   return (
     <>
       <Head>
-        <meta property="og:title" content={movieDetail.title} key="title" />
-        <meta property="og:description" content={movieDetail.overview} key="title" />
-        <meta property="og:image" content={movieDetail.poster_path ?? ''} key="title" />
+        <meta property="og:title" content={movieDetail.title} />
+        <meta property="og:description" content={movieDetail.overview} />
+        <meta property="og:image" content={movieDetail.poster_path ?? ''} />
       </Head>
       <Home movies={movies} />
       <MovieDetailModal
