@@ -4,6 +4,8 @@ import type { MovieDetailResponse } from '@/types/MovieDetail.types';
 import type { MovieItem } from '@/types/Movie.types';
 import Head from 'next/head';
 import { HomeView } from '@/components/HomeView';
+import { useEffect, useRef } from 'react';
+import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
 
 type Props = { movies: MovieItem[]; detail: MovieDetailResponse | null };
 
@@ -30,10 +32,22 @@ export default function MovieDetailPage({
   movies,
   detail,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { openMovieDetailModal } = useMovieDetailModal();
+  const onceRef = useRef(false);
+
+  useEffect(() => {
+    if (detail === null || onceRef.current === true) {
+      return;
+    }
+    (async () => {
+      onceRef.current = true;
+      openMovieDetailModal(detail);
+    })();
+  }, [detail, openMovieDetailModal]);
+
   const imageUrl = detail?.poster_path
     ? `https://image.tmdb.org/t/p/original${detail?.poster_path}`
     : '/images/no_image.png';
-
   return (
     <>
       <Head>
