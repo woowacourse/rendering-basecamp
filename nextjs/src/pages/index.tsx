@@ -28,14 +28,13 @@ export default function Home({ movies }: HomeProps) {
 export const getServerSideProps: GetServerSideProps = async () => {
 	try {
 		const res = await moviesApi.getPopular();
-		console.log(res.data.results[0].id);
 		return {
 			props: {
 				movies: res.data.results,
 			},
 		};
 	} catch (error) {
-		console.log(`❌ 영화 목록 요청 실패: ${error}`);
+		console.log(`영화 목록 요청 실패: ${error}`);
 		return {
 			props: {
 				movies: [],
