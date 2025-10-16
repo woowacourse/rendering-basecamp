@@ -89,7 +89,7 @@ export const getServerSideProps = async (
 
     return {
       props: {
-        movies: moviesRes.props.movies,
+        movies: moviesRes.props.movies ?? null,
         movieDetail: detailRes.props.movieDetail ?? null,
       },
     };
