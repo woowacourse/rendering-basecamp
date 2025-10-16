@@ -91,7 +91,7 @@ function DetailPageOpenModal({ movie }: { movie: MovieDetailResponse }) {
 
         onceRef.current = true;
         openMovieDetailModal(movie).then(() => {
-            router.push('/');
+            router.push('/', undefined, { shallow: true, scroll: false });
         });
     }, [movie, openMovieDetailModal, router]);
 
