@@ -6,7 +6,7 @@ import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
 import { usePopularMovies } from "@/hooks/queries/usePopularMovies";
 import { MovieItem } from "@/types/Movie.types";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 export const getServerSideProps: GetServerSideProps<{
   popularMovies: MovieItem[];
@@ -21,29 +21,21 @@ export const getServerSideProps: GetServerSideProps<{
 
 export default function Home({
   popularMovies,
-}: {
-  popularMovies?: MovieItem[];
-}) {
-  const { data: movies, isLoading } = usePopularMovies(popularMovies);
-
-  if (isLoading === true) {
-    return <Loading />;
-  }
-
-  if (movies == null || movies.length === 0) {
-    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
-  }
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const imageUrl = popularMovies[0]?.poster_path
+    ? `https://image.tmdb.org/t/p/original${popularMovies[0]?.poster_path}`
+    : "/images/no_image.png";
 
   return (
     <div id="wrap">
       <MetaTags
         title="영화 리뷰 웹"
         description="영화 리뷰 웹 입니다"
-        image="images/logo.png"
+        image={imageUrl}
         url="https://rendering-basecamp-blue.vercel.app/"
       />
-      <Header featuredMovie={movies[0]} />
-      <MovieList movies={movies} />
+      <Header featuredMovie={popularMovies[0]} />
+      <MovieList movies={popularMovies} />
       <Footer />
     </div>
   );

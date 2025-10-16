@@ -1,58 +1,62 @@
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { moviesApi } from "@/api/movies";
+import type { MovieDetailResponse } from "@/types/MovieDetail.types";
+import type { MovieItem } from "@/types/Movie.types";
 import { useEffect, useRef } from "react";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import MetaTags from "@/components/common/MetaTags";
 import Home from "..";
-import { moviesApi } from "@/api/movies";
-import { MovieDetailResponse } from "@/types/MovieDetail.types";
 
-interface MovieDetailPageProps {
-  movie: MovieDetailResponse;
-}
+type Props = { movies: MovieItem[]; detail: MovieDetailResponse | null };
 
-export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  params,
+}) => {
+  const id = Number(params?.id);
+  if (!id) return { notFound: true };
+
+  try {
+    const { data: popularData } = await moviesApi.getPopular(1);
+    const { data: detailData } = await moviesApi.getDetail(id);
+
+    const movies = popularData.results ?? [];
+    const detail = detailData ?? null;
+
+    return { props: { movies, detail } };
+  } catch {
+    return { props: { movies: [], detail: null } };
+  }
+};
+
+export default function MovieDetailPage({
+  movies,
+  detail,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
   useEffect(() => {
-    if (!onceRef.current) {
-      openMovieDetailModal(movie);
-      onceRef.current = true;
+    if (detail === null || onceRef.current === true) {
+      return;
     }
-  }, [movie, openMovieDetailModal]);
+    (async () => {
+      onceRef.current = true;
+      openMovieDetailModal(detail);
+    })();
+  }, [detail, openMovieDetailModal]);
 
+  const imageUrl = detail?.poster_path
+    ? `https://image.tmdb.org/t/p/original${detail?.poster_path}`
+    : "/images/no_image.png";
   return (
     <>
       <MetaTags
-        title={`${movie.title} | 영화 리뷰`}
-        description={movie.overview || "줄거리 정보가 없습니다."}
-        image={
-          movie.poster_path
-            ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
-            : `https://rendering-basecamp-blue.vercel.app/images/logo.png`
-        }
-        url={`https://rendering-basecamp-blue.vercel.app/detail/${movie.id}`}
+        title={detail?.original_title ?? "제목 없음"}
+        description={detail?.overview ?? "설명 없음"}
+        image={imageUrl}
+        url={`https://rendering-basecamp-blue.vercel.app/detail/${detail?.id}`}
       />
-      <Home />
+      <Home popularMovies={movies} />
     </>
   );
-}
-
-export async function getServerSideProps(context: { params: { id: string } }) {
-  const { id } = context.params;
-
-  try {
-    const { data } = await moviesApi.getDetail(Number(id));
-
-    return {
-      props: {
-        movie: {
-          ...data,
-        },
-      },
-    };
-  } catch (error) {
-    return {
-      notFound: true,
-    };
-  }
 }
