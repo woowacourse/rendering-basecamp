@@ -9,7 +9,7 @@ interface MovieDetailPageProps {
 }
 
 export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
-	const genreIds = movie.genres.map((genre) => genre.id);
+	const genreIds = movie.genres?.map((genre) => genre.id) || [];
 	const movieItem: MovieItem = {
 		...movie,
 		genre_ids: genreIds,
