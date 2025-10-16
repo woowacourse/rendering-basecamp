@@ -10,6 +10,10 @@ export default function Home({ movies }: MovieHomePageProps) {
         <meta name="description" content="Popular movies collection" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="canonical"
+          href="https://rendering-basecamp-jade.vercel.app/"
+        />
       </Head>
       <MovieHomePage movies={movies} />
     </>
