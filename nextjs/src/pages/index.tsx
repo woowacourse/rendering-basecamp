@@ -19,7 +19,10 @@ export default function Home({ movies }: HomeProps) {
     <>
       <Head>
         <title>영화 리뷰 - 인기 영화</title>
-        <meta name="description" content="최신 인기 영화를 확인하고 리뷰를 남겨보세요" />
+        <meta
+          name="description"
+          content="최신 인기 영화를 확인하고 리뷰를 남겨보세요"
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

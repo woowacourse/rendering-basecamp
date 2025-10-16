@@ -40,19 +40,28 @@ export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
         <meta name="description" content={movieDetail.overview} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
-        
+
         {/* Open Graph 메타태그 */}
         <meta property="og:title" content={movieDetail.title} />
         <meta property="og:description" content={movieDetail.overview} />
-        <meta property="og:image" content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`} />
-        <meta property="og:url" content={`https://your-domain.com/detail/${movieId}`} />
+        <meta
+          property="og:image"
+          content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
+        />
+        <meta
+          property="og:url"
+          content={`https://your-domain.com/detail/${movieId}`}
+        />
         <meta property="og:type" content="movie" />
-        
+
         {/* Twitter Card 메타태그 */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={movieDetail.title} />
         <meta name="twitter:description" content={movieDetail.overview} />
-        <meta name="twitter:image" content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`} />
+        <meta
+          name="twitter:image"
+          content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
+        />
       </Head>
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
@@ -63,14 +72,16 @@ export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<DetailPageProps> = async (context) => {
+export const getServerSideProps: GetServerSideProps<DetailPageProps> = async (
+  context
+) => {
   const { movieId } = context.params!;
-  
+
   try {
     // 병렬로 영화 목록과 상세 정보를 가져옵니다
     const [moviesResponse, movieDetailResponse] = await Promise.all([
       moviesApi.getPopular(),
-      moviesApi.getDetail(Number(movieId))
+      moviesApi.getDetail(Number(movieId)),
     ]);
 
     const movies = moviesResponse.data.results;
