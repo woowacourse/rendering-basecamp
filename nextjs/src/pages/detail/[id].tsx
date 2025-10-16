@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { useRouter } from "next/router";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import MetaTags from "@/components/common/MetaTags";
 import Home from "..";
@@ -9,6 +8,7 @@ import { MovieDetailResponse } from "@/types/MovieDetail.types";
 interface MovieDetailPageProps {
   movie: MovieDetailResponse;
 }
+
 export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
@@ -19,13 +19,12 @@ export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
       onceRef.current = true;
     }
   }, [movie, openMovieDetailModal]);
-  console.log(movie.poster_path);
 
   return (
     <>
       <MetaTags
         title={`${movie.title} | 영화 리뷰`}
-        description={movie.overview}
+        description={movie.overview || "줄거리 정보가 없습니다."}
         image={
           movie.poster_path
             ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
@@ -47,10 +46,7 @@ export async function getServerSideProps(context: { params: { id: string } }) {
     return {
       props: {
         movie: {
-          id: data.id,
-          title: data.title,
-          overview: data.overview ?? "",
-          poster_path: data.poster_path ?? "/logo.png",
+          ...data,
         },
       },
     };
