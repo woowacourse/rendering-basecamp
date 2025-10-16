@@ -35,6 +35,10 @@ export default function MovieDetailPage({
   movies,
   movieDetail,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (!movieDetail) {
+    return null;
+  }
+
   return (
     <>
       <Head>
