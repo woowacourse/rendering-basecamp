@@ -1,34 +1,49 @@
-import { useEffect, useRef } from "react";
+import MetaTags from "@/components/common/MetaTags";
 import Home from "..";
-import { useParams } from "next/navigation";
-import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import { moviesApi } from "@/api/movies";
-import { useRouter } from "next/router";
 
-export default function MovieDetailPage() {
+interface MovieDetailPageProps {
+  movie: {
+    id: number;
+    title: string;
+    overview: string;
+    poster_path: string;
+  };
+}
+
+export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
   return (
     <>
-      <DetailPageOpenModal />
+      <MetaTags
+        title={`${movie.title} | 영화 리뷰`}
+        description={movie.overview}
+        image={movie.poster_path}
+        url={`https://yourdomain.com/detail/${movie.id}`}
+      />
+      <Home />
     </>
   );
 }
 
-function DetailPageOpenModal() {
-  const router = useRouter();
-  const { id } = router.query;
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
+export async function getServerSideProps(context: any) {
+  const { id } = context.params;
 
-  useEffect(() => {
-    if (id == null || onceRef.current === true) {
-      return;
-    }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(id));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [id, openMovieDetailModal]);
+  try {
+    const { data } = await moviesApi.getDetail(Number(id));
 
-  return <Home />;
+    return {
+      props: {
+        movie: {
+          id: data.id,
+          title: data.title,
+          overview: data.overview ?? "",
+          poster_path: data.poster_path ?? "/logo.png",
+        },
+      },
+    };
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
 }

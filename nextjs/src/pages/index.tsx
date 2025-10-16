@@ -1,5 +1,6 @@
 import { moviesApi } from "@/api/movies";
 import { Loading } from "@/components/common/Loading";
+import MetaTags from "@/components/common/MetaTags";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
@@ -35,6 +36,12 @@ export default function Home({
 
   return (
     <div id="wrap">
+      <MetaTags
+        title="영화 리뷰 웹"
+        description="영화 리뷰 웹 입니다"
+        image="/logo.png"
+        url="https://yourdomain.com"
+      />
       <Header featuredMovie={movies[0]} />
       <MovieList movies={movies} />
       <Footer />
