@@ -6,7 +6,7 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
   const router = useRouter();
 
   const handleMovieClick = (movie: MovieItemType) => {
-    router.push(`/detail/${movie.id}`);
+    router.push(`/?movieId=${movie.id}`, undefined, { shallow: true });
   };
 
   return (

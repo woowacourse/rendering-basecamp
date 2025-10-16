@@ -1,8 +1,10 @@
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import { Header } from '../components/Header';
 import { MovieList } from '../components/MovieList';
 import { Footer } from '../components/Footer';
+import { MovieDetailModalLoader } from '../components/MovieDetailModalLoader';
 import { moviesApi } from '../api/movies';
 import { MovieItem } from '../types/Movie.types';
 
@@ -11,6 +13,13 @@ interface HomePageProps {
 }
 
 export default function Home({ movies }: HomePageProps) {
+  const router = useRouter();
+  const { movieId } = router.query;
+
+  const handleCloseModal = () => {
+    router.push('/', undefined, { shallow: true });
+  };
+
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
@@ -27,6 +36,13 @@ export default function Home({ movies }: HomePageProps) {
         <Header featuredMovie={movies[0]} />
         <MovieList movies={movies} />
         <Footer />
+
+        {movieId && typeof movieId === 'string' && (
+          <MovieDetailModalLoader
+            movieId={Number(movieId)}
+            close={handleCloseModal}
+          />
+        )}
       </div>
     </>
   );
