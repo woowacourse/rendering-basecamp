@@ -1,11 +1,10 @@
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
 import { Header } from "../../components/Header";
 import { MovieList } from "../../components/MovieList";
 import { Footer } from "../../components/Footer";
-import { useMovieDetailModal } from "../../hooks/useMovieDetailModal";
+import { MovieDetailModal } from "../../components/MovieDetailModal";
 import { moviesApi } from "../../api/movies";
 import { MovieItem } from "../../types/Movie.types";
 import { MovieDetailResponse } from "../../types/MovieDetail.types";
@@ -17,17 +16,10 @@ interface DetailPageProps {
 
 export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
   const router = useRouter();
-  const { movieId } = router.query;
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
 
-  useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
-      return;
-    }
-    onceRef.current = true;
-    openMovieDetailModal(movieDetail);
-  }, [movieId, movieDetail, openMovieDetailModal]);
+  const handleClose = () => {
+    router.push('/');
+  };
 
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
@@ -50,7 +42,7 @@ export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
         />
         <meta
           property="og:url"
-          content={`https://your-domain.com/detail/${movieId}`}
+          content={`https://your-domain.com/detail/${movieDetail.id}`}
         />
         <meta property="og:type" content="movie" />
 
@@ -67,6 +59,7 @@ export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
         <Header featuredMovie={movies[0]} />
         <MovieList movies={movies} />
         <Footer />
+        <MovieDetailModal movie={movieDetail} onClose={handleClose} />
       </div>
     </>
   );
