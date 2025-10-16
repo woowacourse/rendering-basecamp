@@ -38,6 +38,7 @@ function Detail({ movies, movieDetail }: Detail) {
         title="영화 리뷰"
         description="오늘 뭐 볼까? 지금 인기 있는 영화를 확인해보세요!"
         url="/"
+        image={`https://image.tmdb.org/t/p/original${movieDetail.poster_path}`}
       />
       <MainContent movies={movies} />
       <DetailPageOpenModal movieDetail={movieDetail} />
@@ -50,6 +51,12 @@ export default Detail;
 export const getServerSideProps: GetServerSideProps<Detail> = async (
   context
 ) => {
+  const req = context.req;
+  const protocol = req.headers["x-forwarded-proto"] || "http";
+  const host = req.headers.host;
+  const url = req.url;
+  const currentUrl = `${protocol}://${host}${url}`;
+
   const { id } = context.params!;
   const movieId = id as string;
 
@@ -62,7 +69,7 @@ export const getServerSideProps: GetServerSideProps<Detail> = async (
     const movies = popularResponse.data.results;
     const movieDetail = detailResponse.data;
 
-    return { props: { movies, movieDetail } };
+    return { props: { movies, movieDetail, currentUrl } };
   } catch (error) {
     console.error("영화 정보를 불러오는 데 실패했습니다:", error);
     return { notFound: true };
