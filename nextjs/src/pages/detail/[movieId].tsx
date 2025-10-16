@@ -40,15 +40,20 @@ export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
           property="og:image"
           content={
             movieDetail.poster_path
-              ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`
-              : "/images/no_image.png"
+              ? `https://image.tmdb.org/t/p/w780${movieDetail.poster_path}`
+              : "http://localhost:3000/images/no_image.png"
           }
         />
+        <meta property="og:image:width" content="780" />
+        <meta property="og:image:height" content="1170" />
+        <meta property="og:image:type" content="image/jpeg" />
         <meta
           property="og:url"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/${movieDetail.id}`}
+          content={`http://localhost:3000/detail/${movieDetail.id}`}
         />
         <meta property="og:type" content="movie" />
+        <meta property="og:site_name" content="영화 리뷰" />
+        <meta property="og:locale" content="ko_KR" />
 
         {/* Twitter Card 메타태그 */}
         <meta name="twitter:card" content="summary_large_image" />
@@ -58,8 +63,8 @@ export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
           name="twitter:image"
           content={
             movieDetail.poster_path
-              ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`
-              : "/images/no_image.png"
+              ? `https://image.tmdb.org/t/p/w780${movieDetail.poster_path}`
+              : "http://localhost:3000/images/no_image.png"
           }
         />
       </Head>
