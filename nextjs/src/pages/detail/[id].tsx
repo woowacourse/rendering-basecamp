@@ -19,13 +19,14 @@ export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
       onceRef.current = true;
     }
   }, [movie, openMovieDetailModal]);
+  console.log(movie.poster_path);
 
   return (
     <>
       <MetaTags
         title={`${movie.title} | 영화 리뷰`}
         description={movie.overview}
-        image={movie.poster_path ?? "/logo.png"}
+        image={`https://image.tmdb.org/t/p/original${movie.poster_path} ?? "/images/no_image.png"`}
         url={`https://rendering-basecamp-blue.vercel.app/detail/${movie.id}`}
       />
       <Home />

@@ -39,7 +39,7 @@ export default function Home({
       <MetaTags
         title="영화 리뷰 웹"
         description="영화 리뷰 웹 입니다"
-        image="/logo.png"
+        image="images/logo.png"
         url="https://rendering-basecamp-blue.vercel.app/"
       />
       <Header featuredMovie={movies[0]} />
