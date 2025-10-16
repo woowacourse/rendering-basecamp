@@ -21,15 +21,12 @@ export const MovieItem = ({ movie }: MovieItemProps) => {
     const handleClick = async (e: React.MouseEvent) => {
         e.preventDefault();
 
-        // Shallow routing: URL만 변경, 페이지 리로드 없음
-        router.push(`/detail/${id}`, undefined, { shallow: true });
+        router.push(`/detail/${id}`, undefined, { shallow: true, scroll: false });
 
-        // 클라이언트 사이드에서 모달 열기
         const movieDetail = await moviesApi.getDetail(id);
         await openMovieDetailModal(movieDetail.data);
 
-        // 모달 닫히면 홈으로 돌아가기
-        router.push('/', undefined, { shallow: true });
+        router.push('/', undefined, { shallow: true, scroll: false });
     };
 
     return (

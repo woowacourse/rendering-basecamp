@@ -17,12 +17,12 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
     const handleClick = async (e: React.MouseEvent) => {
         e.preventDefault();
 
-        router.push(`/detail/${movie.id}`, undefined, { shallow: true });
+        router.push(`/detail/${movie.id}`, undefined, { shallow: true, scroll: false });
 
         const movieDetail = await moviesApi.getDetail(movie.id);
         await openMovieDetailModal(movieDetail.data);
 
-        router.push('/', undefined, { shallow: true });
+        router.push('/', undefined, { shallow: true, scroll: false });
     };
 
     return (
