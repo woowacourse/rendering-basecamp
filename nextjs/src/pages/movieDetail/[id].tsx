@@ -1,9 +1,9 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import MovieHomePage from '../index';
 import { moviesApi } from '@/api/movies';
 import type { MovieDetailResponse } from '@/types/MovieDetail.types';
 import type { MovieItem } from '@/types/Movie.types';
 import Head from 'next/head';
+import { HomeView } from '@/components/HomeView';
 
 type Props = { movies: MovieItem[]; detail: MovieDetailResponse | null };
 
@@ -41,7 +41,7 @@ export default function MovieDetailPage({
         <meta property="og:description" content={detail?.overview} />
         <meta property="og:image" content={imageUrl} />
       </Head>
-      <MovieHomePage movies={movies} />
+      <HomeView movies={movies} />
     </>
   );
 }
