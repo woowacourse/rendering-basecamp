@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rendering-basecamp-levi.vercel.app/sitemap.xml
+
