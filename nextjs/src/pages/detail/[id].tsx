@@ -26,7 +26,11 @@ export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
       <MetaTags
         title={`${movie.title} | 영화 리뷰`}
         description={movie.overview}
-        image={`https://image.tmdb.org/t/p/original${movie.poster_path} ?? "/images/no_image.png"`}
+        image={
+          movie.poster_path
+            ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
+            : `https://rendering-basecamp-blue.vercel.app/images/logo.png`
+        }
         url={`https://rendering-basecamp-blue.vercel.app/detail/${movie.id}`}
       />
       <Home />
