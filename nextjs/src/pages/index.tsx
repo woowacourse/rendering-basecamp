@@ -1,35 +1,41 @@
-import { Header } from "@/components/Header";
-import { MovieList } from "@/components/MovieList";
-import { Footer } from "@/components/Footer";
+import Head from "next/head";
+import MovieHomePage from "@/pages/movies";
 import type { MovieItem } from "@/types/Movie.types";
 import type { GetServerSideProps } from "next";
 import { moviesApi } from "@/api/movies";
-import axios from "axios";
 
-interface MovieHomePageProps {
+interface HomeProps {
 	movies: MovieItem[];
 }
 
-export default function MovieHomePage({ movies }: MovieHomePageProps) {
+export default function Home({ movies }: HomeProps) {
 	return (
-		<div id="wrap">
-			<Header featuredMovie={movies[0]} />
-			<MovieList movies={movies} />
-			<Footer />
-		</div>
+		<>
+			<Head>
+				<title>인기 영화 목록</title>
+				<meta
+					name="description"
+					content="지금 상영 중인 인기 영화의 정보를 확인하세요. "
+				/>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<link rel="icon" href="/favicon.ico" />
+			</Head>
+			<MovieHomePage movies={movies} />
+		</>
 	);
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
 	try {
 		const res = await moviesApi.getPopular();
+		console.log(res.data.results[0].id);
 		return {
 			props: {
 				movies: res.data.results,
 			},
 		};
 	} catch (error) {
-		console.log(error.response?.data);
+		console.log(`❌ 영화 목록 요청 실패: ${error}`);
 		return {
 			props: {
 				movies: [],
