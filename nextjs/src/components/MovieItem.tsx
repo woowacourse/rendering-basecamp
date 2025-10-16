@@ -1,31 +1,40 @@
+import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
+import { moviesApi } from '@/api/movies';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
 
 interface MovieItemProps {
     movie: MovieItemType;
-    onClick: (movie: MovieItemType) => void;
-    ref?: React.Ref<HTMLLIElement>;
 }
 
-export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
-    const { title, poster_path, vote_average } = movie;
+export const MovieItem = ({ movie }: MovieItemProps) => {
+    const { title, poster_path, vote_average, id } = movie;
+    const router = useRouter();
+    const { openMovieDetailModal } = useMovieDetailModal();
 
     const imageUrl = poster_path
         ? `https://image.tmdb.org/t/p/w500${poster_path}`
         : '/images/no_image.png';
 
-    const handleClick = () => {
-        onClick(movie);
+    const handleClick = async (e: React.MouseEvent) => {
+        e.preventDefault();
+
+        // Shallow routing: URL만 변경, 페이지 리로드 없음
+        router.push(`/detail/${id}`, undefined, { shallow: true });
+
+        // 클라이언트 사이드에서 모달 열기
+        const movieDetail = await moviesApi.getDetail(id);
+        await openMovieDetailModal(movieDetail.data);
+
+        // 모달 닫히면 홈으로 돌아가기
+        router.push('/', undefined, { shallow: true });
     };
 
     return (
-        <li
-            ref={ref}
-            className="movie-item"
-            onClick={handleClick}
-            data-index={movie.id}
-        >
-            <div className="item">
+        <li className="movie-item" data-index={id}>
+            <Link href={`/detail/${id}`} className="item" onClick={handleClick}>
                 <Image
                     className="thumbnail"
                     src={imageUrl}
@@ -41,7 +50,7 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
                     </p>
                     <strong>{title}</strong>
                 </div>
-            </div>
+            </Link>
         </li>
     );
 };
