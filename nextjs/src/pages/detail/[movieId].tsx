@@ -1,10 +1,10 @@
-import Head from "next/head";
 import { useRouter } from "next/router";
 import type { GetServerSideProps } from "next";
 import type { MovieDetailResponse } from "../../types/MovieDetail.types";
 import { moviesApi } from "../../api/movies";
 import { useMovieRating } from "../../hooks/useMovieRating";
 import { IconButton } from "../../components/common/IconButton";
+import { SEOHead } from "../../components/common/SEOHead";
 
 interface MovieDetailPageProps {
   movie: MovieDetailResponse;
@@ -39,24 +39,15 @@ export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
 
   return (
     <>
-      <Head>
-        <title>{title} - 영화 상세정보</title>
-        <meta name="description" content={overview || "영화 상세 정보"} />
-
-        <meta property="og:type" content="video.movie" />
-        <meta property="og:title" content={title} />
-        <meta
-          property="og:description"
-          content={overview || "영화 상세 정보"}
-        />
-        <meta property="og:image" content={ogImageUrl} />
-        <meta
-          property="og:url"
-          content={`${
-            process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-          }/detail/${movie.id}`}
-        />
-      </Head>
+      <SEOHead
+        title={`${title} - 영화 상세정보`}
+        description={overview || "영화 상세 정보"}
+        ogType="video.movie"
+        ogTitle={title}
+        ogDescription={overview || "영화 상세 정보"}
+        ogImage={ogImageUrl}
+        ogUrl={`https://rendering-basecamp2.vercel.app/detail/${movie.id}`}
+      />
 
       <div className="modal-background active">
         <div className="modal">
