@@ -1,5 +1,3 @@
-import Head from "next/head";
-
 import MovieHomePage from "./MovieHomePage";
 import { GetServerSideProps } from "next";
 import { moviesApi } from "@/api/movies";
