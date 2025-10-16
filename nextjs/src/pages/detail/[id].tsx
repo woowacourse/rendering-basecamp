@@ -40,7 +40,7 @@ const DetailPage = ({ movies, movieDetail }: DetailPageProps) => {
         description={movieDetail.overview}
         imageUrl={
           movieDetail.poster_path
-            ? `${TMDB_IMAGE_URL}original${movieDetail.poster_path}`
+            ? `${TMDB_IMAGE_URL}w500${movieDetail.poster_path}`
             : TMDB_NO_IMAGE_URL
         }
         url={`${HOME_URL}detail/${movieDetail.id}`}

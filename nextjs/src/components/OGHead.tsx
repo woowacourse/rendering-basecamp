@@ -16,8 +16,8 @@ export const OGHead = (props: OGHeadProps) => {
     description,
     imageUrl,
     url,
-    width = 1200,
-    height = 630,
+    width = 500,
+    height = 750,
     alt,
   } = props;
 

@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
 export default function Home({ movies }: HomeProps) {
   const mostPopularMovie = movies[0];
   const imageUrl = mostPopularMovie.poster_path
-    ? `${TMDB_IMAGE_URL}original${mostPopularMovie.poster_path}`
+    ? `${TMDB_IMAGE_URL}w500${mostPopularMovie.poster_path}`
     : TMDB_NO_IMAGE_URL;
 
   return (
@@ -40,8 +40,8 @@ export default function Home({ movies }: HomeProps) {
         description="최신 인기 영화를 확인해보세요."
         imageUrl={imageUrl}
         url={HOME_URL}
-        width={1920}
-        height={800}
+        width={500}
+        height={750}
         alt="인기 영화 리뷰"
       />
 
