@@ -33,6 +33,12 @@ export default function MovieDetailPage({ movie, movies }: MovieDetailPageProps)
                 <meta name="keywords" content={`${movie.title}, 영화, ${genres}`} />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+                <link
+                    rel="preload"
+                    as="image"
+                    href={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path}`}
+                />
+
                 <meta property="og:title" content={`${movie.title} - 영화 상세 정보`} />
                 <meta property="og:description" content={description} />
                 <meta property="og:image" content={ogImage} />
