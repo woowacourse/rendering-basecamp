@@ -20,10 +20,18 @@ export default function Home({ movieDetail }: { movieDetail: MovieItem[] }) {
   }
 
   return (
-    <div id="wrap">
-      <Header featuredMovie={movieDetail[0]} />
-      <MovieList movies={movieDetail} />
-      <Footer />
-    </div>
+    <>
+      <Head>
+        <meta
+          property="og:url"
+          content={`https://rendering-basecamp-s2k7.vercel.app/`}
+        />
+      </Head>
+      <div id="wrap">
+        <Header featuredMovie={movieDetail[0]} />
+        <MovieList movies={movieDetail} />
+        <Footer />
+      </div>
+    </>
   );
 }
