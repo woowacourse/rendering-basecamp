@@ -9,13 +9,6 @@ interface FeaturedMovieProps {
 }
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  // const handleDetailClick = async () => {
-  //   const movieDetail = await moviesApi.getDetail(movie.id);
-  //   await openMovieDetailModal(movieDetail.data);
-  // };
-
   return (
     <div className="top-rated-movie">
       <div className="rate">
