@@ -46,9 +46,7 @@ export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
         />
         <meta
           property="og:url"
-          content={`${
-            process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3002"
-          }/detail/${movieDetail.id}`}
+          content={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/${movieDetail.id}`}
         />
         <meta property="og:type" content="movie" />
 
