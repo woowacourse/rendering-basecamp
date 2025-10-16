@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react';
+import Image from "next/image";
 
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   src: string;
@@ -17,7 +18,7 @@ export const IconButton = ({
 }: IconButtonProps) => {
   return (
     <button className={className} {...props}>
-      <img src={src} width={width} height={height} alt={alt} />
+      <Image src={src} width={Number(width)} height={Number(height)} alt={alt} />
     </button>
   );
 };
