@@ -18,7 +18,7 @@ export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
         title={`${movie.title} | 영화 리뷰`}
         description={movie.overview}
         image={movie.poster_path}
-        url={`https://yourdomain.com/detail/${movie.id}`}
+        url={`https://rendering-basecamp-blue.vercel.app/detail/${movie.id}`}
       />
       <Home />
     </>
