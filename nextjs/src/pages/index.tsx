@@ -23,18 +23,25 @@ export default function Home({ movies }: HomeMoviesProps) {
     <>
       <Head>
         <title>Movielist</title>
-        <meta name="description" content="영화 정보를 확인할 수 있습니다." />
+        <meta
+          name="description"
+          content="영화 정보를 확인할 수 있습니다. 여러 최신 영화의 정보를 평점과 함께 확인해보세요"
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
 
-        <meta property="og:type" content="article" />
+        <meta property="og:type" content="website" />
         <meta property="og:site_name" content="movieList" />
         <meta property="og:title" content={movies[0].title} />
         <meta property="og:description" content={movies[0].overview} />
         <meta property="og:image" content={movieImage} />
+
+        <meta property="twitter:image" content={movieImage} />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content="Movielist" />
         <meta
-          property="og:image:alt"
-          content={`${movies[0].title} 포스터 이미지`}
+          property="twitter:description"
+          content="영화 정보를 확인할 수 있습니다. 여러 최신 영화의 정보를 평점과 함께 확인해보세요"
         />
       </Head>
       <div id="wrap">
