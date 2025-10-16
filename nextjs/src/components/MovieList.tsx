@@ -2,12 +2,17 @@ import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
 import { MovieItem } from "./MovieItem";
 import type { MovieItem as MovieItemType } from "../types/Movie.types";
 import { useRouter } from "next/router";
+import { moviesApi } from "@/api/movies";
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
 	const router = useRouter();
+	const { openMovieDetailModal } = useMovieDetailModal();
 
-	const handleMovieClick = (movie: MovieItemType) => {
-		router.push(`/detail/${movie.id}`, undefined, { shallow: true }); // ✅ URL만 변경
+	const handleMovieClick = async (movie: MovieItemType) => {
+		router.push(`/detail/${movie.id}`, undefined, { shallow: true });
+		const movieDetail = await moviesApi.getDetail(movie.id);
+		await openMovieDetailModal(movieDetail.data);
+		router.replace("/");
 	};
 
 	return (

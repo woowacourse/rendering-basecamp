@@ -1,7 +1,5 @@
 import type { GetServerSideProps } from "next";
-import { useEffect } from "react";
 import { moviesApi } from "@/api/movies";
-import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import MovieHomePage from "@/pages/movies";
 import type { MovieDetailResponse } from "@/types/MovieDetail.types";
 import type { MovieItem } from "@/types/Movie.types";
@@ -11,12 +9,6 @@ interface MovieDetailPageProps {
 }
 
 export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
-	const { openMovieDetailModal } = useMovieDetailModal();
-
-	useEffect(() => {
-		openMovieDetailModal(movie);
-	}, [movie, openMovieDetailModal]);
-
 	const genreIds = movie.genres.map((genre) => genre.id);
 	const movieItem: MovieItem = {
 		...movie,
