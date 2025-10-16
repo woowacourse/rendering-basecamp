@@ -4,6 +4,7 @@ import { Footer } from '@/components/Footer';
 import { MovieList } from '@/components/MovieList';
 import { moviesApi } from '../api/movies';
 import type { MovieItem } from '@/types/Movie.types';
+import { Header } from '@/components/Header';
 
 interface HomeMoviesProps {
   movies: MovieItem[];
@@ -23,6 +24,7 @@ export default function Home({ movies }: HomeMoviesProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div id="wrap">
+        <Header featuredMovie={movies[0]} />
         <MovieList movies={movies} />
         <Footer />
       </div>
