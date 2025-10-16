@@ -25,7 +25,7 @@ export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
   );
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: { params: { id: string } }) {
   const { id } = context.params;
 
   try {
