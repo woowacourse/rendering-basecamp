@@ -12,9 +12,9 @@ export const useMovieDetailModal = () => {
         <MovieDetailModal
           movie={movie}
           onClose={() => {
-            router.push("/");
             resolve();
             unmount();
+            router.push("/");
           }}
         />
       ));
