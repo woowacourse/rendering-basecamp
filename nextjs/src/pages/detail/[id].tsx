@@ -10,6 +10,7 @@ import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 type Detail = {
   movies: MovieItem[];
   movieDetail: MovieDetailResponse;
+  currentUrl: string;
 };
 
 type DetailModal = {
@@ -31,13 +32,19 @@ function DetailPageOpenModal({ movieDetail }: DetailModal) {
   return null;
 }
 
-function Detail({ movies, movieDetail }: Detail) {
+function Detail({ movies, movieDetail, currentUrl }: Detail) {
   return (
     <>
       <OGMetaTags
-        title="영화 리뷰"
-        description="오늘 뭐 볼까? 지금 인기 있는 영화를 확인해보세요!"
-        url="/"
+        title={`${movieDetail.title} - 영화 리뷰`}
+        description={movieDetail.overview}
+        url={currentUrl}
+        type="video.movie"
+        movieDuration={
+          movieDetail.runtime ? `${movieDetail.runtime * 60}` : undefined
+        }
+        movieReleaseDate={movieDetail.release_date}
+        movieTags={movieDetail.genres.map((genre) => genre.name).join(", ")}
         image={`https://image.tmdb.org/t/p/original${movieDetail.poster_path}`}
       />
       <MainContent movies={movies} />
