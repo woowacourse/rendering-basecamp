@@ -37,11 +37,8 @@ export default function MovieDetailPage({
   return (
     <>
       <Head>
-        <meta property="og:title" content="MovieList" />
-        <meta
-          property="og:description"
-          content="현재 인기 영화 목록을 확인해볼 수 있습니다!"
-        />
+        <meta property="og:title" content={detail?.original_title} />
+        <meta property="og:description" content={detail?.overview} />
         <meta property="og:image" content={imageUrl} />
       </Head>
       <MovieHomePage movies={movies} />
