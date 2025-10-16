@@ -55,7 +55,7 @@ export default function MovieDetailPage({
         />
         <meta
           property="og:image"
-          content={movieDetail.poster_path ?? ""}
+          content={`https://image.tmdb.org/t/p/original${movieDetail.poster_path}`}
           key="image"
         />
         <meta
