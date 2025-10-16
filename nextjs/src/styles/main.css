@@ -105,6 +105,10 @@ button.primary {
   margin-bottom: 8px;
 }
 
+.top-rated-movie h1 {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 16px rgba(0, 0, 0, 0.7);
+}
+
 .title {
   font-size: 3rem;
   font-weight: bold;
