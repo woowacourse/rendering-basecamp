@@ -18,7 +18,7 @@ export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
   const router = useRouter();
 
   const handleClose = () => {
-    router.push('/');
+    router.push("/");
   };
 
   if (movies == null || movies.length === 0) {
@@ -38,11 +38,17 @@ export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
         <meta property="og:description" content={movieDetail.overview} />
         <meta
           property="og:image"
-          content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
+          content={
+            movieDetail.poster_path
+              ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`
+              : "/images/no_image.png"
+          }
         />
         <meta
           property="og:url"
-          content={`https://your-domain.com/detail/${movieDetail.id}`}
+          content={`${
+            process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3002"
+          }/detail/${movieDetail.id}`}
         />
         <meta property="og:type" content="movie" />
 
@@ -52,7 +58,11 @@ export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
         <meta name="twitter:description" content={movieDetail.overview} />
         <meta
           name="twitter:image"
-          content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
+          content={
+            movieDetail.poster_path
+              ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`
+              : "/images/no_image.png"
+          }
         />
       </Head>
       <div id="wrap">
