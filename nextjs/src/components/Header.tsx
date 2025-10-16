@@ -1,3 +1,4 @@
+import { TMDB_IMAGE_URL } from '@/constants/url';
 import { MovieItem } from '../types/Movie.types';
 import { IconButton } from './common/IconButton';
 import { FeaturedMovie } from './FeaturedMovie';
@@ -13,7 +14,7 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
         className={`background-container`}
         style={
           featuredMovie && {
-            backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path})`,
+            backgroundImage: `url(${TMDB_IMAGE_URL}w1920_and_h800_multi_faces/${featuredMovie.poster_path})`,
           }
         }
       >
