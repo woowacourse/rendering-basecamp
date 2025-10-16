@@ -8,6 +8,7 @@ import { SEOHead } from "../../components/common/SEOHead";
 
 interface MovieDetailPageProps {
   movie: MovieDetailResponse;
+  currentUrl: string;
 }
 
 const SCORE_TEXT: Record<number, string> = {
@@ -18,7 +19,10 @@ const SCORE_TEXT: Record<number, string> = {
   10: "명작이에요",
 };
 
-export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
+export default function MovieDetailPage({
+  movie,
+  currentUrl,
+}: MovieDetailPageProps) {
   const router = useRouter();
   const { rating, setRating } = useMovieRating(movie.id, movie.title);
 
@@ -46,7 +50,7 @@ export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
         ogTitle={title}
         ogDescription={overview || "영화 상세 정보"}
         ogImage={ogImageUrl}
-        ogUrl={`https://rendering-basecamp2.vercel.app/detail/${movie.id}`}
+        ogUrl={currentUrl}
       />
 
       <div className="modal-background active">
@@ -127,6 +131,10 @@ export const getServerSideProps: GetServerSideProps<
 > = async (context) => {
   const { movieId } = context.params as { movieId: string };
 
+  const protocol = context.req.headers["x-forwarded-proto"];
+  const host = context.req.headers.host;
+  const currentUrl = `${protocol}://${host}${context.resolvedUrl}`;
+
   try {
     const response = await moviesApi.getDetail(Number(movieId));
     const movie = response.data;
@@ -134,6 +142,7 @@ export const getServerSideProps: GetServerSideProps<
     return {
       props: {
         movie,
+        currentUrl,
       },
     };
   } catch {

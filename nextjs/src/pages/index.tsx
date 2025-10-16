@@ -8,9 +8,13 @@ import type { GetServerSideProps } from "next";
 
 interface MovieHomePageProps {
   movies: MovieItem[];
+  currentUrl: string;
 }
 
-export default function MovieHomePage({ movies }: MovieHomePageProps) {
+export default function MovieHomePage({
+  movies,
+  currentUrl,
+}: MovieHomePageProps) {
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
@@ -26,7 +30,7 @@ export default function MovieHomePage({ movies }: MovieHomePageProps) {
         ogTitle="영화 리뷰"
         ogDescription={ogContent}
         ogImage={ogImage}
-        ogUrl="https://rendering-basecamp2.vercel.app/"
+        ogUrl={currentUrl}
       />
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
@@ -39,7 +43,11 @@ export default function MovieHomePage({ movies }: MovieHomePageProps) {
 
 export const getServerSideProps: GetServerSideProps<
   MovieHomePageProps
-> = async () => {
+> = async (context) => {
+  const protocol = context.req.headers["x-forwarded-proto"];
+  const host = context.req.headers.host;
+  const currentUrl = `${protocol}://${host}${context.resolvedUrl}`;
+
   try {
     const response = await moviesApi.getPopular();
     const movies = response.data.results;
@@ -47,12 +55,14 @@ export const getServerSideProps: GetServerSideProps<
     return {
       props: {
         movies,
+        currentUrl,
       },
     };
   } catch {
     return {
       props: {
         movies: [],
+        currentUrl,
       },
     };
   }
