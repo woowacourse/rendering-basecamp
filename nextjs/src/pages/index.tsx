@@ -5,11 +5,11 @@ import { MovieList } from '@/components/MovieList';
 import { moviesApi } from '../api/movies';
 import type { MovieItem } from '@/types/Movie.types';
 
-interface HomeMoviesType {
+interface HomeMoviesProps {
   movies: MovieItem[];
 }
 
-export default function Home({ movies }: HomeMoviesType) {
+export default function Home({ movies }: HomeMoviesProps) {
   if (!movies || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
@@ -31,7 +31,7 @@ export default function Home({ movies }: HomeMoviesType) {
 }
 
 export const getServerSideProps: GetServerSideProps<
-  HomeMoviesType
+  HomeMoviesProps
 > = async () => {
   try {
     const response = await moviesApi.getPopular();
