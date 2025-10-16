@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import MetaTags from "@/components/common/MetaTags";
 import Home from "..";
+import Head from "next/head";
 
 type Props = { movies: MovieItem[]; detail: MovieDetailResponse | null };
 
@@ -50,12 +51,11 @@ export default function MovieDetailPage({
     : "/images/no_image.png";
   return (
     <>
-      <MetaTags
-        title={detail?.original_title ?? "제목 없음"}
-        description={detail?.overview ?? "설명 없음"}
-        image={imageUrl}
-        url={`https://rendering-basecamp-blue.vercel.app/detail/${detail?.id}`}
-      />
+      <Head>
+        <meta property="og:title" content={detail?.original_title} />
+        <meta property="og:description" content={detail?.overview} />
+        <meta property="og:image" content={imageUrl} />
+      </Head>
       <Home popularMovies={movies} />
     </>
   );

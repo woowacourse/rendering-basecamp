@@ -7,6 +7,7 @@ import { MovieList } from "@/components/MovieList";
 import { usePopularMovies } from "@/hooks/queries/usePopularMovies";
 import { MovieItem } from "@/types/Movie.types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import Head from "next/head";
 
 export const getServerSideProps: GetServerSideProps<{
   popularMovies: MovieItem[];
@@ -28,12 +29,11 @@ export default function Home({
 
   return (
     <div id="wrap">
-      <MetaTags
-        title="영화 리뷰 웹"
-        description="영화 리뷰 웹 입니다"
-        image={imageUrl}
-        url="https://rendering-basecamp-blue.vercel.app/"
-      />
+      <Head>
+        <meta property="og:title" content="영화 리뷰 웹" />
+        <meta property="og:description" content="영화 리뷰 웹 입니다." />
+        <meta property="og:image" content={imageUrl} />
+      </Head>
       <Header featuredMovie={popularMovies[0]} />
       <MovieList movies={popularMovies} />
       <Footer />
