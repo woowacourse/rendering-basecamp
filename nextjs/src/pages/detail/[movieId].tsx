@@ -17,8 +17,8 @@ export default function Detail({
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
 
-  const posterUrl = movieDetail.poster_path
-    ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
+  const backdropUrl = movieDetail.backdrop_path
+    ? `https://image.tmdb.org/t/p/original${movieDetail.backdrop_path}`
     : '/images/no_image.png'
 
   return (
@@ -26,7 +26,7 @@ export default function Detail({
       <Head>
         <meta property="og:title" content={movieDetail.title} />
         <meta property="og:description" content={movieDetail.overview} />
-        <meta property="og:image" content={posterUrl} />
+        <meta property="og:image" content={backdropUrl} />
       </Head>
       <Home movies={movies} />
       <MovieDetailModal
