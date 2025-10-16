@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { GetServerSideProps } from "next";
 import { useEffect, useRef } from "react";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
@@ -6,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import { MovieItem } from "@/types/Movie.types";
 import { MovieDetailResponse } from "@/types/MovieDetail.types";
+import { moviesApi } from "@/api/movies";
 
 type DetailPageProps = {
   popularMovies: MovieItem[];
@@ -26,6 +28,10 @@ export default function MovieDetailPage({
     ? `https://image.tmdb.org/t/p/w780${movieDetail.poster_path}`
     : `${siteUrl}/images/og-image.jpg`;
   const url = `${siteUrl}/detail/${movieDetail?.id ?? ""}`;
+
+  if (!popularMovies || popularMovies.length === 0) {
+    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
+  }
 
   return (
     <>
@@ -50,8 +56,11 @@ export default function MovieDetailPage({
       </Head>
 
       <DetailPageOpenModal movieDetail={movieDetail} />
+
       <div id="wrap">
-        <Header featuredMovie={popularMovies[0]} />
+        {popularMovies.length > 0 && (
+          <Header featuredMovie={popularMovies[0]} />
+        )}
         <MovieList movies={popularMovies} />
         <Footer />
       </div>
@@ -75,3 +84,38 @@ function DetailPageOpenModal({
 
   return null;
 }
+
+export const getServerSideProps: GetServerSideProps<DetailPageProps> = async (
+  context
+) => {
+  const { id } = context.params!;
+
+  const host = context.req.headers.host;
+  const protocol =
+    (context.req.headers["x-forwarded-proto"] as string) || "http";
+  const siteUrl = `${protocol}://${host}`;
+
+  try {
+    const [popularRes, detailRes] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(Number(id)),
+    ]);
+
+    return {
+      props: {
+        popularMovies: popularRes.data.results,
+        movieDetail: detailRes.data,
+        siteUrl,
+      },
+    };
+  } catch (error) {
+    console.error("❌ getServerSideProps error:", error);
+    return {
+      props: {
+        popularMovies: [],
+        movieDetail: null,
+        siteUrl,
+      },
+    };
+  }
+};
