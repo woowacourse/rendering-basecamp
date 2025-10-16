@@ -21,6 +21,7 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
                         alt={featuredMovie.title}
                         fill
                         priority
+                        fetchPriority="high"
                         style={{
                             objectFit: 'cover',
                             objectPosition: 'center',
