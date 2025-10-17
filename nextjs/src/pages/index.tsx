@@ -7,6 +7,7 @@ import Head from "next/head";
 
 export default function MovieHomePage({
   movies,
+  url,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const featured = movies[0];
 
@@ -35,11 +36,7 @@ export default function MovieHomePage({
               : "https://your-domain.com/images/og-default.png"
           }
         />
-        {/* 추후 수정 예정 */}
-        {/* <meta
-          property='og:url'
-          content={`https://hoyychoi.com/detail/${detail.id}`}
-        /> */}
+        <meta property='og:url' content={url} />
       </Head>
       <div id='wrap'>
         <Header featuredMovie={featured} />
@@ -49,7 +46,7 @@ export default function MovieHomePage({
   );
 }
 
-export const getServerSideProps = (async () => {
+export const getServerSideProps = (async (ctx) => {
   const response = await moviesApi.getPopular();
   const movies = response.data.results;
 
@@ -59,5 +56,9 @@ export const getServerSideProps = (async () => {
     };
   }
 
-  return { props: { movies } };
+  const protocol = ctx.req.headers["x-forwarded-proto"] || "https";
+  const host = ctx.req.headers.host;
+  const url = `${protocol}://${host}${ctx.resolvedUrl}`;
+
+  return { props: { movies, url } };
 }) satisfies GetServerSideProps<{ movies: MovieItem[] }>;

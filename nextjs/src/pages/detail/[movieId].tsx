@@ -11,6 +11,7 @@ import Head from "next/head";
 export default function MovieDetailPage({
   movies,
   detail,
+  url,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const { openMovieDetailModal } = useMovieDetailModal();
@@ -43,11 +44,7 @@ export default function MovieDetailPage({
               : "/default-thumbnail.png"
           }
         />
-        {/* 추후 수정 예정 */}
-        {/* <meta
-          property='og:url'
-          content={`https://hoyychoi.com/detail/${detail.id}`}
-        /> */}
+        <meta property='og:url' content={url} />
       </Head>
       <div id='wrap'>
         <Header featuredMovie={movies[0]} />
@@ -58,6 +55,10 @@ export default function MovieDetailPage({
 }
 
 export const getServerSideProps = (async (ctx) => {
+  const protocol = ctx.req.headers["x-forwarded-proto"] || "https";
+  const host = ctx.req.headers.host;
+  const url = `${protocol}://${host}${ctx.resolvedUrl}`;
+
   const id = ctx.params?.movieId;
   if (!id || Array.isArray(id)) return { notFound: true };
 
@@ -70,6 +71,7 @@ export const getServerSideProps = (async (ctx) => {
     props: {
       movies: popularRes.data.results,
       detail: detailRes.data,
+      url,
     },
   };
 }) satisfies GetServerSideProps<{
