@@ -13,10 +13,10 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
 	const router = useRouter();
 
 	const handleDetailClick = async () => {
-		router.push(`/detail/${movie.id}`, undefined, { shallow: true });
+		router.push(`/detail/${movie.id}`);
 		const movieDetail = await moviesApi.getDetail(movie.id);
 		await openMovieDetailModal(movieDetail.data);
-		router.replace("/");
+		router.back();
 	};
 
 	return (
