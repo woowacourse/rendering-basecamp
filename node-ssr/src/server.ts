@@ -96,6 +96,9 @@ app.get('/detail/:id', async (req: Request, res: Response) => {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta property="og:title" content="${movieDetailResponse.title}" />
+        <meta property="og:description" content="${movieDetailResponse.overview}" />
+        <meta property="og:image" content="https://image.tmdb.org/t/p/original${movieDetailResponse.backdrop_path}" />
         <link rel="stylesheet" href="/styles/index.css" />
         <title>영화 세부사항 - Node.js로 낋인</title>
       </head>
