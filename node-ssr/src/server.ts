@@ -3,6 +3,7 @@ dotenv.config();
 
 import express, { Request, Response } from 'express';
 import path from 'path';
+import { moviesApi } from './service/tmdbApi';
 
 const app = express();
 const PORT = 8080;
@@ -458,7 +459,11 @@ app.get('/', async (_req: Request, res: Response) => {
         `);
 });
 
-app.get('/detail/:id', async (_req: Request, res: Response) => {
+app.get('/detail/:id', async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const movieDetailResponse = await moviesApi.getDetail(id);
+  const movieCategory = movieDetailResponse.genres.map(genre => genre.name).join(', ')
+
   res.send(/* html */ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -473,38 +478,36 @@ app.get('/detail/:id', async (_req: Request, res: Response) => {
       <div class="modal">
         <!-- 모달 헤더 -->
         <div class="modal-header">
-          <h1 class="modal-title">인사이드 아웃 2</h1>
-          <img
-            src="/images/modal_button_close.png"
-            width="24"
-            height="24"
-            class="modal-close-btn"
-            alt="Close" />
+          <h1 class="modal-title">${movieDetailResponse.title}</h1>
+          <a href="/">
+            <img
+              src="/images/modal_button_close.png"
+              width="24"
+              height="24"
+              class="modal-close-btn"
+              alt="Close" />
+          </a>
         </div>
 
         <div class="modal-container">
           <img
-            src="https://image.tmdb.org/t/p/original//pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-            alt="인사이드 아웃 2"
+            src="https://image.tmdb.org/t/p/original${movieDetailResponse.poster_path}"
+            alt="${movieDetailResponse.title}"
             class="modal-image" />
           <div class="modal-description">
             <!-- 영화 정보 섹션 -->
             <div class="movie-info-line">
-              <span class="movie-meta">모험, 애니메이션, 코미디, 드라마, 가족</span>
+              <span class="movie-meta">${movieCategory}</span>
               <div class="movie-rating">
                 <img src="/images/star_filled.png" width="16" height="16" />
-                <span class="rating-value">7.7</span>
+                <span class="rating-value">${movieDetailResponse.vote_average.toFixed(1)}</span>
               </div>
             </div>
 
             <!-- 줄거리 -->
             <div class="overview-section">
               <p class="overview-text">
-                13살이 된 라일리의 행복을 위해 매일 바쁘게 머릿속 감정 컨트롤 본부를 운영하는
-                '기쁨', '슬픔', '버럭', '까칠', '소심'. 그러던 어느 날, 낯선 감정인 '불안', '당황',
-                '따분', '부럽'이가 본부에 등장하고, 언제나 최악의 상황을 대비하며 제멋대로인
-                '불안'이와 기존 감정들은 계속 충돌한다. 결국 새로운 감정들에 의해 본부에서 쫓겨나게
-                된 기존 감정들은 다시 본부로 돌아가기 위해 위험천만한 모험을 시작하는데…
+                ${movieDetailResponse.overview}
               </p>
             </div>
 
