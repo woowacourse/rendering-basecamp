@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   images: {
-    domains: ["image.tmdb.org"],
+    remotePatterns: [new URL("https://image.tmdb.org")],
   },
 };
 
