@@ -259,6 +259,7 @@ app.get('/detail/:id', async (_req: Request, res: Response) => {
         <meta property='og:title' content=${title} />
         <meta property='og:description' content=${overview} />
         <meta property='og:image' content=${posterUrl} />
+        <link rel="stylesheet" href="/styles/index.css" />
       </Head>
         <body>
           ${home}
