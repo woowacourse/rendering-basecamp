@@ -146,7 +146,9 @@ app.get("/detail/:movieId", async (req, res) => {
           <div class="modal-description">
             <!-- 영화 정보 섹션 -->
             <div class="movie-info-line">
-              <span class="movie-meta">${movie.genres.join(" ")}</span>
+              <span class="movie-meta">${movie.genres
+                .map((item) => item.name)
+                .join(" ")}</span>
               <div class="movie-rating">
                 <img src="/images/star_filled.png" width="16" height="16" />
                 <span class="rating-value">${movie.vote_average.toFixed(
