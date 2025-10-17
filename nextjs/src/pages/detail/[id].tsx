@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from "next";
+import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { moviesApi } from "@/api/movies";
 import MovieHomePage from "@/pages/movies";
 import type { MovieDetailResponse } from "@/types/MovieDetail.types";
@@ -13,12 +13,7 @@ interface MovieDetailPageProps {
 export default function MovieDetailPage({
 	movies,
 	movieDetail,
-}: MovieDetailPageProps) {
-	const genreIds = movieDetail.genres?.map((genre) => genre.id) || [];
-	const movieItem: MovieItem = {
-		...movieDetail,
-		genre_ids: genreIds,
-	};
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
 		<>
 			<Head>
@@ -59,7 +54,7 @@ export default function MovieDetailPage({
 	);
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = (async (context) => {
 	// biome-ignore lint/style/noNonNullAssertion: URL의 [id] 값
 	const { id } = context.params!;
 	try {
@@ -74,4 +69,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 			notFound: true,
 		};
 	}
-};
+}) satisfies GetServerSideProps<MovieDetailPageProps>;
