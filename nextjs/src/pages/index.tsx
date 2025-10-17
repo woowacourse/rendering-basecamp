@@ -7,15 +7,15 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 export const getServerSideProps: GetServerSideProps<{
-  movieDetail: MovieItem[];
+  movies: MovieItem[];
 }> = async () => {
   const data = await moviesApi.getPopular();
-  const movieDetail = data.data.results;
-  return { props: { movieDetail } };
+  const movies = data.data.results;
+  return { props: { movies } };
 };
 
-export default function Home({ movieDetail }: { movieDetail: MovieItem[] }) {
-  if (movieDetail == null || movieDetail.length === 0) {
+export default function Home({ movies }: { movies: MovieItem[] }) {
+  if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
 
@@ -28,8 +28,8 @@ export default function Home({ movieDetail }: { movieDetail: MovieItem[] }) {
         />
       </Head>
       <div id="wrap">
-        <Header featuredMovie={movieDetail[0]} />
-        <MovieList movies={movieDetail} />
+        <Header featuredMovie={movies[0]} />
+        <MovieList movies={movies} />
         <Footer />
       </div>
     </>

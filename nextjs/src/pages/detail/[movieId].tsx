@@ -8,26 +8,26 @@ import { useEffect, useRef } from 'react';
 import { MovieDetailResponse } from '@/types/MovieDetail.types';
 
 export const getServerSideProps: GetServerSideProps<{
-  moviesDetail: MovieItem[];
+  movies: MovieItem[];
   movieDetail: MovieDetailResponse;
 }> = async (context) => {
   const { movieId } = context.query;
 
-  const [movies, movie] = await Promise.all([
+  const [moviesResponse, movieDetailResponse] = await Promise.all([
     moviesApi.getPopular(),
     moviesApi.getDetail(Number(movieId)),
   ]);
 
-  const moviesDetail = movies.data.results;
-  const movieDetail = movie.data;
-  return { props: { moviesDetail, movieDetail } };
+  const movies = moviesResponse.data.results;
+  const movieDetail = movieDetailResponse.data;
+  return { props: { movies, movieDetail } };
 };
 
 export default function MovieDetail({
-  moviesDetail,
+  movies,
   movieDetail,
 }: {
-  moviesDetail: MovieItem[];
+  movies: MovieItem[];
   movieDetail: MovieDetailResponse;
 }) {
   const { openMovieDetailModal } = useMovieDetailModal();
@@ -63,7 +63,7 @@ export default function MovieDetail({
         />
       </Head>
       <div id="wrap">
-        <Home movieDetail={moviesDetail} />
+        <Home movies={movies} />
       </div>
     </>
   );
