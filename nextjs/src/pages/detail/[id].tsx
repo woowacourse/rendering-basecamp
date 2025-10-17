@@ -53,7 +53,7 @@ export default function MovieDetailPage({ movies, detail }: DetailProps) {
       <Head>
         <title>{detail.title} - Movie App</title>
         <meta property="og:title" content={detail.title} />
-        <meta property="og:description" content={detail.overview} />
+        <meta property="og:description" content={detail.overview || '줄거리 정보가 없습니다.'} />
         <meta
           property="og:image"
           content={`https://image.tmdb.org/t/p/w500${detail.poster_path}`}
@@ -61,7 +61,10 @@ export default function MovieDetailPage({ movies, detail }: DetailProps) {
         <meta property="og:type" content="website" />
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:title" content={detail.title} />
-        <meta property="twitter:description" content={detail.overview} />
+        <meta
+          property="twitter:description"
+          content={detail.overview || '줄거리 정보가 없습니다.'}
+        />
         <meta
           property="twitter:image"
           content={`https://image.tmdb.org/t/p/w500${detail.poster_path}`}
