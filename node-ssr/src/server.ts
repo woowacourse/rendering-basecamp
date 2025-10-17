@@ -43,8 +43,13 @@ function renderMovies(movies: Movie[]) {
 }
 
 // 라우터
-app.get("/", async (_, res) => {
+app.get("/", async (req, res) => {
   const movies = await getMovies();
+  const imageUrl = movies[0].poster_path
+    ? `https://image.tmdb.org/t/p/original${movies[0].poster_path}`
+    : "/images/no_image.png";
+
+  const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
 
   const html = `
   <!DOCTYPE html>
@@ -52,6 +57,13 @@ app.get("/", async (_, res) => {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="Movie App" />
+    <meta property="og:description" content="영화를 소개시켜주는 서비스입니다." />
+    <meta property="og:image" content=${imageUrl} />
+    <meta property="og:url" content=${fullUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Movie App" />
+
     <link rel="stylesheet" href="/styles/index.css" />
     <title>영화 리뷰</title>
   </head>
@@ -110,12 +122,12 @@ app.get("/detail/:movieId", async (req, res) => {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta property="og:title" content=${movie.title} />
-        <meta property="og:description" content=${movie.overview} />
-        <meta property="og:image" content=${imageUrl} />
-        <meta property="og:url" content=${fullUrl} />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Movie App" />
+    <meta property="og:title" content=${movie.title} />
+    <meta property="og:description" content=${movie.overview} />
+    <meta property="og:image" content=${imageUrl} />
+    <meta property="og:url" content=${fullUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Movie App" />
     <link rel="stylesheet" href="/styles/index.css" />
     <title>영화 리뷰 디테일</title>
   </head>
