@@ -11,11 +11,12 @@ const PORT = 8080;
 app.use(express.json());
 
 app.get("/", async (_req: Request, res: Response) => {
-  const response = await moviesApi.getPopular();
-  const movies = response.results;
-  const titleMovie = movies[0];
+  try {
+    const response = await moviesApi.getPopular();
+    const movies = response.results;
+    const titleMovie = movies[0];
 
-  res.send(/*html*/ `
+    res.send(/*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
       <head>
@@ -81,17 +82,26 @@ app.get("/", async (_req: Request, res: Response) => {
       </body>
     </html>
         `);
+  } catch (error) {
+    res.status(400).send("영화 데이터를 불러오는데 실패했습니다.");
+  }
 });
 
 app.get("/detail/:id", async (req: Request, res: Response) => {
-  const response = await moviesApi.getPopular();
-  const movies = response.results;
-  const titleMovie = movies[0];
+  try {
+    const response = await moviesApi.getPopular();
+    const movies = response.results;
+    const titleMovie = movies[0];
 
-  const { id } = req.params;
-  const movieData = await moviesApi.getDetail(Number(id));
+    const { id } = req.params;
+    const movieData = await moviesApi.getDetail(Number(id));
 
-  res.send(/*html*/ `
+    if (!movieData) {
+      res.status(404).send("영화 데이터를 찾을 수 없습니다.");
+      return;
+    }
+
+    res.send(/*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
       <head>
@@ -209,6 +219,9 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
       </body>
     </html>
         `);
+  } catch (error) {
+    res.status(400).send("영화 데이터를 불러오는데 실패했습니다.");
+  }
 });
 
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
