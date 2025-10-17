@@ -8,7 +8,7 @@ export function getAbsolutePageUrl({
   req: IncomingMessage & {
     cookies: NextApiRequestCookies;
   };
-  resolvedUrl?: string;
+  resolvedUrl: string;
 }): string {
   const proto = (req.headers["x-forwarded-proto"] as string) || "http";
   const host = (req.headers["x-forwarded-host"] as string) || req.headers.host;
