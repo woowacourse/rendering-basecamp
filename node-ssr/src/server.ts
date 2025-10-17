@@ -95,7 +95,7 @@ app.get("/", async (_req: Request, res: Response) => {
         `);
 });
 
-app.get("/movie/:id", async (req: Request, res: Response) => {
+app.get("/detail/:id", async (req: Request, res: Response) => {
 	const id = Number(req.params.id);
 	const movieDetail = await moviesApi.getDetail(Number(id));
 	const genres = movieDetail.genres.map((g) => g.name).join(" ");
@@ -113,7 +113,7 @@ app.get("/movie/:id", async (req: Request, res: Response) => {
         ${createMetaTags({
 					title: movieDetail.title,
 					description: movieDetail.overview,
-					url: `https://movie-review.com/movie/${movieDetail.id}`,
+					url: `https://movie-review.com/detail/${movieDetail.id}`,
 					image: `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`,
 				})}
       </head>
