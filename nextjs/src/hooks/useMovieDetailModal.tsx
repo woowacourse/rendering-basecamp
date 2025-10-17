@@ -1,0 +1,31 @@
+import { overlay } from "overlay-kit";
+import { MovieDetailResponse } from "../types/MovieDetail.types";
+import { MovieDetailModal } from "../components/MovieDetailModal";
+import { useRouter } from "next/router";
+
+export const useMovieDetailModal = () => {
+  const router = useRouter();
+  const openMovieDetailModal = (movie: MovieDetailResponse) => {
+    const currentPath = router.asPath;
+
+    const detailPath = `/detail/${movie.id}`;
+
+    router.push(detailPath, undefined, { shallow: true });
+
+    return new Promise<void>((resolve) => {
+      overlay.open(({ unmount }) => (
+        <MovieDetailModal
+          movie={movie}
+          onClose={() => {
+            router.replace(currentPath, undefined, { shallow: true });
+
+            resolve();
+            unmount();
+          }}
+        />
+      ));
+    });
+  };
+
+  return { openMovieDetailModal };
+};
