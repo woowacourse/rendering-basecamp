@@ -24,6 +24,16 @@ app.get("/", async (_req: Request, res: Response) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
         <title>영화 리뷰</title>
+        
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="http://localhost:8080/" />
+        <meta property="og:title" content="영화 리뷰 - 지금 인기 있는 영화" />
+        <meta property="og:description" content=${titleMovie.overview} />
+        <meta property="og:image" content="https://image.tmdb.org/t/p/w1280${
+          titleMovie.backdrop_path
+        }" />
+      
       </head>
       <body>
         <div id="wrap">
@@ -109,6 +119,16 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
         <title>${movieData.title} - 영화 리뷰</title>
+        
+        <meta property="og:type" content="video.movie" />
+        <meta property="og:url" content="http://localhost:8080/detail/${id}" />
+        <meta property="og:title" content="${movieData.title}" />
+        <meta property="og:description" content="${movieData.overview}" />
+        <meta property="og:image" content="https://image.tmdb.org/t/p/w1280${
+          movieData.poster_path
+        }" />
+
+        
       </head>
       <body>
         <div id="wrap">
