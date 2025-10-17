@@ -5,6 +5,7 @@ import express, { type Request, type Response } from "express";
 import path from "path";
 
 import { moviesApi } from "./service/tmdbApi";
+import { createMetaTags } from "./util/createMetaTags";
 
 const app = express();
 const PORT = 8080;
@@ -100,6 +101,12 @@ app.get("/movie/:id", async (req: Request, res: Response) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
         <title>${movieDetail.title}</title>
+        ${createMetaTags({
+					title: movieDetail.title,
+					description: movieDetail.overview,
+					url: `https://movie-review.com/movie/${movieDetail.id}`,
+					image: `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`,
+				})}
       </head>
       <body>
         <div class="modal-background active">
