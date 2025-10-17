@@ -109,7 +109,7 @@ export const getServerSideProps: GetServerSideProps<DetailPageProps> = async (
       },
     };
   } catch (error) {
-    console.error("❌ getServerSideProps error:", error);
+    console.error("영화 정보를 불러오는데 실패했습니다.", error);
     return {
       props: {
         popularMovies: [],
