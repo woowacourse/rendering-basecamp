@@ -1,14 +1,16 @@
 import Head from "next/head";
 import MovieHomePage from "@/pages/movies";
 import type { MovieItem } from "@/types/Movie.types";
-import type { GetServerSideProps } from "next";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { moviesApi } from "@/api/movies";
 
 interface HomeProps {
 	movies: MovieItem[];
 }
 
-export default function Home({ movies }: HomeProps) {
+export default function Home({
+	movies,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
 		<>
 			<Head>
@@ -25,7 +27,7 @@ export default function Home({ movies }: HomeProps) {
 	);
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = (async () => {
 	try {
 		const res = await moviesApi.getPopular();
 		return {
@@ -41,4 +43,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
 			},
 		};
 	}
-};
+}) satisfies GetServerSideProps<HomeProps>;

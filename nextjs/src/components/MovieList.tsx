@@ -9,10 +9,10 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
 	const { openMovieDetailModal } = useMovieDetailModal();
 
 	const handleMovieClick = async (movie: MovieItemType) => {
-		router.push(`/detail/${movie.id}`, undefined, { shallow: true });
+		router.push(`/detail/${movie.id}`);
 		const movieDetail = await moviesApi.getDetail(movie.id);
 		await openMovieDetailModal(movieDetail.data);
-		router.replace("/");
+		router.back();
 	};
 
 	return (
