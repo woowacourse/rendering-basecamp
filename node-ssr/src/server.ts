@@ -116,16 +116,17 @@ app.get("/detail/:movieId", async (req, res) => {
 
   const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
 
+  console.log("movie", movie.overview);
   const html = `
    <!DOCTYPE html>
   <html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta property="og:title" content=${movie.title} />
-    <meta property="og:description" content=${movie.overview} />
-    <meta property="og:image" content=${imageUrl} />
-    <meta property="og:url" content=${fullUrl} />
+    <meta property="og:title" content="${movie.title}" />
+    <meta property="og:description" content="${movie.overview}" />
+    <meta property="og:image" content="${imageUrl}" />
+    <meta property="og:url" content="${fullUrl}" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Movie App" />
     <link rel="stylesheet" href="/styles/index.css" />
