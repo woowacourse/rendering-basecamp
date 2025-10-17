@@ -42,8 +42,10 @@ export default function Detail({ movies, movieDetail }: InferGetServerSidePropsT
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { movieId } = context.params as { movieId: string };
-  const popularResponse = await moviesApi.getPopular()
-  const detailResponse = await moviesApi.getDetail(Number(movieId));
+  const [popularResponse, detailResponse] = await Promise.all([
+    moviesApi.getPopular(),
+    moviesApi.getDetail(Number(movieId)),
+  ])
 
   return {
     props: {
