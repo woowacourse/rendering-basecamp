@@ -20,7 +20,7 @@ app.get("/", async (_req: Request, res: Response) => {
 			(movie) => `
       <li class="movie-item">
         <div class="item">
-          <a href="/movie/${movie.id}">
+          <a href="/detail/${movie.id}">
             <img
               class="thumbnail"
               src="https://media.themoviedb.org/t/p/w440_and_h660_face${movie.poster_path}"
@@ -72,7 +72,7 @@ app.get("/", async (_req: Request, res: Response) => {
                     <span class="text-2xl font-semibold text-yellow">${topMovie.vote_average.toFixed(1)}</span>
                   </div>
                   <h1 class="text-3xl font-semibold">${topMovie.title}</h1>
-                  <a href="/movie/${topMovie.id}" class="primary detail">자세히 보기</a>
+                  <a href="/detail/${topMovie.id}" class="primary detail">자세히 보기</a>
                 </div>
               </div>
             </div>
