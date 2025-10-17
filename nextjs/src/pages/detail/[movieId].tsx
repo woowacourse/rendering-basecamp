@@ -2,25 +2,23 @@ import { moviesApi } from "@/api/movies";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import { useEffect } from "react";
 import type { MovieDetailResponse } from "@/types/MovieDetail.types";
-import type { GetServerSideProps } from "next";
-import type { MovieItem } from "@/types/Movie.types";
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+  PreviewData,
+} from "next";
 import { Header } from "@/components/Header";
 import { MovieList } from "@/components/MovieList";
 import { Footer } from "@/components/Footer";
 import { MetaData } from "@/components/common/MetaData";
 import { getAbsolutePageUrl } from "@/utils/getAbsolutePageUrl";
+import type { Params } from "next/dist/server/request/params";
 
-interface MovieDetailPageProps {
-  movies: MovieItem[];
-  movie: MovieDetailResponse;
-  pageUrl: string;
-}
-
-export const getServerSideProps: GetServerSideProps = async ({
+export const getServerSideProps = async ({
   params,
   req,
   resolvedUrl,
-}) => {
+}: GetServerSidePropsContext<Params, PreviewData>) => {
   const movieId = Number(params?.movieId);
 
   if (!movieId) {
@@ -64,7 +62,7 @@ export default function MovieDetailPage({
   movies,
   movie,
   pageUrl,
-}: MovieDetailPageProps) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const imageUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
     : "/images/no_image.png";
