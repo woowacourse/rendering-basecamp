@@ -3,7 +3,6 @@ import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { MovieList } from '@/components/MovieList';
 import { OGHead } from '@/components/OGHead';
-import { HOME_URL } from '@/constants/url';
 import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
 import { MovieItem } from '@/types/Movie.types';
 import { MovieDetailResponse } from '@/types/MovieDetail.types';
@@ -40,7 +39,7 @@ const DetailPage = ({ movies, movieDetail }: DetailPageProps) => {
         title={`${movieDetail.title} - 영화 상세 정보`}
         description={movieDetail.overview}
         imageUrl={getImageUrl(movieDetail.poster_path)}
-        url={`${HOME_URL}detail/${movieDetail.id}`}
+        url={`detail/${movieDetail.id}`}
         alt={movieDetail.title}
       />
       <div id="wrap">

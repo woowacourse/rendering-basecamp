@@ -38,7 +38,6 @@ export default function Home({ movies }: HomeProps) {
         title="최신 영화리뷰"
         description="최신 인기 영화를 확인해보세요."
         imageUrl={imageUrl}
-        url={HOME_URL}
         width={500}
         height={750}
         alt="인기 영화 리뷰"
