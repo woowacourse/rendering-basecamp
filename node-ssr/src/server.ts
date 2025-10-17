@@ -13,29 +13,32 @@ app.use(express.json());
 
 app.get("/", async (_req: Request, res: Response) => {
 	const data = await moviesApi.getPopular();
-	const movieListHTML = data.results.slice(0, 12).map(
-		(movie) => `
-            <li class="movie-item">
-            <div class="item">
-              <a href="/movie/${movie.id}">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face${movie.poster_path}"
-                  alt="${movie.title}"
-                  loading="lazy"
-                />
-              </a>
-              <div class="item-desc">
-                <p class="rate">
-                  <img src="/images/star_empty.png" class="star" />
-                  <span>${movie.vote_average.toFixed(1)}</span>
-                </p>
-                <strong>${movie.title}</strong>
-              </div>
-            </div>
-          </li>
-  `,
-	);
+	const movieListHTML = data.results
+		.slice(0, 12)
+		.map(
+			(movie) => `
+      <li class="movie-item">
+        <div class="item">
+          <a href="/movie/${movie.id}">
+            <img
+              class="thumbnail"
+              src="https://media.themoviedb.org/t/p/w440_and_h660_face${movie.poster_path}"
+              alt="${movie.title}"
+              loading="lazy"
+            />
+          </a>
+          <div class="item-desc">
+            <p class="rate">
+              <img src="/images/star_empty.png" class="star" />
+              <span>${movie.vote_average.toFixed(1)}</span>
+            </p>
+            <strong>${movie.title}</strong>
+          </div>
+        </div>
+      </li>
+    `,
+		)
+		.join("");
 	res.send(/*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
