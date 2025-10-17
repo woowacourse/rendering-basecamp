@@ -24,7 +24,7 @@ export const generateMetaTemplate = ({
   const metaImage = image
     ? image
     : {
-        url: "https://rendering-basecamp-wo-o29.vercel.app/images/logo.png",
+        url: "https://rendering-basecamp-wo-o29.up.railway.app/images/logo.png",
         alt: "Movielist 로고",
       };
 
