@@ -13,8 +13,10 @@ app.use(express.json());
 app.get('/', async (_req: Request, res: Response) => {
   const movieListResponse = await moviesApi.getPopular();
   const topMovie = movieListResponse.results[0];
-  const movieListHtml = movieListResponse.results.map(movie => /* html */`
-  <a href='/detail/${movie.id}'>
+  const movieListHtml = movieListResponse.results
+    .map(
+      (movie) => /* html */ `
+  <a href='/detail/${movie.id}' target="_self">
   <li class="movie-item">
     <div class="item">
       <img
@@ -31,12 +33,11 @@ app.get('/', async (_req: Request, res: Response) => {
       </div>
     </div>
   </li>
-  </a>`).join("\n")
-  
-  
-  
+  </a>`
+    )
+    .join('\n');
 
-  res.send(/*html*/`
+  res.send(/*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
       <head>
@@ -51,7 +52,9 @@ app.get('/', async (_req: Request, res: Response) => {
         <div
           class="background-container"
           style="
-            background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${topMovie.backdrop_path});
+            background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${
+              topMovie.backdrop_path
+            });
           ">
           <div class="overlay"></div>
           <div class="top-rated-container">
@@ -59,10 +62,14 @@ app.get('/', async (_req: Request, res: Response) => {
             <div class="top-rated-movie">
               <div class="rate">
                 <img src="/images/star_empty.png" width="32" height="32" />
-                <span class="text-2xl font-semibold text-yellow">${topMovie.vote_average.toFixed(1)}</span>
+                <span class="text-2xl font-semibold text-yellow">${topMovie.vote_average.toFixed(
+                  1
+                )}</span>
               </div>
               <h1 class="text-3xl font-semibold">${topMovie.title}</h1>
-              <a href="/detail/${topMovie.id}"><button class="primary detail">자세히 보기</button></a>
+              <a href="/detail/${
+                topMovie.id
+              }" target="_self"><button class="primary detail">자세히 보기</button></a>
             </div>
           </div>
         </div>
@@ -98,7 +105,9 @@ app.get('/detail/:id', async (req: Request, res: Response) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta property="og:title" content="${movieDetailResponse.title}" />
         <meta property="og:description" content="${movieDetailResponse.overview}" />
-        <meta property="og:image" content="https://image.tmdb.org/t/p/original${movieDetailResponse.backdrop_path}" />
+        <meta property="og:image" content="https://image.tmdb.org/t/p/original${
+          movieDetailResponse.backdrop_path
+        }" />
         <link rel="stylesheet" href="/styles/index.css" />
         <title>영화 세부사항 - Node.js로 낋인</title>
       </head>
@@ -108,7 +117,7 @@ app.get('/detail/:id', async (req: Request, res: Response) => {
         <!-- 모달 헤더 -->
         <div class="modal-header">
           <h1 class="modal-title">${movieDetailResponse.title}</h1>
-          <a href="/">
+          <a href="/" target="_self">
             <img
               src="/images/modal_button_close.png"
               width="24"
