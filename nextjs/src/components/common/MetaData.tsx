@@ -36,7 +36,7 @@ export const MetaData = ({
       <meta property='og:type' content='website' />
       <meta property='og:title' content={title} />
       <meta property='og:description' content={description} />
-      {pageUrl && <meta property='og:url' content={pageUrl} />}
+      <meta property='og:url' content={pageUrl} />
       {imageUrl && <meta property='og:image' content={imageUrl} />}
       {title && <meta property='og:image:alt' content={title} />}
 
