@@ -72,8 +72,7 @@ export default function MovieDetailPage({
         pageUrl={pageUrl}
         title={`영화 상세보기 | ${movie.title}`}
         description={movie.overview}
-        imageUrl={imageUrl}
-        movie={movie}
+        image={{ url: imageUrl, alt: movie.title }}
       />
       <div id='wrap'>
         <Header featuredMovie={movies[0]} />
