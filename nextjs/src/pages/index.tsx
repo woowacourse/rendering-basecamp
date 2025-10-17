@@ -15,16 +15,17 @@ export default function Home({ movies }: HomeProps) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
 
-  const ogContent = "보고싶은 영화의 리뷰를 확인하세요";
+  const title = "영화 리뷰 서비스";
+  const content = "보고싶은 영화의 리뷰를 확인하세요";
   const ogImage = `https://image.tmdb.org/t/p/w1280${movies[0].poster_path}`;
 
   return (
     <>
       <Head>
-        <title>영화 리뷰 서비스</title>
-        <meta name="description" content={ogContent} />
-        <meta property="og:title" content={ogContent} />
-        <meta property="og:description" content={ogContent} />
+        <title>{title}</title>
+        <meta name="description" content={content} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={content} />
         <meta property="og:image" content={ogImage} />
       </Head>
 
