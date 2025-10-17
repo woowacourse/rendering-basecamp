@@ -255,12 +255,11 @@ app.get('/detail/:id', async (_req: Request, res: Response) => {
     const html = /*html*/ `
       <!DOCTYPE html>
       <html lang="ko">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <link rel="stylesheet" href="/styles/index.css" />
-          <title>${title} - 영화 리뷰</title>
-        </head>
+        <Head>
+        <meta property='og:title' content=${title} />
+        <meta property='og:description' content=${overview} />
+        <meta property='og:image' content=${posterUrl} />
+      </Head>
         <body>
           ${home}
           ${modalHtml}
