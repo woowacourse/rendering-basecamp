@@ -41,7 +41,6 @@ export const generateMetaTemplate = ({
   />
   <meta name="description" content=${metaDescription} />
 
-  {/* Open Graph */}
   <meta property="og:title" content=${metaTitle} />
   <meta property="og:description" content=${metaDescription} />
   <meta property="og:type" content="website" />
@@ -51,7 +50,6 @@ export const generateMetaTemplate = ({
   <meta property="og:locale" content="ko_KR" />
   <meta property="og:site_name" content="Movielist" />
 
-  {/* Twitter */}
   <meta property="twitter:title" content=${metaTitle} />
   <meta name="twitter:description" content=${metaDescription} />
   <meta name="twitter:card" content="website" />
