@@ -6,9 +6,10 @@ import { MovieList } from '@/components/MovieList';
 import { OGHead } from '@/components/OGHead';
 
 import { moviesApi } from '@/api/movies';
-import { HOME_URL, TMDB_IMAGE_URL, TMDB_NO_IMAGE_URL } from '@/constants/url';
+import { HOME_URL } from '@/constants/url';
 
 import type { MovieItem } from '@/types/Movie.types';
+import { getImageUrl } from '@/utils/imageUrl';
 
 interface HomeProps {
   movies: MovieItem[];
@@ -29,9 +30,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
 
 export default function Home({ movies }: HomeProps) {
   const mostPopularMovie = movies[0];
-  const imageUrl = mostPopularMovie.poster_path
-    ? `${TMDB_IMAGE_URL}w500${mostPopularMovie.poster_path}`
-    : TMDB_NO_IMAGE_URL;
+  const imageUrl = getImageUrl(mostPopularMovie.poster_path);
 
   return (
     <>

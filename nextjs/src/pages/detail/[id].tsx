@@ -3,10 +3,11 @@ import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { MovieList } from '@/components/MovieList';
 import { OGHead } from '@/components/OGHead';
-import { HOME_URL, TMDB_IMAGE_URL, TMDB_NO_IMAGE_URL } from '@/constants/url';
+import { HOME_URL } from '@/constants/url';
 import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
 import { MovieItem } from '@/types/Movie.types';
 import { MovieDetailResponse } from '@/types/MovieDetail.types';
+import { getImageUrl } from '@/utils/imageUrl';
 import { GetServerSideProps } from 'next/types';
 import { useEffect, useRef } from 'react';
 
@@ -38,11 +39,7 @@ const DetailPage = ({ movies, movieDetail }: DetailPageProps) => {
       <OGHead
         title={`${movieDetail.title} - 영화 상세 정보`}
         description={movieDetail.overview}
-        imageUrl={
-          movieDetail.poster_path
-            ? `${TMDB_IMAGE_URL}w500${movieDetail.poster_path}`
-            : TMDB_NO_IMAGE_URL
-        }
+        imageUrl={getImageUrl(movieDetail.poster_path)}
         url={`${HOME_URL}detail/${movieDetail.id}`}
         alt={movieDetail.title}
       />
