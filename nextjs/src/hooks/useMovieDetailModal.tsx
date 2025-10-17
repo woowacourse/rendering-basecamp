@@ -7,18 +7,28 @@ export const useMovieDetailModal = () => {
   const router = useRouter();
 
   const openMovieDetailModal = (movie: MovieDetailResponse) => {
-    return new Promise<void>((resolve) => {
-      overlay.open(({ unmount }) => (
-        <MovieDetailModal
-          movie={movie}
-          onClose={() => {
-            router.push('/');
-            resolve();
-            unmount();
-          }}
-        />
-      ));
+    let modalUnmount: (() => void) | null = null;
+
+    const promise = new Promise<void>((resolve) => {
+      overlay.open(({ unmount }) => {
+        modalUnmount = unmount;
+        return (
+          <MovieDetailModal
+            movie={movie}
+            onClose={() => {
+              router.push('/');
+              resolve();
+              unmount();
+            }}
+          />
+        );
+      });
     });
+
+    return {
+      promise,
+      unmount: () => modalUnmount?.(),
+    };
   };
 
   return { openMovieDetailModal };

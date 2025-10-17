@@ -8,6 +8,7 @@ import { MovieItem } from '@/types/Movie.types';
 import { MovieDetailResponse } from '@/types/MovieDetail.types';
 import { getImageUrl } from '@/utils/imageUrl';
 import { GetServerSideProps } from 'next/types';
+import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 
 interface DetailPageProps {
@@ -58,18 +59,34 @@ interface OpenModalProps {
 
 const OpenModal = ({ movieDetail }: OpenModalProps) => {
   const currentRef = useRef(false);
+  const modalUnmountRef = useRef<(() => void) | null>(null);
   const { openMovieDetailModal } = useMovieDetailModal();
+  const router = useRouter();
 
   useEffect(() => {
     if (currentRef.current === true) {
       return;
     }
 
-    (async () => {
-      currentRef.current = true;
-      openMovieDetailModal(movieDetail);
-    })();
+    currentRef.current = true;
+    const { unmount } = openMovieDetailModal(movieDetail);
+    modalUnmountRef.current = unmount;
   }, [movieDetail, openMovieDetailModal]);
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      if (modalUnmountRef.current) {
+        modalUnmountRef.current();
+        modalUnmountRef.current = null;
+      }
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router]);
 
   return null;
 };
