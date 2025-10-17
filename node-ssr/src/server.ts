@@ -11,7 +11,32 @@ const PORT = 8080;
 app.use(express.json());
 
 app.get('/', async (_req: Request, res: Response) => {
-  res.send(/*html*/ `
+  const movieListResponse = await moviesApi.getPopular();
+  const topMovie = movieListResponse.results[0];
+  const movieListHtml = movieListResponse.results.map(movie => /* html */`
+  <a href='/detail/${movie.id}'>
+  <li class="movie-item">
+    <div class="item">
+      <img
+        class="thumbnail"
+        src="https://media.themoviedb.org/t/p/w440_and_h660_face${movie.poster_path}"
+        alt="${movie.title}"
+        loading="lazy" />
+      <div class="item-desc">
+        <p class="rate">
+          <img src="/images/star_empty.png" class="star" />
+          <span>${movie.vote_average.toFixed(1)}</span>
+        </p>
+        <strong>${movie.title}</strong>
+      </div>
+    </div>
+  </li>
+  </a>`).join("\n")
+  
+  
+  
+
+  res.send(/*html*/`
     <!DOCTYPE html>
     <html lang="ko">
       <head>
@@ -26,7 +51,7 @@ app.get('/', async (_req: Request, res: Response) => {
         <div
           class="background-container"
           style="
-            background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/stKGOm8UyhuLPR9sZLjs5AkmncA.jpg);
+            background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${topMovie.backdrop_path});
           ">
           <div class="overlay"></div>
           <div class="top-rated-container">
@@ -34,10 +59,10 @@ app.get('/', async (_req: Request, res: Response) => {
             <div class="top-rated-movie">
               <div class="rate">
                 <img src="/images/star_empty.png" width="32" height="32" />
-                <span class="text-2xl font-semibold text-yellow">7.7</span>
+                <span class="text-2xl font-semibold text-yellow">${topMovie.vote_average.toFixed(1)}</span>
               </div>
-              <h1 class="text-3xl font-semibold">인사이드 아웃 2</h1>
-              <button class="primary detail">자세히 보기</button>
+              <h1 class="text-3xl font-semibold">${topMovie.title}</h1>
+              <a href="/detail/${topMovie.id}"><button class="primary detail">자세히 보기</button></a>
             </div>
           </div>
         </div>
@@ -46,406 +71,7 @@ app.get('/', async (_req: Request, res: Response) => {
         <section class="container">
           <h2 class="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
           <ul class="thumbnail-list">
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
-            <li class="movie-item">
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                  alt="인사이드 아웃 2"
-                  loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>7.7</span>
-                  </p>
-                  <strong>인사이드 아웃 2</strong>
-                </div>
-              </div>
-            </li>
+            ${movieListHtml}
           </ul>
         </section>
       </main>
@@ -456,13 +82,13 @@ app.get('/', async (_req: Request, res: Response) => {
     </div>
   </body>
     </html>
-        `);
+  `);
 });
 
 app.get('/detail/:id', async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const movieDetailResponse = await moviesApi.getDetail(id);
-  const movieCategory = movieDetailResponse.genres.map(genre => genre.name).join(', ')
+  const movieCategory = movieDetailResponse.genres.map((genre) => genre.name).join(', ');
 
   res.send(/* html */ `
     <!DOCTYPE html>
