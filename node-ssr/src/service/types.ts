@@ -46,7 +46,7 @@ export interface SpokenLanguage {
   name: string;
 }
 
-export interface MovieDetail extends Omit<Movie, "genre_ids"> {
+export interface MovieDetail extends Omit<Movie, 'genre_ids'> {
   belongs_to_collection: any;
   budget: number;
   genres: Genre[];
