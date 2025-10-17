@@ -36,7 +36,7 @@ export default function Home({ movies }: HomeProps) {
   return (
     <>
       <OGHead
-        title="최신 영화리뷰 "
+        title="최신 영화리뷰"
         description="최신 인기 영화를 확인해보세요."
         imageUrl={imageUrl}
         url={HOME_URL}
