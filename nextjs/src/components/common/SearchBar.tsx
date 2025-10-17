@@ -35,8 +35,8 @@ export const SearchBar = ({
       />
       <IconButton
         src="/images/search.png"
-        width="16"
-        height="16"
+        width={16}
+        height={16}
         onClick={handleIconClick}
         type="button"
       />
