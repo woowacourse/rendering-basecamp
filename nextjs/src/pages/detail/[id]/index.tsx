@@ -54,12 +54,10 @@ function DetailPageOpenModal({ movieDetail }: DetailPageOpenModalProps) {
   const onceRef = useRef(false);
 
   useEffect(() => {
-    if (onceRef.current === true) return;
+    if (onceRef.current) return;
 
-    (async () => {
-      onceRef.current = true;
-      openMovieDetailModal(movieDetail);
-    })();
+    onceRef.current = true;
+    openMovieDetailModal(movieDetail);
   }, [movieDetail, openMovieDetailModal]);
 
   return null;
@@ -71,20 +69,18 @@ export const getServerSideProps: GetServerSideProps<
   const { id } = context.query;
 
   try {
-    const popularRes = await moviesApi.getPopular();
+    const popularPromise = moviesApi.getPopular();
+    const detailPromise = id ? moviesApi.getDetail(Number(id)) : null;
+
+    const [popularRes, detailRes] = await Promise.all([
+      popularPromise,
+      detailPromise ?? Promise.resolve(null),
+    ]);
+
     const movies: MovieItem[] = popularRes.data.results;
-
-    if (!id) {
-      return {
-        props: {
-          movies: movies ?? null,
-          movieDetail: null,
-        },
-      };
-    }
-
-    const detailRes = await moviesApi.getDetail(Number(id));
-    const movieDetail: MovieDetailResponse = detailRes.data;
+    const movieDetail: MovieDetailResponse | null = detailRes
+      ? detailRes.data
+      : null;
 
     return {
       props: {
