@@ -123,7 +123,7 @@ export const html = {
   `,
   makeMeta: (movie: MovieDetail) => /*html*/ `
       <title>${movie.title}</title>
-        <meta property="og:title" content={movieDetail.title} />
+        <meta property="og:title" content=${movie.title} />
         <meta
           property="og:image"
           content=${
@@ -133,7 +133,7 @@ export const html = {
           }
           }
         />
-        <meta property="og:description" content={movieDetail.overview} />
+        <meta property="og:description" content=${movie.overview} />
         <meta
           property="og:url"
           content="https://rendering-basecamp-s2k7.vercel.app/detail/${
