@@ -11,6 +11,9 @@ const PORT = 8080;
 
 app.use(express.json());
 
+// public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
+app.use(express.static(path.join(__dirname, "../public")));
+
 app.get("/", async (_req: Request, res: Response) => {
   try {
     const data = await moviesApi.getPopular(1);
@@ -159,9 +162,6 @@ app.get("/detail/:id", async (req: Request, res: Response): Promise<void> => {
       </html>
     `);
 });
-
-// public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
-app.use(express.static(path.join(__dirname, "../public")));
 
 app.listen(PORT, (): void => {
   console.log(`🌟 서버가 http://localhost:${PORT} 에서 실행 중입니다.`);
