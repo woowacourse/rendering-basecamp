@@ -84,7 +84,7 @@ app.get("/", async (_req: Request, res: Response) => {
         `);
 });
 
-app.get("/detail/:id", async (_req: Request) => {
+app.get("/detail/:id", async (_req: Request, res: Response) => {
   const movieId = Number(_req.params.id);
   const movieDetail = await moviesApi.getDetail(movieId);
   const popularMovies = (await moviesApi.getPopular()).results;
@@ -99,7 +99,8 @@ app.get("/detail/:id", async (_req: Request) => {
     image: { url: imageUrl, alt: movieDetail.title },
     currentUrl: getCurrentUrlByRequest(_req),
   });
-  `
+
+  res.send(/*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
       <head>
@@ -213,7 +214,7 @@ app.get("/detail/:id", async (_req: Request) => {
     </div>
       </body>
     </html>
-        `;
+                `);
 });
 
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
