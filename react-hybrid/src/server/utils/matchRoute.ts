@@ -13,13 +13,10 @@ export const matchRoute = (url: string) => {
     const match = url.match(regex);
 
     if (match) {
-      const paramNames = [...route.path.matchAll(/:(\w+)/g)].map((m) => m[1]);
-      const params = paramNames.reduce((acc, name, i) => {
-        acc[name] = match[i + 1];
-        return acc;
-      }, {} as Record<string, string>);
+      const paramName = route.path.match(/:(\w+)/)[1];
+      const paramValue = match[1];
 
-      return { route, params };
+      return { route, params: { [paramName]: paramValue } };
     }
   }
 
