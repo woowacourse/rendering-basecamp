@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import express, { Request, Response } from "express";
+import express, { type Request, type Response } from "express";
 import path from "path";
 
 const app = express();
@@ -14,7 +14,7 @@ app.get("/", async (_req: Request, res: Response) => {
     <!DOCTYPE html>
     <html lang="ko">
       <head>
-        <title>영화 리뷰</title>
+        <title>영화 리뷰 테스트용임</title>
       </head>
       <body>
         테스트
