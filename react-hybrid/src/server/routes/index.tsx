@@ -58,8 +58,8 @@ router.get("/", async (req: Request, res: Response) => {
     "<!--{OG_TAGS}-->",
     `
       <meta property="og:site_name" content="Movie App" />
-      <meta property="og:url" content=${fullUrl} />
-      <meta property="og:image" content=${imageUrl} />
+      <meta property="og:url" content="${fullUrl}" />
+      <meta property="og:image" content="${imageUrl}" />
       <meta property="og:description" content="무비앱에서 다양한 영화들을 만나 보세요" />
       <meta property="og:type" content="website" />
       <meta property="og:title" content="Movie App" />
@@ -124,10 +124,10 @@ router.get("/detail/:movieId", async (req: Request, res: Response) => {
   const renderedHTMLWithOgTag = template.replace(
     "<!--{OG_TAGS}-->",
     `
-      <meta property="og:title" content=${movieDetail.title} />
-      <meta property="og:description" content=${movieDetail.overview} />
-      <meta property="og:image" content=${imageUrl} />
-      <meta property="og:url" content=${fullUrl} />
+      <meta property="og:title" content="${movieDetail.title}" />
+      <meta property="og:description" content="${movieDetail.overview}" />
+      <meta property="og:image" content="${imageUrl}" />
+      <meta property="og:url" content="${fullUrl}" />
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content="Movie App" />
   `
