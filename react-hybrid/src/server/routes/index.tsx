@@ -7,9 +7,15 @@ import { renderToPipeableStream } from "react-dom/server";
 import App from "../../client/App";
 import { matchRoute } from "../utils/matchRoute";
 import { routes } from "../../client/routes";
+import { getCurrentUrlByRequest } from "../utils/getCurrentUrlByRequest";
 
-const render = async (url: string, res: Response) => {
-  const matched = matchRoute(url);
+export type GetServerDataParams = {
+  [key: string]: string;
+  currentUrl: string;
+};
+
+const render = async (req: Request, res: Response) => {
+  const matched = matchRoute(req.path);
 
   if (!matched) {
     res.statusCode = 404;
@@ -18,8 +24,10 @@ const render = async (url: string, res: Response) => {
   }
 
   const { route, params } = matched;
+
+  const currentUrl = getCurrentUrlByRequest(req);
   const serverData = route.getServerData
-    ? await route.getServerData(params)
+    ? await route.getServerData({ ...params, currentUrl })
     : null;
 
   const { pipe } = renderToPipeableStream(
@@ -67,8 +75,7 @@ const router = Router();
 
 routes.forEach((route) => {
   router.get(route.path, (req: Request, res: Response) => {
-    console.log(req.path);
-    render(req.path, res);
+    render(req, res);
   });
 });
 
