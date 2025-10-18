@@ -5,8 +5,13 @@ import { useEffect } from "react";
 import { Header } from "../components/Header";
 import { MovieList } from "../components/MovieList";
 import { Footer } from "../components/Footer";
+import Meta from "../components/common/Meta";
+import type { GetServerDataParams } from "../../server/routes";
 
-export const getServerData = async ({ movieId }: Record<string, string>) => {
+export const getServerData = async ({
+  movieId,
+  currentUrl,
+}: GetServerDataParams) => {
   try {
     const [popularMovie, movieDetail] = await Promise.all([
       moviesApi.getPopular(),
@@ -16,11 +21,13 @@ export const getServerData = async ({ movieId }: Record<string, string>) => {
     return {
       popularMovie: popularMovie.data.results,
       movieDetail: movieDetail.data,
+      currentUrl,
     };
   } catch (error) {
     return {
       popularMovie: [],
       movieDetail: null,
+      currentUrl,
     };
   }
 };
@@ -30,6 +37,7 @@ type MovieDetailPageProps = InferGetServerDataType<typeof getServerData>;
 export default function MovieDetailPage({
   popularMovie,
   movieDetail,
+  currentUrl,
 }: MovieDetailPageProps) {
   const { openMovieDetailModal } = useMovieDetailModal();
 
@@ -37,11 +45,24 @@ export default function MovieDetailPage({
     openMovieDetailModal(movieDetail);
   }, [movieDetail, openMovieDetailModal]);
 
+  const imageUrl = movieDetail.poster_path
+    ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
+    : "/static/images/no_image.png";
+
   return (
-    <div id="wrap">
-      <Header featuredMovie={popularMovie[0]} />
-      <MovieList movies={popularMovie} />
-      <Footer />
-    </div>
+    <>
+      <Meta
+        title={movieDetail.title}
+        description={movieDetail.overview}
+        image={{ url: imageUrl, alt: movieDetail.title }}
+        currentUrl={currentUrl}
+      />
+
+      <div id="wrap">
+        <Header featuredMovie={popularMovie[0]} />
+        <MovieList movies={popularMovie} />
+        <Footer />
+      </div>
+    </>
   );
 }
