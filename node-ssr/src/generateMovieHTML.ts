@@ -1,7 +1,7 @@
 import { Movie, MovieDetailResponse } from "./service/types";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
-const HERO_IMAGE_URL = "https://image.tmdb.org/t/p/original";
+const HERO_IMAGE_URL = "https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/";
 
 const movieListHTML = ({ title, poster_path, vote_average }: Movie) => `
   <li class="movie-item">
@@ -33,7 +33,7 @@ const popularMoviesHTML = ({ title, poster_path, vote_average }: Movie) => `
         background-image: url(${
           poster_path ? HERO_IMAGE_URL + poster_path : "/images/no-poster.png"
         });
-        object-fit: cover;
+        
       "
     >
       <div class="overlay"></div>
