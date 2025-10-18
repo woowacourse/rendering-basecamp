@@ -47,9 +47,8 @@ app.get("/", async (_req: Request, res: Response) => {
     const movieListHtml = movies.map(renderMovieItem).join("");
 
     if (!movieData) {
-      return res
-        .status(404)
-        .send("영화 데이터를 불러오는 중 오류가 발생했습니다.");
+      res.status(404).send("영화 데이터를 불러오는 중 오류가 발생했습니다.");
+      return;
     }
 
     const html = `
@@ -124,15 +123,17 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
     ]);
 
     if (!movieDetail) {
-      return res
+      res
         .status(404)
         .send("영화 상세 데이터를 불러오는 중 오류가 발생했습니다.");
+      return;
     }
 
     if (!popularMovies) {
-      return res
+      res
         .status(404)
         .send("인기 영화 데이터를 불러오는 중 오류가 발생했습니다.");
+      return;
     }
 
     const posterUrl = movieDetail.poster_path
