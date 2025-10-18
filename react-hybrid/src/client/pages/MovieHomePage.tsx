@@ -5,6 +5,8 @@ import { moviesApi } from "../api/movies";
 import type { InferGetServerDataType } from "../types";
 import Meta from "../components/common/Meta";
 import type { GetServerDataParams } from "../../server/routes";
+import { Suspense } from "react";
+import DelayWithThrowPromise from "../components/common/DelayWithThrowPromise";
 
 export const getServerData = async ({ currentUrl }: GetServerDataParams) => {
   try {
@@ -29,7 +31,13 @@ export default function MovieHomePage({
     <>
       <Meta currentUrl={currentUrl} />
       <div id="wrap">
-        <Header featuredMovie={popularMovie[0]} />
+        <Suspense
+          fallback={<div>헤더 로딩중(스트리밍 테스트, 5초 딜레이)...</div>}
+        >
+          <DelayWithThrowPromise ms={5000}>
+            <Header featuredMovie={popularMovie[0]} />
+          </DelayWithThrowPromise>
+        </Suspense>
         <MovieList movies={popularMovie} />
         <Footer />
       </div>
