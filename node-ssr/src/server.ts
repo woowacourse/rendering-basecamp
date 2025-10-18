@@ -5,6 +5,41 @@ import express, { type Request, type Response } from "express";
 import path from "path";
 import { moviesApi } from "./service/tmdbApi";
 
+const metaTemplate = ({
+  title,
+  description,
+  image,
+  pageUrl,
+  siteName,
+}: {
+  title: string;
+  description: string;
+  image: Record<string, string>;
+  pageUrl: string;
+  siteName: string;
+}) => `
+    <title>${title}</title>
+    <meta name='description' content=${description} />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <link rel='icon' href='/favicon.ico' />
+    {pageUrl && <link rel='canonical' href=${pageUrl} />}
+
+    <meta property='og:locale' content="ko_KR" />
+    <meta property='og:site_name' content=${siteName} />
+    <meta property='og:type' content='website' />
+    <meta property='og:title' content=${title} />
+    <meta property='og:description' content=${description} />
+    <meta property='og:url' content=${pageUrl} />
+    ${image.url && `<meta property='og:image' content=${image.url} />`}
+    ${image.alt && `<meta property='og:image:alt' content=${image.alt} />`}
+
+    <meta name='twitter:card' content='summary_large_image' />
+    <meta name='twitter:title' content=${title} />
+    <meta name='twitter:description' content=${description} />
+    ${image.url && `<meta property='twitter:image' content=${image.url} />`}
+    ${image.alt && `<meta property='twitter:image:alt' content=${image.alt} />`}
+`;
+
 const app = express();
 const PORT = 8080;
 
@@ -16,6 +51,19 @@ app.get("/", async (_req: Request, res: Response) => {
     ? popularMoviesResponse.results
     : [];
   const bannerMoive = popularMovies[0];
+
+  const metaTags = metaTemplate({
+    title: "세오가 추천하는 인기 영화",
+    description: "지금 인기 있는 영화 정보를 확인해보세요.",
+    image: {
+      url: bannerMoive.poster_path
+        ? `https://image.tmdb.org/t/p/original${bannerMoive.poster_path}`
+        : "/images/no_image.png",
+      alt: bannerMoive.title,
+    },
+    pageUrl: "https://rendering-basecamp-production-4152.up.railway.app/",
+    siteName: "세오가 추천하는 인기 영화",
+  });
 
   const movieItemList = `
     <ul class="thumbnail-list">
@@ -44,10 +92,7 @@ app.get("/", async (_req: Request, res: Response) => {
     <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles/index.css" />
-    <title>영화 리뷰</title>
+    ${metaTags}
   </head>
   <body>
     <div id="wrap">
