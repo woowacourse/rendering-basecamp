@@ -36,7 +36,9 @@ app.get('/', async (_req: Request, res: Response) => {
             <div
               class="background-container"
               style="
-                background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/stKGOm8UyhuLPR9sZLjs5AkmncA.jpg);
+                background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${
+                  popularMovies[0].poster_path
+                });
               "
             >
               <div class="overlay"></div>
@@ -51,9 +53,9 @@ app.get('/', async (_req: Request, res: Response) => {
                 <div class="top-rated-movie">
                   <div class="rate">
                     <img src="/images/star_empty.png" width="32" height="32" />
-                    <span class="text-2xl font-semibold text-yellow">${
-                      popularMovies[0].vote_average
-                    }</span>
+                    <span class="text-2xl font-semibold text-yellow">${popularMovies[0].vote_average.toFixed(
+                      1
+                    )}</span>
                   </div>
                   <h1 class="text-3xl font-semibold">${
                     popularMovies[0].title
