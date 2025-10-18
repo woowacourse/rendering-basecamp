@@ -1,17 +1,25 @@
 import { moviesApi } from "@/api/movies";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { MovieDetailModalLoader } from "@/components/MovieDetailModalLoader";
 import { MovieList } from "@/components/MovieList";
 import { SeoHead } from "@/components/SeoHead";
 import { MovieItem } from "@/types/Movie.types";
 import { GetServerSideProps } from "next";
-import Head from "next/head";
+import { useRouter } from "next/router";
 
 interface MoviesPageProps {
   movies: MovieItem[];
 }
 
 export default function Home({ movies }: MoviesPageProps) {
+  const router = useRouter();
+  const { movieId } = router.query;
+
+  const handleCloseModal = () => {
+    router.push("/", undefined, { shallow: true });
+  };
+
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
@@ -31,6 +39,13 @@ export default function Home({ movies }: MoviesPageProps) {
         <Header featuredMovie={featured} />
         <MovieList movies={movies} />
         <Footer />
+
+        {movieId && typeof movieId === "string" && (
+          <MovieDetailModalLoader
+            movieId={parseInt(movieId)}
+            close={handleCloseModal}
+          />
+        )}
       </div>
     </>
   );

@@ -1,26 +1,31 @@
 import { moviesApi } from "@/api/movies";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { MovieList } from "@/components/MovieList";
+import { MovieDetailModal } from "@/components/MovieDetailModal";
 import { SeoHead } from "@/components/SeoHead";
-import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import { MovieItem } from "@/types/Movie.types";
+import { MovieDetailResponse } from "@/types/MovieDetail.types";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
 
 interface MovieDetailPageProps {
   movies: MovieItem[];
-  movieDetail: MovieItem;
+  movieDetail: MovieDetailResponse;
 }
 
 export default function MovieDetailPage({
   movies,
   movieDetail,
 }: MovieDetailPageProps) {
+  const router = useRouter();
+
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
+
+  const handleClose = () => {
+    router.push("/");
+  };
 
   const ogImage = `https://image.tmdb.org/t/p/w1280${movieDetail.backdrop_path}`;
   const ogUrl = `https://rendering-basecamp-p53f-j8uw934wj-horse6953-7600s-projects.vercel.app//detail/${movieDetail.id}`;
@@ -36,33 +41,27 @@ export default function MovieDetailPage({
 
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
-        <MovieList movies={movies} />
+        <MovieDetailModal movie={movieDetail} onClose={handleClose} />
         <Footer />
-        <DetailPageOpenModal />
       </div>
     </>
   );
 }
 
-function DetailPageOpenModal() {
-  const router = useRouter();
-  const { id: movieId } = router.query;
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
+// function DetailPageOpenModal() {
+//   useEffect(() => {
+//     if (movieId == null || onceRef.current === true) {
+//       return;
+//     }
+//     (async () => {
+//       onceRef.current = true;
+//       const movieDetail = await moviesApi.getDetail(Number(movieId));
+//       openMovieDetailModal(movieDetail.data);
+//     })();
+//   }, [movieId, openMovieDetailModal]);
 
-  useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
-      return;
-    }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [movieId, openMovieDetailModal]);
-
-  return null;
-}
+//   return null;
+// }
 
 /**
  * ✅ 서버사이드 렌더링 (SSR)

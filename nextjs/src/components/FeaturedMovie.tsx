@@ -10,7 +10,7 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
   const router = useRouter();
 
   const handleDetailClick = async () => {
-    router.push(`/detail/${movie.id}`);
+    router.push(`/detail/${movie.id}`, undefined, { shallow: true });
   };
 
   return (
