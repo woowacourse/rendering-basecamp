@@ -112,7 +112,7 @@ app.get("/detail/:id", async (_req: Request, res: Response) => {
         <!-- 모달 헤더 -->
         <div class="modal-header">
           <h1 class="modal-title">${selectedMovieDetail.title}</h1>
-          <img src="/images/modal_button_close.png" width="24" height="24" class="modal-close-btn" alt="Close" />
+          <img src="/images/modal_button_close.png" width="24" height="24" class="modal-close-btn" alt="Close" onclick="location.href='/'"/>
         </div>
 
         <div class="modal-container">
