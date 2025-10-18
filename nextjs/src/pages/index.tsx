@@ -26,6 +26,7 @@ function Home({ movies }: { movies: MovieItem[] }) {
         title="영화 리뷰"
         description="오늘 뭐 볼까? 지금 인기 있는 영화를 확인해보세요!"
         url="/"
+        image={`https://image.tmdb.org/t/p/original${movies[0].poster_path}`}
       />
       <MainContent movies={movies} />
     </>
