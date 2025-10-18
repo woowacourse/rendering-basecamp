@@ -71,6 +71,8 @@ export default function HomeView({
           <meta property="og:title" content={movieForHead.title} />
           <meta property="og:description" content={movieForHead.overview} />
           <meta property="og:image" content={movieForHead.ogImage} />
+          <meta property="og:url" content={window.location.href} />
+          <meta property="og:type" content="website" />
           <meta property="twitter:card" content="summary_large_image" />
           <meta property="twitter:title" content={movieForHead.title} />
           <meta
