@@ -5,14 +5,16 @@ import { MovieDetailModalLoader } from "@/components/MovieDetailModalLoader";
 import { MovieList } from "@/components/MovieList";
 import { SeoHead } from "@/components/SeoHead";
 import { MovieItem } from "@/types/Movie.types";
+import { MovieDetailResponse } from "@/types/MovieDetail.types";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 
 interface MoviesPageProps {
   movies: MovieItem[];
+  movieDetail?: MovieDetailResponse | null;
 }
 
-export default function Home({ movies }: MoviesPageProps) {
+export default function Home({ movies, movieDetail }: MoviesPageProps) {
   const router = useRouter();
   const { movieId } = router.query;
 
@@ -28,12 +30,21 @@ export default function Home({ movies }: MoviesPageProps) {
 
   return (
     <>
-      <SeoHead
-        title="인기 영화 추천"
-        description="지금 인기 있는 영화들을 만나보세요."
-        image={`https://image.tmdb.org/t/p/w1280${featured.backdrop_path}`}
-        url="https://rendering-basecamp-p53f-j8uw934wj-horse6953-7600s-projects.vercel.app/"
-      />
+      {!movieDetail ? (
+        <SeoHead
+          title="인기 영화 추천"
+          description="지금 인기 있는 영화들을 만나보세요."
+          image={`https://image.tmdb.org/t/p/w1280${featured.backdrop_path}`}
+          url="https://rendering-basecamp-p53f-j8uw934wj-horse6953-7600s-projects.vercel.app/"
+        />
+      ) : (
+        <SeoHead
+          title={movieDetail.title}
+          description={movieDetail.overview}
+          image={`https://image.tmdb.org/t/p/w1280${movieDetail.backdrop_path}`}
+          url={`https://rendering-basecamp-p53f-j8uw934wj-horse6953-7600s-projects.vercel.app//detail/${movieDetail.id}`}
+        />
+      )}
 
       <div id="wrap">
         <Header featuredMovie={featured} />
@@ -51,14 +62,30 @@ export default function Home({ movies }: MoviesPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps<MoviesPageProps> = async (
+  context
+) => {
   try {
-    const res = await moviesApi.getPopular();
-    const movies = res.data.results;
+    const movieResponse = await moviesApi.getPopular();
+    const movies = movieResponse.data.results;
 
+    const { movieId } = context.query;
+    let movieDetail: MovieDetailResponse | null = null;
+
+    if (movieId && typeof movieId === "string") {
+      try {
+        const movieDetailResponse = await moviesApi.getDetail(
+          parseInt(movieId)
+        );
+        movieDetail = movieDetailResponse.data;
+      } catch (error) {
+        console.error("영화 상세 정보 가져오기 실패:", error);
+      }
+    }
     return {
       props: {
         movies,
+        movieDetail,
       },
     };
   } catch (error) {
