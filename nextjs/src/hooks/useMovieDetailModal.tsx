@@ -11,7 +11,7 @@ export const useMovieDetailModal = () => {
         <MovieDetailModal
           movie={movie}
           onClose={() => {
-            router.push("/", undefined, { shallow: true });
+            router.push("/");
             resolve();
             unmount();
           }}
