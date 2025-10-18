@@ -5,7 +5,7 @@ interface GetMetaTagsParams {
   pageUrl: string;
 }
 
-const getMetaTags = ({
+export const getMetaTags = ({
   title,
   description,
   imageUrl,

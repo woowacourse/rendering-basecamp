@@ -4,6 +4,7 @@ dotenv.config();
 import express, { Request, Response } from 'express';
 import path from 'path';
 import { moviesApi } from './service/tmdbApi';
+import { getMetaTags } from './utils/getMetaTags';
 
 const app = express();
 const PORT = 8080;
