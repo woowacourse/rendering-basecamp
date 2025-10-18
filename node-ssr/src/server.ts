@@ -4,6 +4,7 @@ dotenv.config();
 import express from "express";
 import { indexPage } from "./routes/indexPage";
 import path from "path";
+import { detailPage } from "./routes/detailPage";
 
 const app = express();
 const PORT = 8080;
@@ -11,6 +12,7 @@ const PORT = 8080;
 app.use(express.json());
 
 app.get("/", indexPage);
+app.get("/detail/:id", detailPage);
 
 app.use(express.static(path.join(__dirname, "../public")));
 

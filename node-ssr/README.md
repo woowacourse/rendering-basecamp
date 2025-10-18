@@ -10,9 +10,9 @@
 ### 💻 프로그래밍 요구사항
 
 - [x] /public 의 html, css 리소스를 기반으로, 구현한다.
-- [ ] UI 나 디테일한 부분은 신경쓰지 않아도 된다. API endpoint 와 그에 맞는 HTML 응답받는 흐름을 이해한다.
+- [x] UI 나 디테일한 부분은 신경쓰지 않아도 된다. API endpoint 와 그에 맞는 HTML 응답받는 흐름을 이해한다.
 - [x] 서버 API 개발은 Node.js 라이브러리인 express 를 활용한다.
 - [x] API 내에서 TMDB 를 동적으로 받아오고, 동적으로 html 을 생성해야 한다.
 - [ ] Railway 로 서버를 무료 배포하여, 결과물을 확인한다.
-- [ ] /detail/:id 에서 og tag 가 정상 동작하도록 구현한다.
+- [x] /detail/:id 에서 og tag 가 정상 동작하도록 구현한다.
 - [ ] / 에서 FCP 가 개선되었음을 확인한다.
