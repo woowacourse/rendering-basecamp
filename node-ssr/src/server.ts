@@ -119,6 +119,14 @@ app.get("/detail/:id", async (req: Request, res: Response): Promise<void> => {
 
     const genreNames = movieDetail.genres.map((genre) => genre.name).join(", ");
 
+    const ogTitle = movieDetail.title;
+    const ogDescription =
+      movieDetail.overview || `${movieDetail.title}에 대한 상세 정보입니다.`;
+    const ogImage = movieDetail.poster_path
+      ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
+      : "/images/no_image.png";
+    const ogUrl = `${req.protocol}://${req.get("host")}/detail/${movieId}`;
+
     res.send(`
       <!DOCTYPE html>
       <html lang="ko">
@@ -127,6 +135,20 @@ app.get("/detail/:id", async (req: Request, res: Response): Promise<void> => {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <link rel="stylesheet" href="/styles/index.css" />
           <title>${movieDetail.title} - 영화 리뷰</title>
+          
+          <!-- Open Graph 태그 -->
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content="${ogTitle}" />
+          <meta property="og:description" content="${ogDescription}" />
+          <meta property="og:image" content="${ogImage}" />
+          <meta property="og:url" content="${ogUrl}" />
+          <meta property="og:site_name" content="영화 리뷰" />
+          
+          <!-- Twitter Card 태그 -->
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="${ogTitle}" />
+          <meta name="twitter:description" content="${ogDescription}" />
+          <meta name="twitter:image" content="${ogImage}" />
         </head>
         <body>
           <div id="wrap">
