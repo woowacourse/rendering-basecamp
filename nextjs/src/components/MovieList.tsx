@@ -1,0 +1,22 @@
+import { MovieItem } from './MovieItem';
+import type { MovieItem as MovieItemType } from '../types/Movie.types';
+import router from 'next/router';
+
+export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
+  const handleMovieClick = async (movie: MovieItemType) => {
+    router.replace(`/detail/${movie.id}`, undefined, { shallow: true });
+  };
+
+  return (
+    <main>
+      <section className="container">
+        <h2 className="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
+        <ul className="thumbnail-list">
+          {movies.map((movie) => (
+            <MovieItem key={movie.id} movie={movie} onClick={handleMovieClick} />
+          ))}
+        </ul>
+      </section>
+    </main>
+  );
+};
