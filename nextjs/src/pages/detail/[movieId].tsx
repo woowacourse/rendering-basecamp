@@ -11,7 +11,7 @@ import { MovieDetailResponse } from '@/types/MovieDetail.types';
 import Head from 'next/head';
 
 export const getServerSideProps = (async (context) => {
-  const { movieId } = context.query;
+  const { movieId } = context.params ?? {};
   if (!movieId || typeof movieId !== 'string') {
     return { notFound: true };
   }
