@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { Footer } from '@/components/Footer';
 import { MovieList } from '@/components/MovieList';
 import { moviesApi } from '../api/movies';
@@ -10,7 +10,9 @@ interface HomeMoviesProps {
   movies: MovieItem[];
 }
 
-export default function Home({ movies }: HomeMoviesProps) {
+export default function Home({
+  movies,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!movies || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }

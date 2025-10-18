@@ -22,7 +22,7 @@ interface DetailPageOpenModalProps {
 export default function MovieDetailPage({
   movie,
   movies,
-}: MovieDetailPageProps) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!movies || !movie) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
