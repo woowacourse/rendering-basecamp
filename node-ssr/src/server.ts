@@ -19,25 +19,29 @@ const metaTemplate = ({
   siteName: string;
 }) => `
     <title>${title}</title>
-    <meta name='description' content=${description} />
+    <meta charset="UTF-8" />
+    <meta name='description' content='${description}' />
     <meta name='viewport' content='width=device-width, initial-scale=1' />
     <link rel='icon' href='/favicon.ico' />
-    {pageUrl && <link rel='canonical' href=${pageUrl} />}
+    ${pageUrl && `<link rel='canonical' href='${pageUrl}' />`}
 
-    <meta property='og:locale' content="ko_KR" />
-    <meta property='og:site_name' content=${siteName} />
+    <meta property='og:locale' content='ko_KR' />
+    <meta property='og:site_name' content='${siteName}' />
     <meta property='og:type' content='website' />
-    <meta property='og:title' content=${title} />
-    <meta property='og:description' content=${description} />
-    <meta property='og:url' content=${pageUrl} />
-    ${image.url && `<meta property='og:image' content=${image.url} />`}
-    ${image.alt && `<meta property='og:image:alt' content=${image.alt} />`}
+    <meta property='og:title' content='${title}' />
+    <meta property='og:description' content='${description}' />
+    <meta property='og:url' content='${pageUrl}' />
+    ${image.url && `<meta property='og:image' content='${image.url}' />`}
+    ${image.alt && `<meta property='og:image:alt' content='${image.alt}' />`}
 
     <meta name='twitter:card' content='summary_large_image' />
-    <meta name='twitter:title' content=${title} />
-    <meta name='twitter:description' content=${description} />
-    ${image.url && `<meta property='twitter:image' content=${image.url} />`}
-    ${image.alt && `<meta property='twitter:image:alt' content=${image.alt} />`}
+    <meta name='twitter:title' content='${title}' />
+    <meta name='twitter:description' content='${description}' />
+    ${image.url && `<meta property='twitter:image' content='${image.url}' />`}
+    ${
+      image.alt &&
+      `<meta property='twitter:image:alt' content='${image.alt}' />`
+    }
 `;
 
 const app = express();
@@ -93,6 +97,7 @@ app.get("/", async (_req: Request, res: Response) => {
 <html lang="ko">
   <head>
     ${metaTags}
+    <link rel="stylesheet" href="/styles/index.css" />
   </head>
   <body>
     <div id="wrap">
