@@ -1,52 +1,75 @@
-import { Router, Request, Response } from "express";
+import dotenv from "dotenv";
+dotenv.config();
 
-import { renderToString } from "react-dom/server";
+import { Router, type Request, type Response } from "express";
+import { renderToPipeableStream } from "react-dom/server";
+
 import App from "../../client/App";
-import React from "react";
+import { matchRoute } from "../utils/matchRoute";
+import { routes } from "../../client/routes";
+
+const render = async (url: string, res: Response) => {
+  const matched = matchRoute(url);
+
+  if (!matched) {
+    res.statusCode = 404;
+    res.send("매칭된 라우트가 존재하지 않습니다.");
+    return;
+  }
+
+  const { route, params } = matched;
+  const serverData = route.getServerData
+    ? await route.getServerData(params)
+    : null;
+
+  const { pipe } = renderToPipeableStream(
+    <html lang="ko">
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/static/styles/index.css" />
+      </head>
+      <body>
+        <div id="root">
+          <App Component={route.component} props={serverData} />
+        </div>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `  
+              window.__INITIAL_DATA__ = ${JSON.stringify({
+                path: route.path,
+                props: serverData,
+              })}  
+            `,
+          }}
+        />
+      </body>
+    </html>,
+    {
+      bootstrapScripts: ["/static/bundle.js"],
+      onShellReady() {
+        res.statusCode = 200;
+        res.setHeader("Content-type", "text/html");
+        pipe(res);
+      },
+      onShellError(error) {
+        res.statusCode = 500;
+        res.send("<!doctype html><p>Error</p>");
+      },
+      onError(error) {
+        console.error(error);
+      },
+    }
+  );
+};
 
 const router = Router();
 
-function generateHTML() {
-  return /*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
-      </head>
-      <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
-}
-
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
-
-  const renderedApp = renderToString(<App />);
-
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
-
-  res.send(renderedHTML);
+routes.forEach((route) => {
+  router.get(route.path, (req: Request, res: Response) => {
+    console.log(req.path);
+    render(req.path, res);
+  });
 });
 
 export default router;
