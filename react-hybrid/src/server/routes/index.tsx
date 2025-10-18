@@ -48,7 +48,25 @@ router.get("/", async (req: Request, res: Response) => {
     </StaticRouter>
   );
 
-  const renderedHTMLWithInitialData = template.replace(
+  const imageUrl = moviesData[0].poster_path
+    ? `https://image.tmdb.org/t/p/original${moviesData[0].poster_path}`
+    : "/images/no_image.png";
+
+  const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+
+  const renderedHTMLWithOgTag = template.replace(
+    "<!--{OG_TAGS}-->",
+    `
+      <meta property="og:site_name" content="Movie App" />
+      <meta property="og:url" content=${fullUrl} />
+      <meta property="og:image" content=${imageUrl} />
+      <meta property="og:description" content="무비앱에서 다양한 영화들을 만나 보세요" />
+      <meta property="og:type" content="website" />
+      <meta property="og:title" content="Movie App" />
+  `
+  );
+
+  const renderedHTMLWithInitialData = renderedHTMLWithOgTag.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
