@@ -21,7 +21,15 @@ export const detailTemplate = (data: DetailPageData): string => {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
-        <title>영화 리뷰</title>
+        <title>${title} - 영화 리뷰</title>
+        <meta property="og:type" content="video.movie" />
+        <meta property="og:title" content="${title}" />
+        <meta property="og:description" content="${
+          overview || "줄거리 정보가 없습니다."
+        }" />
+        <meta property="og:image" content="${
+          poster_path ? `https://image.tmdb.org/t/p/original${poster_path}` : ""
+        }" />
       </head>
       <body>
         <div id="wrap">

@@ -20,6 +20,14 @@ export const homeTemplate = (data: HomePageData): string => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
         <title>영화 리뷰</title>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="영화 리뷰" />
+        <meta property="og:description" content="지금 인기 있는 영화를 확인하고 리뷰를 남겨보세요." />
+        <meta property="og:image" content="${
+          topRatedMovie.backdrop_path
+            ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${topRatedMovie.backdrop_path}`
+            : ""
+        }" />
       </head>
       <body>
         <div id="wrap">
