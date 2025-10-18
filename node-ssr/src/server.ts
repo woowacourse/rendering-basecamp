@@ -60,6 +60,16 @@ app.get("/", async (_req: Request, res: Response) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/styles/index.css" />
     <title>영화 리뷰</title>
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="영화 리뷰 - 지금 인기 있는 영화" />
+    <meta property="og:description" content="TMDB 기반 인기 영화 정보와 리뷰를 확인하세요. ${
+      featuredMovie.title
+    } 등 다양한 영화를 만나보세요." />
+    <meta property="og:image" content="${backdropUrl}" />
+    <meta property="og:url" content="" />
+    <meta property="og:site_name" content="영화 리뷰" />
+    
   </head>
   <body>
     <div id="wrap">
@@ -144,6 +154,16 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/styles/index.css" />
     <title>${movieDetail.title} - 영화 리뷰</title>
+    
+    <meta property="og:type" content="video.movie" />
+    <meta property="og:title" content="${movieDetail.title}" />
+    <meta property="og:description" content="${
+      movieDetail.overview || "영화 상세 정보를 확인하세요."
+    }" />
+    <meta property="og:image" content="${posterUrl}" />
+    <meta property="og:url" content="" />
+    <meta property="og:site_name" content="영화 리뷰" />
+    
   </head>
   <body>
     <div id="wrap">
