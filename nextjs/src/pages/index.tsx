@@ -9,7 +9,6 @@ import { getPageMetadata } from "@/utils/metadata";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { overlay } from "overlay-kit";
 import { useEffect, useRef, useState } from "react";
 
 interface MovieHomePageProps {
