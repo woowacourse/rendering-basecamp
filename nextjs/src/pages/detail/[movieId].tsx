@@ -17,8 +17,7 @@ export const getServerSideProps = (async (context) => {
   }
 
   try {
-    const movies = await moviesApi.getPopular();
-    const movieDetail = await moviesApi.getDetail(Number(movieId));
+    const [movies, movieDetail] = await Promise.all([moviesApi.getPopular(), moviesApi.getDetail(Number(movieId))]);
 
     return {
       props: { movies: movies.data.results, movieDetail: movieDetail.data },
@@ -70,7 +69,7 @@ function DetailPageOpenModal({ movieDetail }: { movieDetail: MovieDetailResponse
       onceRef.current = true;
       openMovieDetailModal(movieDetail);
     })();
-  }, [movieDetail.id, openMovieDetailModal]);
+  }, [movieDetail, openMovieDetailModal]);
 
   return null;
 }
