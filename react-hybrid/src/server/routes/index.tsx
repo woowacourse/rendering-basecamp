@@ -6,6 +6,7 @@ import { moviesApi } from "../../client/api/movies";
 import { MovieItem } from "../../client/types/Movie.types";
 import App from "../../client/App";
 import { StaticRouter } from "react-router-dom";
+import { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 
 const router = Router();
 
@@ -32,6 +33,7 @@ function generateHTML() {
 router.get("/", async (req: Request, res: Response) => {
   const template = generateHTML();
   let moviesData = [] as MovieItem[];
+
   try {
     const res = await moviesApi.getPopular();
     if (res.data) {
@@ -52,6 +54,56 @@ router.get("/", async (req: Request, res: Response) => {
     <script>
       window.__INITIAL_DATA__ = {
         movies: ${JSON.stringify(moviesData)}
+      }
+    </script>
+  `
+  );
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    "<!--{BODY_AREA}-->",
+    renderedApp
+  );
+
+  res.send(renderedHTML);
+});
+
+router.get("/detail/:movieId", async (req: Request, res: Response) => {
+  const template = generateHTML();
+  let moviesData = [] as MovieItem[];
+  let movieDetail = {} as MovieDetailResponse;
+
+  const { movieId } = req.params;
+
+  try {
+    const res = await moviesApi.getPopular();
+    if (res.data) {
+      moviesData = res.data.results;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  try {
+    const res = await moviesApi.getDetail(Number(movieId));
+    if (res.data) {
+      movieDetail = res.data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  const renderedApp = renderToString(
+    <StaticRouter location={req.url}>
+      <App initialData={{ movie: movieDetail, movies: moviesData }} />
+    </StaticRouter>
+  );
+
+  const renderedHTMLWithInitialData = template.replace(
+    "<!--{INIT_DATA_AREA}-->",
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = {
+        movies: ${JSON.stringify(moviesData)},
+        movie:${JSON.stringify(movieDetail)}
       }
     </script>
   `
