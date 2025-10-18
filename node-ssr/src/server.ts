@@ -5,12 +5,14 @@ import express, { Request, Response } from "express";
 import path from "path";
 import { moviesApi } from "./service/tmdbApi";
 import { Genre } from "./service/types";
-import { getBaseMetaTagsHTML } from "./utils/getBaseMetaTagsHTML";
-import { getFooterHTML } from "./utils/getFooterHTML";
-import { getMovieListHTML } from "./utils/getMovieListHTML";
-import { getOGMetaTagsHTML } from "./utils/getOGMetaTags";
-import { getTopMovieHeaderHTML } from "./utils/getTopMovieHeaderHTML";
-import { getFullUrl } from "./utils/getUrl";
+import {
+  getBaseMetaTagsHTML,
+  getFooterHTML,
+  getMovieListHTML,
+  getOGMetaTagsHTML,
+  getTopMovieHeaderHTML,
+  getUrl,
+} from "./utils";
 
 const app = express();
 const PORT = 8080;
@@ -30,7 +32,7 @@ app.get("/", async (_req: Request, res: Response) => {
     description: `현재 인기 영화: ${topMovie.title}. ${
       topMovie.overview || "최신 인기 영화를 확인해보세요."
     }`,
-    url: getFullUrl(_req),
+    url: getUrl(_req),
     image: topMovieImageUrl,
   });
 
@@ -76,7 +78,7 @@ app.get("/detail/:id", async (_req: Request, res: Response) => {
     title: selectedMovieTitle,
     description:
       selectedMovieDetail.overview || "영화 상세 정보를 확인해보세요.",
-    url: getFullUrl(_req),
+    url: getUrl(_req),
     type: "video.movie",
     image: imageUrl,
     movieReleaseDate: selectedMovieDetail.release_date,
