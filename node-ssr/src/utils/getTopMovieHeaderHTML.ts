@@ -30,7 +30,7 @@ export const getTopMovieHeaderHTML = (topMovie: Movie) => `
         <h1 class="text-3xl font-semibold">${topMovie.title}</h1>
         <button 
           class="primary detail" 
-          onclick="location.href='/movie/${topMovie.id}'"
+          onclick="location.href='/detail/${topMovie.id}'"
         >
           자세히 보기
         </button>
