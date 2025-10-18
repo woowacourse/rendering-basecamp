@@ -6,7 +6,7 @@ import { MovieList } from '@/components/MovieList';
 import { MovieDetailResponse } from '@/types/MovieDetail.types';
 import { MovieItem } from '@/types/Movie.types';
 import { Header } from '@/components/Header';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { moviesApi } from '@/api/movies';
 import { useRouter } from 'next/router';
 
@@ -89,12 +89,10 @@ function DetailPageOpenModal({ movie }: DetailPageOpenModalProps) {
 
 export const getServerSideProps: GetServerSideProps<
   MovieDetailPageProps
-> = async (context) => {
-  const { id } = context.params as { id: string };
-
+> = async ({ params }) => {
   try {
     const [movieDetailResponse, moviesResponse] = await Promise.all([
-      moviesApi.getDetail(Number(id)),
+      moviesApi.getDetail(Number(params?.id)),
       moviesApi.getPopular(),
     ]);
 
