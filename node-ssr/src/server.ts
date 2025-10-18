@@ -124,7 +124,6 @@ app.get('/detail/:id', async (_req: Request, res: Response) => {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
-        <meta property="og:url" content="/" />
         <meta property="og:title" content="${movieDetail.title}" />
         <meta property="og:description" content="${movieDetail.overview}" />
         <meta property="og:image" content="${
@@ -139,7 +138,6 @@ app.get('/detail/:id', async (_req: Request, res: Response) => {
       <div class="modal">
         <div class="modal-header">
           <h1 class="modal-title">${movieDetail.title}</h1>
-          <img src="/images/modal_button_close.png" width="24" height="24" class="modal-close-btn" alt="Close" />
         </div>
 
         <div class="modal-container">
