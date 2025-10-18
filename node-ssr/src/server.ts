@@ -4,7 +4,7 @@ dotenv.config();
 import express, { Request, Response } from "express";
 import path from "path";
 import { moviesApi } from "./service/tmdbApi";
-// import { renderHomePage, renderDetailPage } from "./renderer/htmlRenderer";
+import { renderHomePage, renderDetailPage } from "./renderer/htmlRenderer";
 
 const app = express();
 const PORT = 8080;
@@ -14,9 +14,8 @@ app.use(express.json());
 app.get("/", async (_req: Request, res: Response) => {
   try {
     const movieData = await moviesApi.getPopular();
-    res.json(movieData);
-    // const html = await renderHomePage(movieData.results);
-    // res.send(html);
+    const html = await renderHomePage(movieData.results);
+    res.send(html);
   } catch (error) {
     res.status(500).send("서버 오류가 발생했습니다.");
   }
@@ -26,9 +25,8 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
     const movieDetail = await moviesApi.getDetail(id);
-    res.json(movieDetail);
-    // const html = await renderDetailPage(movieDetail);
-    // res.send(html);
+    const html = await renderDetailPage(movieDetail);
+    res.send(html);
   } catch (error) {
     res.status(500).send("서버 오류가 발생했습니다.");
   }
