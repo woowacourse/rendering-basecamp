@@ -23,11 +23,11 @@ app.get('/', async (_req: Request, res: Response) => {
         <link rel="stylesheet" href="/styles/index.css" />
         <meta property="og:title" content="MovieList" />
         <meta property="og:description" content="현재 인기 영화 목록을 확인해볼 수 있습니다!" />
-        <meta property="og:image" content=${
+        <meta property="og:image" content="${
           popularMovies[0].poster_path
             ? `https://image.tmdb.org/t/p/original/${popularMovies[0].poster_path}`
             : '/images/no_image.png'
-        } />
+        }" />
         <title>영화 리뷰</title>
       </head>
       <body>
@@ -124,13 +124,14 @@ app.get('/detail/:id', async (_req: Request, res: Response) => {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
-        <meta property="og:title" content=${movieDetail.title} />
-        <meta property="og:description" content=${movieDetail.overview} />
-        <meta property="og:image" content=${
+        <meta property="og:url" content="/" />
+        <meta property="og:title" content="${movieDetail.title}" />
+        <meta property="og:description" content="${movieDetail.overview}" />
+        <meta property="og:image" content="${
           movieDetail.poster_path
             ? `https://image.tmdb.org/t/p/original/${movieDetail.poster_path}`
             : '/images/no_image.png'
-        } />
+        }" />
         <title>영화 리뷰</title>
       </head>
       <body>
