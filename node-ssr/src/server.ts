@@ -38,7 +38,9 @@ const renderMovies = (movies: Movie[]) => {
 
 app.get("/", async (req: Request, res: Response) => {
   const movies = (await moviesApi.getPopular(1)).results;
-  const imageUrl = movies[0].poster_path;
+  const imageUrl = movies[0].poster_path
+    ? `https://image.tmdb.org/t/p/original${movies[0].poster_path}`
+    : "/images/no_image.png";
   const url = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
 
   res.send(/*html*/ `
@@ -95,7 +97,9 @@ app.get("/", async (req: Request, res: Response) => {
 app.get("/detail/:id", async (req: Request, res: Response) => {
   const movieId = Number(req.params.id);
   const movie = await moviesApi.getDetail(movieId);
-  const imageUrl = movie.poster_path;
+  const imageUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
+    : "/images/no_image.png";
   const url = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
 
   res.send(/*html*/ `
