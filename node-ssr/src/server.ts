@@ -66,7 +66,7 @@ app.get("/", async (_req: Request, res: Response) => {
       featuredMovie.title
     } 등 다양한 영화를 만나보세요." />
     <meta property="og:image" content="${backdropUrl}" />
-    <meta property="og:url" content="" />
+    <meta property="og:url" content="https://rendering-basecamp-production-e65d.up.railway.app/" />
     <meta property="og:site_name" content="영화 리뷰" />
     
   </head>
@@ -162,7 +162,7 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
       movieDetail.overview || "영화 상세 정보를 확인하세요."
     }" />
     <meta property="og:image" content="${posterUrl}" />
-    <meta property="og:url" content="" />
+    <meta property="og:url" content="https://rendering-basecamp-production-e65d.up.railway.app/detail/${movieId}" />
     <meta property="og:site_name" content="영화 리뷰" />
     
   </head>
