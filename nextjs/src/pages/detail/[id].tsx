@@ -16,8 +16,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   if (!id) return { notFound: true };
 
   try {
-    const { data: popularData } = await moviesApi.getPopular(1);
-    const { data: detailData } = await moviesApi.getDetail(id);
+    const [{ data: popularData }, { data: detailData }] = await Promise.all([
+      moviesApi.getPopular(1),
+      moviesApi.getDetail(id),
+    ]);
 
     const movies = popularData.results ?? [];
     const detail = detailData ?? null;
