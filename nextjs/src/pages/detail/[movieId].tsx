@@ -1,13 +1,14 @@
-import Head from "next/head";
 import { useRouter } from "next/router";
 import type { GetServerSideProps } from "next";
 import type { MovieDetailResponse } from "../../types/MovieDetail.types";
 import { moviesApi } from "../../api/movies";
 import { useMovieRating } from "../../hooks/useMovieRating";
 import { IconButton } from "../../components/common/IconButton";
+import { SEOHead } from "../../components/common/SEOHead";
 
 interface MovieDetailPageProps {
   movie: MovieDetailResponse;
+  currentUrl: string;
 }
 
 const SCORE_TEXT: Record<number, string> = {
@@ -18,7 +19,10 @@ const SCORE_TEXT: Record<number, string> = {
   10: "명작이에요",
 };
 
-export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
+export default function MovieDetailPage({
+  movie,
+  currentUrl,
+}: MovieDetailPageProps) {
   const router = useRouter();
   const { rating, setRating } = useMovieRating(movie.id, movie.title);
 
@@ -39,24 +43,15 @@ export default function MovieDetailPage({ movie }: MovieDetailPageProps) {
 
   return (
     <>
-      <Head>
-        <title>{title} - 영화 상세정보</title>
-        <meta name="description" content={overview || "영화 상세 정보"} />
-
-        <meta property="og:type" content="video.movie" />
-        <meta property="og:title" content={title} />
-        <meta
-          property="og:description"
-          content={overview || "영화 상세 정보"}
-        />
-        <meta property="og:image" content={ogImageUrl} />
-        <meta
-          property="og:url"
-          content={`${
-            process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-          }/detail/${movie.id}`}
-        />
-      </Head>
+      <SEOHead
+        title={`${title} - 영화 상세정보`}
+        description={overview || "영화 상세 정보"}
+        ogType="video.movie"
+        ogTitle={title}
+        ogDescription={overview || "영화 상세 정보"}
+        ogImage={ogImageUrl}
+        ogUrl={currentUrl}
+      />
 
       <div className="modal-background active">
         <div className="modal">
@@ -136,6 +131,10 @@ export const getServerSideProps: GetServerSideProps<
 > = async (context) => {
   const { movieId } = context.params as { movieId: string };
 
+  const protocol = context.req.headers["x-forwarded-proto"];
+  const host = context.req.headers.host;
+  const currentUrl = `${protocol}://${host}${context.resolvedUrl}`;
+
   try {
     const response = await moviesApi.getDetail(Number(movieId));
     const movie = response.data;
@@ -143,6 +142,7 @@ export const getServerSideProps: GetServerSideProps<
     return {
       props: {
         movie,
+        currentUrl,
       },
     };
   } catch {
