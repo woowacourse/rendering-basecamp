@@ -368,10 +368,6 @@ app.get("/detail/:id", async (_req: Request, res: Response) => {
 
   const topMovie = movies[0];
 
-  const topMovieImageUrl = topMovie.poster_path
-    ? `https://image.tmdb.org/t/p/original${topMovie.poster_path}`
-    : "/images/no_image.png";
-
   const imageUrl = selectedMovieDetail.poster_path
     ? `https://image.tmdb.org/t/p/original${selectedMovieDetail.poster_path}`
     : "/images/no_image.png";
