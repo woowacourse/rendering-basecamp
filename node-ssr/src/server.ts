@@ -11,9 +11,6 @@ const PORT = 8080;
 
 app.use(express.json());
 
-// public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
-app.use(express.static(path.join(__dirname, "../public")));
-
 app.get("/", async (_req: Request, res: Response) => {
   try {
     const data = await moviesApi.getPopular();
@@ -22,31 +19,80 @@ app.get("/", async (_req: Request, res: Response) => {
       throw new Error("TMDB 응답이 예상과 다릅니다.");
     }
 
+    // 상단 배너용 첫 번째 영화
+    const topMovie = data.results[0];
+    const banner = `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${topMovie.backdrop_path}`;
+    const topRating = topMovie.vote_average.toFixed(1);
+
+    // 나머지 인기 영화 목록
     const movieList = data.results
       .map(
         (m: Movie) => `
-        <li>
+          <li class="movie-item">
           <a href="/detail/${m.id}">
-            <img src="https://image.tmdb.org/t/p/w200${m.poster_path}" alt="${
-          m.title
-        }" />
-            <p>${m.title}</p>
-            <p>⭐ ${m.vote_average.toFixed(1)}</p>
+            <div class="item">
+            <img class="thumbnail" src="https://media.themoviedb.org/t/p/w440_and_h660_face${
+              m.poster_path
+            }" alt="${m.title}" loading="lazy" />
+            <div class="item-desc">
+              <p class="rate">
+                <img src="/images/star_empty.png" class="star" />
+                <span>${m.vote_average.toFixed(1)}</span>
+              </p>
+              <strong>${m.title}</strong>
+            </div>
+          </div>
           </a>
-        </li>`
+           
+          </li>`
       )
       .join("");
 
+    // 전체 HTML
     res.send(`
       <!DOCTYPE html>
       <html lang="ko">
         <head>
           <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <link rel="stylesheet" href="/styles/index.css" />
           <title>영화 리뷰</title>
         </head>
         <body>
-          <h1>인기 영화</h1>
-          <ul>${movieList}</ul>
+          <div id="wrap">
+            <header>
+              <div class="background-container" style="background-image: url(${banner});">
+                <div class="overlay"></div>
+                <div class="top-rated-container">
+                  <img src="/images/logo.png" width="117" height="20" class="logo" alt="MovieLogo" />
+                  <div class="top-rated-movie">
+                    <div class="rate">
+                      <img src="/images/star_empty.png" width="32" height="32" />
+                      <span class="text-2xl font-semibold text-yellow">${topRating}</span>
+                    </div>
+                    <h1 class="text-3xl font-semibold">${topMovie.title}</h1>
+                    <a href="/detail/${topMovie.id}">
+                      <button class="primary detail">자세히 보기</button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            <main>
+              <section class="container">
+                <h2 class="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
+                <ul class="thumbnail-list">
+                  ${movieList}
+                </ul>
+              </section>
+            </main>
+
+            <footer class="footer">
+              <p>&copy; 우아한테크코스 All Rights Reserved.</p>
+              <p><img src="/images/woowacourse_logo.png" width="180" alt="우아한테크코스" /></p>
+            </footer>
+          </div>
         </body>
       </html>
     `);
@@ -55,7 +101,6 @@ app.get("/", async (_req: Request, res: Response) => {
     res.status(500).send("서버 오류가 발생했습니다.");
   }
 });
-
 app.get("/detail/:id", async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const movie = await moviesApi.getDetail(Number(id));
@@ -162,6 +207,9 @@ app.get("/detail/:id", async (req: Request, res: Response): Promise<void> => {
       </html>
     `);
 });
+
+// public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
+app.use(express.static(path.join(__dirname, "../public")));
 
 app.listen(PORT, (): void => {
   console.log(`🌟 서버가 http://localhost:${PORT} 에서 실행 중입니다.`);
