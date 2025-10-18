@@ -9,7 +9,7 @@ export const html = {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
         <title>영화 리뷰</title>
-        ${meta}
+        ${meta ? meta : ''}
       </head>
       <body>
         <div id="wrap">
@@ -65,7 +65,7 @@ export const html = {
         <p>&copy; 우아한테크코스 All Rights Reserved.</p>
         <p><img src="/images/woowacourse_logo.png" width="180" alt="우아한테크코스" /></p>
       </footer>
-      ${html}
+      ${html ? html : ''}
       </body>
     </html>
   `,
