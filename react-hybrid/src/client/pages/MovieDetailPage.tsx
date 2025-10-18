@@ -1,33 +1,47 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import MovieHomePage from './MovieHomePage';
-import { moviesApi } from '../api/movies';
+import { moviesApi } from "../api/movies";
+import type { InferGetServerDataType } from "../types";
+import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
+import { useEffect } from "react";
+import { Header } from "../components/Header";
+import { MovieList } from "../components/MovieList";
+import { Footer } from "../components/Footer";
 
-export default function MovieDetailPage() {
-  return (
-    <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
-    </>
-  );
-}
+export const getServerData = async ({ movieId }: Record<string, string>) => {
+  try {
+    const [popularMovie, movieDetail] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(Number(movieId)),
+    ]);
 
-function DetailPageOpenModal() {
-  const { movieId } = useParams();
+    return {
+      popularMovie: popularMovie.data.results,
+      movieDetail: movieDetail.data,
+    };
+  } catch (error) {
+    return {
+      popularMovie: [],
+      movieDetail: null,
+    };
+  }
+};
+
+type MovieDetailPageProps = InferGetServerDataType<typeof getServerData>;
+
+export default function MovieDetailPage({
+  popularMovie,
+  movieDetail,
+}: MovieDetailPageProps) {
   const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
 
   useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
-      return;
-    }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [movieId, openMovieDetailModal]);
+    openMovieDetailModal(movieDetail);
+  }, [movieDetail, openMovieDetailModal]);
 
-  return null;
+  return (
+    <div id="wrap">
+      <Header featuredMovie={popularMovie[0]} />
+      <MovieList movies={popularMovie} />
+      <Footer />
+    </div>
+  );
 }
