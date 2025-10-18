@@ -1,0 +1,6 @@
+
+User-agent: *
+
+Allow: /
+
+Sitemap: https://rendering-basecamp-nextjs.vercel.app/sitemap.xml
