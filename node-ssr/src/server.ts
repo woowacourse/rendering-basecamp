@@ -24,7 +24,7 @@ app.get('/detail/:id', async (_req: Request, res: Response) => {
   const id = _req.params.id;
   const movie = await moviesApi.getDetail(Number(id));
 
-  res.send(html.mainHtml(movies, html.modalHtml(movie)));
+  res.send(html.mainHtml(movies, html.makeMeta(movie), html.modalHtml(movie)));
 });
 
 app.listen(PORT, (): void => {
