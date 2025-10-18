@@ -84,7 +84,7 @@ app.get("/", async (_req: Request, res: Response) => {
         `);
 });
 
-app.get("/detail/:id", async (_req: Request, res: Response) => {
+app.get("/detail/:id", async (_req: Request) => {
   const movieId = Number(_req.params.id);
   const movieDetail = await moviesApi.getDetail(movieId);
   const popularMovies = (await moviesApi.getPopular()).results;
