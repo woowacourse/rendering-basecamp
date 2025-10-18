@@ -115,7 +115,25 @@ router.get("/detail/:movieId", async (req: Request, res: Response) => {
     </StaticRouter>
   );
 
-  const renderedHTMLWithInitialData = template.replace(
+  const imageUrl = movieDetail.poster_path
+    ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
+    : "/images/no_image.png";
+
+  const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+
+  const renderedHTMLWithOgTag = template.replace(
+    "<!--{OG_TAGS}-->",
+    `
+      <meta property="og:title" content=${movieDetail.title} />
+      <meta property="og:description" content=${movieDetail.overview} />
+      <meta property="og:image" content=${imageUrl} />
+      <meta property="og:url" content=${fullUrl} />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="Movie App" />
+  `
+  );
+
+  const renderedHTMLWithInitialData = renderedHTMLWithOgTag.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
