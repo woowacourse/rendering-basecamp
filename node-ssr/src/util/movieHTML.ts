@@ -38,7 +38,49 @@ export function movieHTML() {
     generateWithDetail(data: MovieItem[], detail: MovieDetailResponse) {
       this.generate(data);
       this._detailModal = this.createMovieDetailModal(detail);
+      this._metaTags = this.createMetaTags(detail);
       return this;
+    },
+    createMetaTags(detail: MovieDetailResponse) {
+      const title = detail.title;
+      const description = detail.overview;
+      const url = ""; // 필요 시 도메인 포함 URL 지정
+      const image = detail.backdrop_path
+        ? `https://image.tmdb.org/t/p/original${detail.backdrop_path}`
+        : "";
+      const type = "video.movie";
+      const movieDuration = detail.runtime ? detail.runtime.toString() : "";
+      const movieReleaseDate = detail.release_date || "";
+      const movieTags = detail.genres.map((g) => g.name).join(", ");
+
+      return `
+    <title>${title}</title>
+    <meta name="description" content="${description}" />
+
+    <meta property="og:type" content="${type}" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    ${
+      image
+        ? `
+      <meta property="og:image" content="${image}" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:type" content="image/jpeg" />`
+        : ""
+    }
+    ${url ? `<meta property="og:url" content="${url}" />` : ""}
+    <meta property="og:site_name" content="영화 추천 사이트" />
+
+    <meta property="video:duration" content="${movieDuration}" />
+    <meta property="video:release_date" content="${movieReleaseDate}" />
+    <meta property="video:tag" content="${movieTags}" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${title}" />
+    <meta name="twitter:description" content="${description}" />
+    ${image ? `<meta name="twitter:image" content="${image}" />` : ""}
+  `;
     },
     createHeader({
       backgroundImgSrc,
@@ -195,6 +237,7 @@ export function movieHTML() {
         <head>
           <meta charset="UTF-8"/>
           <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+          ${this._metaTags || ""}
           <link rel="stylesheet" href="/styles/index.css"/>
           <title>영화 리뷰</title>
           <script>
@@ -235,9 +278,11 @@ export function movieHTML() {
       _movieList = "";
       _footer = "";
       this._detailModal = "";
+      this._metaTags = "";
     },
 
     _detailModal: "",
+    _metaTags: "",
   };
 
   return builder;
