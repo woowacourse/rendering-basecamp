@@ -1,0 +1,83 @@
+.movieItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.item {
+  user-select: none;
+  cursor: pointer;
+}
+
+.thumbnail {
+  width: 200px;
+  height: 300px;
+  border-radius: 8px;
+}
+
+.itemDesc > *:not(:last-child) {
+  position: relative;
+  margin-bottom: 4px;
+  line-height: 1.2rem;
+}
+
+.rate {
+  display: flex;
+  align-items: baseline;
+  color: var(--color-yellow);
+}
+
+.rate > span {
+  margin-left: 4px;
+}
+
+.star {
+  width: 16px;
+  top: 1px;
+}
+
+.movieDescription {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 1024px) {
+  .movieDescription p {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 768px) {
+  .movieDescription p {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .rate {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .rate img {
+    width: 24px;
+    height: 24px;
+    bottom: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rate {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
