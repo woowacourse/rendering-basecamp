@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, "../public")));
 
 app.get("/", async (_req: Request, res: Response) => {
   try {
-    const data = await moviesApi.getPopular(1);
+    const data = await moviesApi.getPopular();
 
     if (!data?.results || !Array.isArray(data.results)) {
       throw new Error("TMDB 응답이 예상과 다릅니다.");
