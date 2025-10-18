@@ -4,11 +4,13 @@ dotenv.config();
 import express, { Request, Response } from "express";
 import path from "path";
 import { moviesApi } from "./service/tmdbApi";
-import { getOGMetaTagsHTML } from "./utils/getOGMetaTags";
-import { getFullUrl } from "./utils/getUrl";
-import { getTopMovieHeaderHTML } from "./utils/getTopMovieHeaderHTML";
-import { getMovieListHTML } from "./utils/getMovieListHTML";
 import { Genre } from "./service/types";
+import { getBaseMetaTagsHTML } from "./utils/getBaseMetaTagsHTML";
+import { getFooterHTML } from "./utils/getFooterHTML";
+import { getMovieListHTML } from "./utils/getMovieListHTML";
+import { getOGMetaTagsHTML } from "./utils/getOGMetaTags";
+import { getTopMovieHeaderHTML } from "./utils/getTopMovieHeaderHTML";
+import { getFullUrl } from "./utils/getUrl";
 
 const app = express();
 const PORT = 8080;
@@ -36,15 +38,12 @@ app.get("/", async (_req: Request, res: Response) => {
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles/index.css" />
-    <title>영화 리뷰</title>
+    ${getBaseMetaTagsHTML()}
     ${ogMetaTags}
   </head>
   <body>
     <div id="wrap">
-      <header>${getTopMovieHeaderHTML(topMovie)}</header>
+      ${getTopMovieHeaderHTML(topMovie)}
       <main>
         <section class="container">
           <h2 class="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
@@ -53,10 +52,7 @@ app.get("/", async (_req: Request, res: Response) => {
           </ul>
         </section>
       </main>
-      <footer class="footer">
-        <p>&copy; 우아한테크코스 All Rights Reserved.</p>
-        <p><img src="/images/woowacourse_logo.png" width="180" alt="우아한테크코스" /></p>
-      </footer>
+      ${getFooterHTML}
     </div>
   </body>
 </html>
@@ -74,8 +70,10 @@ app.get("/detail/:id", async (_req: Request, res: Response) => {
     ? `https://image.tmdb.org/t/p/original${selectedMovieDetail.poster_path}`
     : "/images/no_image.png";
 
+  const selectedMovieTitle = `${selectedMovieDetail.title} | 영화 리뷰`;
+
   const ogMetaTags = getOGMetaTagsHTML({
-    title: `${selectedMovieDetail.title} | 영화 리뷰`,
+    title: selectedMovieTitle,
     description:
       selectedMovieDetail.overview || "영화 상세 정보를 확인해보세요.",
     url: getFullUrl(_req),
@@ -90,15 +88,12 @@ app.get("/detail/:id", async (_req: Request, res: Response) => {
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles/index.css" />
-    <title>영화 리뷰</title>
+    ${getBaseMetaTagsHTML({ title: selectedMovieTitle })}
     ${ogMetaTags}
   </head>
   <body>
     <div id="wrap">
-      <header>${getTopMovieHeaderHTML(movies[0])}</header>
+      ${getTopMovieHeaderHTML(movies[0])}
       <main>
         <section class="container">
           <h2 class="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
@@ -107,10 +102,7 @@ app.get("/detail/:id", async (_req: Request, res: Response) => {
           </ul>
         </section>
       </main>
-      <footer class="footer">
-        <p>&copy; 우아한테크코스 All Rights Reserved.</p>
-        <p><img src="/images/woowacourse_logo.png" width="180" alt="우아한테크코스" /></p>
-      </footer>
+      ${getFooterHTML}
     </div>
 
     <div class="modal-background active">
