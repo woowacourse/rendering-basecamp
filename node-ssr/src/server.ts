@@ -12,6 +12,7 @@ app.use(express.json());
 
 app.get('/', async (_req: Request, res: Response) => {
   const popularMovies = (await moviesApi.getPopular()).results;
+  console.log(popularMovies[4]);
 
   res.send(/*html*/ `
     <!DOCTYPE html>
@@ -20,8 +21,8 @@ app.get('/', async (_req: Request, res: Response) => {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
-        <meta property="og:title" content=${popularMovies[0].original_title} />
-        <meta property="og:description" content=${popularMovies[0].overview} />
+        <meta property="og:title" content="MovieList" />
+        <meta property="og:description" content="현재 인기 영화 목록을 확인해볼 수 있습니다!" />
         <meta property="og:image" content=${
           popularMovies[0].poster_path
             ? `https://image.tmdb.org/t/p/original/${popularMovies[0].poster_path}`
@@ -123,7 +124,7 @@ app.get('/detail/:id', async (_req: Request, res: Response) => {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
-        <meta property="og:title" content=${movieDetail.original_title} />
+        <meta property="og:title" content=${movieDetail.title} />
         <meta property="og:description" content=${movieDetail.overview} />
         <meta property="og:image" content=${
           movieDetail.poster_path
