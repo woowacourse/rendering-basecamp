@@ -38,9 +38,11 @@ export const fetchMoviesForSSR = async () => {
     const movieDetail = await moviesApi.getPopular();
     return { props: { movies: movieDetail.data.results } };
   } catch {
-    return { props: { movies: null } };
+    return { notFound: true };
   }
 };
 
-export const getServerSideProps: GetServerSideProps<MovieHomePageProps> =
-  fetchMoviesForSSR;
+export const getServerSideProps = async () => {
+  const movieDetail = await moviesApi.getPopular();
+  return { props: { movies: movieDetail.data.results } };
+};
