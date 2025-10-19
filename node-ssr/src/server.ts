@@ -87,6 +87,10 @@ app.get('/', async (_req: Request, res: Response) => {
 
         `);
 });
+
+const getDetailMovie = async (movieId: number) => {
+  return await moviesApi.getDetail(movieId);
+};
         `);
 });
 
