@@ -48,6 +48,13 @@ export function renderMovieList(movieData: MovieResponse): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/styles/index.css" />
     <title>영화 리뷰</title>
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="영화 리뷰 - 지금 인기 있는 영화" />
+    <meta property="og:description" content="TMDB에서 제공하는 인기 영화 목록을 확인하고 별점을 매겨보세요." />
+    <meta property="og:image" content="${backdropUrl}" />
+    <meta property="og:url" content="https://rendering-basecamp-production-5724.up.railway.app/" />
+    <meta property="og:type" content="website" />
   </head>
   <body>
     <div id="wrap">
@@ -111,6 +118,17 @@ export function renderMovieDetail(movie: MovieDetail): string {
     <link rel="stylesheet" href="/styles/index.css" />
     <link rel="stylesheet" href="/styles/modal.css" />
     <title>${movie.title} - 영화 리뷰</title>
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="${movie.title} - 영화 리뷰" />
+    <meta property="og:description" content="${
+      movie.overview || '영화 상세 정보를 확인하고 별점을 매겨보세요.'
+    }" />
+    <meta property="og:image" content="${posterUrl}" />
+    <meta property="og:url" content="https://rendering-basecamp-production-5724.up.railway.app/detail/${
+      movie.id
+    }" />
+    <meta property="og:type" content="movie" />
   </head>
   <body>
     <div id="wrap">
