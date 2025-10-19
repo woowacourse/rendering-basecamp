@@ -1,7 +1,8 @@
 declare global {
   interface Window {
     __INITIAL_DATA__: {
-      movies: any[];
+      Component: string;
+      props: any;
     };
   }
 }
