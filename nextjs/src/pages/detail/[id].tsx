@@ -6,6 +6,8 @@ import {useMovieDetailModal} from "@/hooks/useMovieDetailModal";
 import {MovieItem} from "@/types/Movie.types";
 import {GetServerSideProps} from "next";
 import {MovieDetailResponse} from "@/types/MovieDetail.types";
+import {useRouter} from "next/router";
+import {overlay} from "overlay-kit";
 
 interface DetailProps {
   movies: MovieItem[];
@@ -64,6 +66,7 @@ function DetailPageOpenModal({detail}: {
   detail: MovieDetailResponse | null;
 }) {
   const {openMovieDetailModal} = useMovieDetailModal();
+  const router = useRouter();
   const onceRef = useRef(false);
 
   useEffect(() => {
@@ -74,6 +77,18 @@ function DetailPageOpenModal({detail}: {
     onceRef.current = true;
     openMovieDetailModal(detail);
   }, [detail, openMovieDetailModal]);
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      overlay.unmountAll();
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router.events]);
 
   return null;
 }
