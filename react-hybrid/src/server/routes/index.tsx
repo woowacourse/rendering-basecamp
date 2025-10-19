@@ -18,12 +18,12 @@ router.get("/", async (_: Request, res: Response) => {
     <App Component={MovieHomePage} props={{ popularMoviesResult }} />
   );
 
-  const initialData = {
+  const hydrationData = {
     Component: "MovieHomePage",
     props: { popularMoviesResult },
   };
 
-  const renderedHTML = injectDataToTemplate(renderedApp, initialData);
+  const renderedHTML = injectDataToTemplate(renderedApp, hydrationData);
 
   res.send(renderedHTML);
 });
@@ -44,7 +44,7 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     />
   );
 
-  const initialData = {
+  const hydrationData = {
     Component: "MovieDetailPage",
     props: {
       popularMoviesResult,
@@ -54,7 +54,7 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
 
   const renderedHTML = injectDataToTemplate(
     renderedApp,
-    initialData,
+    hydrationData,
     movieDetailResult.data
   );
 

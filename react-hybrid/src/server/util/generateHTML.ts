@@ -1,9 +1,15 @@
 import { MovieDetailResponse } from "../../client/types/MovieDetail.types";
+
+interface HydrationData {
+  Component: string;
+  props: any;
+}
+
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 const VERSION = "REACT HYBRID";
 
-const generateHTML = () => {
-  return /*html*/ `
+const createHTMLTemplate = () => {
+  return `
       <!DOCTYPE html>
       <html lang="ko">
         <head>
@@ -11,18 +17,19 @@ const generateHTML = () => {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <link rel="stylesheet" href="/static/styles/index.css" />
           <title>영화 리뷰</title>
-          <!--{OG_TAGS}-->
+          <!--{META_TAGS}-->
         </head>
         <body>
-          <div id="root"><!--{BODY_AREA}--></div>
-          <!--{INIT_DATA_AREA}-->
+          <div id="root"><!--{APP_CONTENT}--></div>
+          <!--{INITIAL_STATE}-->
           <script src="/static/bundle.js"></script>
         </body>
       </html>
       `;
 };
-const generateMeta = (movieDetailResponse?: MovieDetailResponse) => {
-  if (!movieDetailResponse) {
+
+const createMetaTags = (movie?: MovieDetailResponse) => {
+  if (!movie) {
     return `
         <title>마빈의 영화 리뷰</title>
         <meta property="og:title" content="마빈의 영화 리뷰 | ${VERSION}" />
@@ -30,53 +37,34 @@ const generateMeta = (movieDetailResponse?: MovieDetailResponse) => {
         <meta property="og:image" content="/images/logo.png" />
       `;
   }
+
+  const posterUrl = movie.poster_path
+    ? IMAGE_BASE_URL + movie.poster_path
+    : "/images/no-poster.png";
+
   return `
-      <title>${movieDetailResponse.title} | ${VERSION}</title>
-      <meta property="og:title" content="${
-        "마빈의 영화 리뷰 | " + movieDetailResponse.title
-      }" />
-      <meta
-        property="og:description"
-        content="${movieDetailResponse.overview}"
-      />
-      <meta
-        property="og:image"
-        content="${
-          movieDetailResponse.poster_path
-            ? IMAGE_BASE_URL + movieDetailResponse.poster_path
-            : "/images/no-poster.png"
-        }"
-      />
+      <title>${movie.title} | ${VERSION}</title>
+      <meta property="og:title" content="마빈의 영화 리뷰 | ${movie.title}" />
+      <meta property="og:description" content="${movie.overview}" />
+      <meta property="og:image" content="${posterUrl}" />
     `;
 };
 
+const createInitialStateScript = (hydrationData: HydrationData) => {
+  return `<script>
+            window.__INITIAL_DATA__ = ${JSON.stringify(hydrationData)}
+          </script>`;
+};
+
 export const injectDataToTemplate = (
-  renderedApp: string,
-  initialData: any,
-  movieDetailResponse?: MovieDetailResponse
+  appContent: string,
+  hydrationData: HydrationData,
+  movieDetail?: MovieDetailResponse
 ) => {
-  const template = generateHTML();
+  const htmlTemplate = createHTMLTemplate();
 
-  const htmlWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = ${JSON.stringify(initialData)}
-    </script>
-  `
-  );
-
-  const htmlWithBody = htmlWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
-
-  const finalHTML = htmlWithBody.replace(
-    "<!--{OG_TAGS}-->",
-    /*html*/ `
-    ${generateMeta(movieDetailResponse)}
-  `
-  );
-
-  return finalHTML;
+  return htmlTemplate
+    .replace("<!--{INITIAL_STATE}-->", createInitialStateScript(hydrationData))
+    .replace("<!--{APP_CONTENT}-->", appContent)
+    .replace("<!--{META_TAGS}-->", createMetaTags(movieDetail));
 };
