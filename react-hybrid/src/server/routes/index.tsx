@@ -6,7 +6,6 @@ import { renderToPipeableStream } from "react-dom/server";
 
 import App from "../../client/App";
 import { matchRoute } from "../utils/matchRoute";
-import { routes } from "../../client/routes";
 import { getCurrentUrlByRequest } from "../utils/getCurrentUrlByRequest";
 
 export type GetServerDataParams = {
@@ -73,10 +72,8 @@ const render = async (req: Request, res: Response) => {
 
 const router = Router();
 
-routes.forEach((route) => {
-  router.get(route.path, (req: Request, res: Response) => {
-    render(req, res);
-  });
+router.get(/.*/, (req: Request, res: Response) => {
+  render(req, res);
 });
 
 export default router;
