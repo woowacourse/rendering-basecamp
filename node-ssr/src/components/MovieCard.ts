@@ -12,6 +12,7 @@ export default function MovieCard({ movie }: MovieProps) {
 
   return /* html */ `
     <li class="movie-item">
+      <a href="/detail/${movie.id}">
         <div class="item">
         <img class="thumbnail" src=${imageUrl} alt=${title} loading="lazy" />
         <div class="item-desc">
@@ -22,6 +23,7 @@ export default function MovieCard({ movie }: MovieProps) {
             <strong>${title}</strong>
         </div>
         </div>
+      </a>
     </li>
   `;
 }
