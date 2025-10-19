@@ -12,7 +12,7 @@ import { injectDataToTemplate } from "../util/generateHTML";
 const router = Router();
 
 router.get("/", async (_: Request, res: Response) => {
-  const popularMoviesResult = await fetchApi(moviesApi.getPopular(1));
+  const popularMoviesResult = await fetchApi(moviesApi.getPopular());
 
   const renderedApp = renderToString(
     <App Component={MovieHomePage} props={{ popularMoviesResult }} />
