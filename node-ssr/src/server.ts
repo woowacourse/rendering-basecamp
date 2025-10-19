@@ -11,7 +11,16 @@ const PORT = 8080;
 
 app.use(express.json());
 
-app.get("/", async (_req: Request, res: Response) => {
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+app.get("/", async (req: Request, res: Response) => {
   try {
     const popular: MovieResponse = await moviesApi.getPopular(1);
     const featured: Movie | undefined = popular.results?.[0];
@@ -49,6 +58,13 @@ app.get("/", async (_req: Request, res: Response) => {
       })
       .join("");
 
+    const forwarded = req.headers["x-forwarded-proto"]; // for proxies
+    const protocol = Array.isArray(forwarded)
+      ? forwarded[0]
+      : forwarded || req.protocol;
+    const host = req.headers.host || `localhost:${PORT}`;
+    const canonicalUrl = `${protocol}://${host}${req.originalUrl}`;
+
     const html = /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -57,6 +73,19 @@ app.get("/", async (_req: Request, res: Response) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
         <title>영화 리뷰</title>
+        <link rel="canonical" href="${canonicalUrl}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="영화 리뷰" />
+        <meta property="og:locale" content="ko_KR" />
+        <meta property="og:url" content="${canonicalUrl}" />
+        <meta property="og:title" content="영화 리뷰" />
+        <meta property="og:description" content="영화 리뷰 서비스" />
+        <meta property="og:image" content="${heroBackground}" />
+        <meta property="og:image:alt" content="영화 리뷰 포스터" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="영화 리뷰" />
+        <meta name="twitter:description" content="영화 리뷰 서비스" />
+        <meta name="twitter:image" content="${heroBackground}" />
       </head>
       <body>
         <div id="wrap">
@@ -167,6 +196,13 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
     const genres = (detail.genres || []).map((g) => g.name).join(", ");
     const overview = detail.overview || "줄거리 정보가 없습니다.";
 
+    const forwarded = req.headers["x-forwarded-proto"]; // for proxies
+    const protocol = Array.isArray(forwarded)
+      ? forwarded[0]
+      : forwarded || req.protocol;
+    const host = req.headers.host || `localhost:${PORT}`;
+    const canonicalUrl = `${protocol}://${host}${req.originalUrl}`;
+
     const html = /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -174,7 +210,20 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
-        <title>${title} - 상세</title>
+        <title>${escapeHtml(title)} - 상세</title>
+        <link rel="canonical" href="${canonicalUrl}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="영화 리뷰" />
+        <meta property="og:locale" content="ko_KR" />
+        <meta property="og:url" content="${canonicalUrl}" />
+        <meta property="og:title" content="${escapeHtml(title)}" />
+        <meta property="og:description" content="${escapeHtml(overview)}" />
+        <meta property="og:image" content="${poster}" />
+        <meta property="og:image:alt" content="${escapeHtml(title)} 포스터" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="${escapeHtml(title)}" />
+        <meta name="twitter:description" content="${escapeHtml(overview)}" />
+        <meta name="twitter:image" content="${poster}" />
       </head>
       <body>
         <div id="wrap">
