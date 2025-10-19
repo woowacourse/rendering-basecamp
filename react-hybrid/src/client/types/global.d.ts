@@ -1,8 +1,8 @@
 declare global {
   interface Window {
     __INITIAL_DATA__: {
-      Component: string;
-      props: any;
+      Component: "MovieHomePage" | "MovieDetailPage";
+      props: Record<string, any>;
     };
   }
 }
