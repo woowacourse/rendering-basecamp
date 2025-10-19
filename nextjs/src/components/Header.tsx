@@ -1,6 +1,7 @@
-import { MovieItem } from '../types/Movie.types';
-import { IconButton } from './common/IconButton';
-import { FeaturedMovie } from './FeaturedMovie';
+import { MovieItem } from "../types/Movie.types";
+import { IconButton } from "./common/IconButton";
+import Image from "next/image";
+import { FeaturedMovie } from "./FeaturedMovie";
 
 export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
   const handleLogoClick = () => {
@@ -8,19 +9,22 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
   };
 
   return (
-    <header>
-      <div
-        className={`background-container`}
-        style={
-          featuredMovie && {
-            backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path})`,
-          }
-        }
-      >
+    <header className="header">
+      <div className="background-container">
+        {featuredMovie && (
+          <Image
+            src={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path}`}
+            alt={`${featuredMovie.title} 배경 이미지`}
+            fill
+            priority
+            className="background-image"
+          />
+        )}
+
         <div className="overlay" />
 
         <div className="top-rated-container">
-          {/* 헤더 섹션 (로고 + 검색바) */}
+          {/* 로고 + 검색바 섹션 */}
           <IconButton
             src="/images/logo.png"
             width="117"
