@@ -45,9 +45,6 @@ export default function DetailPage({ movie, featuredMovie }: DetailPageProps) {
         <meta name="twitter:title" content={movie.title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={imageUrl} />
-
-        <meta property="video:release_date" content={movie.release_date} />
-        <meta property="video:rating" content={movie.vote_average.toString()} />
       </Head>
 
       <div id="wrap">
