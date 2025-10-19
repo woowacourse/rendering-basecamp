@@ -14,11 +14,10 @@ import { buildOgMeta, OgMeta } from "@/utils/og";
 
 type PageProps = {
   movies: MovieItem[];
-  movieDetail?: MovieDetailResponse;
   og: OgMeta;
 };
 
-export default function HomePage({ movies, movieDetail, og }: PageProps) {
+export default function HomePage({ movies, og }: PageProps) {
   const router = useRouter();
   const { openMovieDetailModal } = useMovieDetailModal();
   const isOpeningRef = useRef(false);
