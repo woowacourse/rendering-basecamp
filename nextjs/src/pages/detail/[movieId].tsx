@@ -51,7 +51,7 @@ export default function DetailPageOpenModal({ movieDetail }: DetailPageProps) {
         <meta property="og:image" content={ogImage} />
         <meta
           property="og:url"
-          content={`https://https://rendering-basecamp-zl46.vercel.app/detail/${movieDetail.id}`}
+          content={`https://rendering-basecamp-alpha.vercel.app/detail/${movieDetail.id}`}
         />
         <meta property="og:type" content="video.movie" />
       </Head>
