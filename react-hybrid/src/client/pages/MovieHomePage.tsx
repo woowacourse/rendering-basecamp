@@ -1,24 +1,30 @@
-import { Header } from '../components/Header';
-import { MovieList } from '../components/MovieList';
-import { Footer } from '../components/Footer';
-import { usePopularMovies } from '../hooks/queries/usePopularMovies';
-import { Loading } from '../components/common/Loading';
+import { Header } from "../components/Header";
+import { MovieList } from "../components/MovieList";
+import { Footer } from "../components/Footer";
+import { MovieResponse } from "../types/Movie.types";
+import { ApiResult } from "../types/ApiResult.types";
 
-export default function MovieHomePage() {
-  const { data: movies, isLoading } = usePopularMovies();
+interface MovieHomePageProps {
+  popularMoviesResult: ApiResult<MovieResponse>;
+}
 
-  if (isLoading === true) {
-    return <Loading />;
+export default function MovieHomePage({
+  popularMoviesResult,
+}: MovieHomePageProps) {
+  const { data: movies, error } = popularMoviesResult;
+
+  if (error) {
+    return <div> 꺄악! 고장났슈! {error.message}</div>;
   }
 
-  if (movies == null || movies.length === 0) {
-    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
+  if (!movies.results || movies.results.length === 0) {
+    return <div>영화 데이터가 없습니다.</div>;
   }
 
   return (
     <div id="wrap">
-      <Header featuredMovie={movies[0]} />
-      <MovieList movies={movies} />
+      <Header featuredMovie={movies.results[0]} />
+      <MovieList movies={movies.results} />
       <Footer />
     </div>
   );
