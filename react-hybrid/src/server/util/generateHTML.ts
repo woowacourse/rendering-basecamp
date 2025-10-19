@@ -1,5 +1,6 @@
 import { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+const VERSION = "REACT HYBRID";
 
 const generateHTML = () => {
   return /*html*/ `
@@ -24,13 +25,13 @@ const generateMeta = (movieDetailResponse?: MovieDetailResponse) => {
   if (!movieDetailResponse) {
     return `
         <title>마빈의 영화 리뷰</title>
-        <meta property="og:title" content="마빈의 영화 리뷰" />
-        <meta property="og:description" content="마빈의 영화 리뷰1 !!!!" />
+        <meta property="og:title" content="마빈의 영화 리뷰 | ${VERSION}" />
+        <meta property="og:description" content="마빈의 영화 리뷰1 !!!! " />
         <meta property="og:image" content="/images/logo.png" />
       `;
   }
   return `
-      <title>${movieDetailResponse.title}</title>
+      <title>${movieDetailResponse.title} | ${VERSION}</title>
       <meta property="og:title" content="${
         "마빈의 영화 리뷰 | " + movieDetailResponse.title
       }" />
