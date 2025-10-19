@@ -22,7 +22,9 @@ export default function TopRatedMovieCard({
                 )}</span>
               </div>
               <h1 class="text-3xl font-semibold">${topRatedMovie.title}</h1>
-              <button class="primary detail">자세히 보기</button>
+              <button class="primary detail" id=${
+                topRatedMovie.id
+              }>자세히 보기</button>
             </div>
           </div>
         </div>
