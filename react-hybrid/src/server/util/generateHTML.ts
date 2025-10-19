@@ -48,4 +48,34 @@ const generateMeta = (movieDetailResponse?: MovieDetailResponse) => {
       />
     `;
 };
-export { generateHTML, generateMeta };
+
+export const injectDataToTemplate = (
+  renderedApp: string,
+  initialData: any,
+  movieDetailResponse?: MovieDetailResponse
+) => {
+  const template = generateHTML();
+
+  const htmlWithInitialData = template.replace(
+    "<!--{INIT_DATA_AREA}-->",
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = ${JSON.stringify(initialData)}
+    </script>
+  `
+  );
+
+  const htmlWithBody = htmlWithInitialData.replace(
+    "<!--{BODY_AREA}-->",
+    renderedApp
+  );
+
+  const finalHTML = htmlWithBody.replace(
+    "<!--{OG_TAGS}-->",
+    /*html*/ `
+    ${generateMeta(movieDetailResponse)}
+  `
+  );
+
+  return finalHTML;
+};
