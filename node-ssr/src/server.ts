@@ -4,7 +4,7 @@ dotenv.config();
 import express, { Request, Response } from 'express';
 import path from 'path';
 import { moviesApi } from './service/tmdbApi';
-import { renderMovieList } from './templates/movieTemplate';
+import { renderMovieList, renderMovieDetail } from './templates/movieTemplate';
 
 const app = express();
 const PORT = 8080;
@@ -34,6 +34,21 @@ app.get('/api/movies/:id', async (req: Request, res: Response) => {
     return res
       .status(500)
       .json({ error: '영화 상세 정보를 불러오는데 실패했습니다.' });
+  }
+});
+
+// 영화 상세 페이지 (SSR)
+app.get('/detail/:id', async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).send('유효하지 않은 영화 ID입니다.');
+    }
+    const movieData = await moviesApi.getDetail(id);
+    const html = renderMovieDetail(movieData);
+    return res.send(html);
+  } catch (error) {
+    return res.status(500).send('영화 상세 정보를 불러오는데 실패했습니다.');
   }
 });
 
