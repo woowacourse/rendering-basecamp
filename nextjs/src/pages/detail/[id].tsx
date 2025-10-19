@@ -82,6 +82,15 @@ function DetailPageOpenModal({
   const { openMovieDetailModal } = useMovieDetailModal();
   const router = useRouter();
   const hasOpenedRef = useRef(false);
+  const isDirectAccessRef = useRef(false);
+
+  useEffect(() => {
+    const referrer = document.referrer;
+    const currentOrigin = window.location.origin;
+
+    isDirectAccessRef.current =
+      !referrer || !referrer.startsWith(currentOrigin);
+  }, []);
 
   useEffect(() => {
     if (hasOpenedRef.current) {
@@ -91,8 +100,11 @@ function DetailPageOpenModal({
     hasOpenedRef.current = true;
 
     openMovieDetailModal(movieDetail).then(() => {
-      // 모달이 닫히면 메인 페이지로 이동
-      router.push('/');
+      if (isDirectAccessRef.current) {
+        router.back();
+      } else {
+        router.push('/');
+      }
     });
   }, [movieDetail, openMovieDetailModal, router]);
 
