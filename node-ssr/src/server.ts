@@ -52,7 +52,9 @@ app.get('/', async (_req: Request, res: Response) => {
       <body>
         <div id="wrap">
           <header>
-            <div class="background-container" style="background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/stKGOm8UyhuLPR9sZLjs5AkmncA.jpg);">
+            <div class="background-container" style="background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${
+              featuredMovie.poster_path
+            });">
               <div class="overlay"></div>
               <div class="top-rated-container">
                 <img src="/images/logo.png" width="117" height="20" class="logo" alt="MovieLogo" />
