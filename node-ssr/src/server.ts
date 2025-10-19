@@ -1,15 +1,19 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
 
-import express, { Request, Response } from "express";
-import path from "path";
+import express, { Request, Response } from 'express';
+import path from 'path';
+import { moviesApi } from './service/tmdbApi';
+import { Movie, MovieDetail } from './service/types';
 
 const app = express();
 const PORT = 8080;
 
 app.use(express.json());
 
-app.get("/", async (_req: Request, res: Response) => {
+const getPopularMovies = async () => {
+  return (await moviesApi.getPopular()).results;
+};
   res.send(/*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
