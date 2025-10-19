@@ -36,7 +36,7 @@ export default function Home({ movies }: HomeProps) {
         />
         <meta
           property="og:url"
-          content="https://rendering-basecamp-zl46.vercel.app/"
+          content="https://rendering-basecamp-alpha.vercel.app/s"
         />
         <meta property="og:type" content="website" />
       </Head>
