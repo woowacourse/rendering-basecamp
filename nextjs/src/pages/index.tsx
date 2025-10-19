@@ -76,14 +76,17 @@ export const getServerSideProps: GetServerSideProps<{
   try {
     const popularRes = await moviesApi.getPopular();
     const movies = popularRes.data.results as MovieItem[];
-    const q = ctx.query.movieId;
-    const movieDetail: MovieDetailResponse | undefined =
-      typeof q === "string"
-        ? await moviesApi
-            .getDetail(Number(q))
-            .then((r) => r.data)
-            .catch(() => undefined)
-        : undefined;
+    const raw = ctx.query.movieId;
+    const movieId = typeof raw === "string" ? Number(raw) : NaN;
+
+    const isValidId = Number.isFinite(movieId) && movieId > 0;
+
+    const movieDetail: MovieDetailResponse | undefined = isValidId
+      ? await moviesApi
+          .getDetail(movieId)
+          .then((r) => r.data)
+          .catch(() => undefined)
+      : undefined;
 
     const origin = "https://vercel.com/yeji0214s-projects/rendering-basecamp";
     const path = ctx.resolvedUrl || "/";
