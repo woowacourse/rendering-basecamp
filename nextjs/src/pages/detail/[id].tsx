@@ -32,7 +32,7 @@ export default function DetailPage({ movie, featuredMovie }: DetailPageProps) {
         <title>{movie.title} - Movie App</title>
         <meta name="description" content={description} />
 
-        <meta property="og:type" content="video.movie" />
+        <meta property="og:type" content="website" />
         <meta property="og:title" content={movie.title} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={imageUrl} />
