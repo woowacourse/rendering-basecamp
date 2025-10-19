@@ -1,10 +1,8 @@
-import { Header } from '../components/Header';
-import { MovieList } from '../components/MovieList';
-import { Footer } from '../components/Footer';
 import Head from 'next/head';
 import { MovieItem } from '../types/Movie.types';
 import { moviesApi } from '@/api/movies';
 import { GetServerSideProps } from 'next';
+import { MovieLayout } from '@/components/MovieLayout';
 
 interface HomeProps {
   movies: MovieItem[];
@@ -26,11 +24,7 @@ export default function Home({ movies }: HomeProps) {
         <meta property="og:type" content="website" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div id="wrap">
-        <Header featuredMovie={movies[0]} />
-        <MovieList movies={movies} />
-        <Footer />
-      </div>
+      <MovieLayout movies={movies} />
     </>
   );
 }
