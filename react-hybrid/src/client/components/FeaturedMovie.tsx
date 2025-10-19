@@ -1,18 +1,13 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { Button } from './common/Button';
-import type { MovieItem } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
+import { Button } from "./common/Button";
+import type { MovieItem } from "../types/Movie.types";
 
 interface FeaturedMovieProps {
   movie: MovieItem;
 }
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  const handleDetailClick = async () => {
-    const movieDetail = await moviesApi.getDetail(movie.id);
-    await openMovieDetailModal(movieDetail.data);
+  const handleDetailClick = () => {
+    window.location.href = `/detail/${movie.id}`;
   };
 
   return (
