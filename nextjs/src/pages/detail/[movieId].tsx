@@ -42,10 +42,6 @@ export default function MovieDetailPage({ movies, movieDetail }: MovieDetailPage
           content={`https://rendering-basecamp-pink-seven.vercel.app//detail/${movieDetail.id}`}
         />
         <meta property="og:site_name" content="Movie Review App" />
-
-        <meta property="video:release_date" content={movieDetail.release_date} />
-        {movieDetail.genres &&
-          movieDetail.genres.map((genre) => <meta key={genre.id} property="video:tag" content={genre.name} />)}
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MovieLayout movies={movies}>
