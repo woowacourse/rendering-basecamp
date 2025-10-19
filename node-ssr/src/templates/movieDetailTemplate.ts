@@ -5,14 +5,14 @@ import {
   getGenreNamesFromDetail,
 } from '../utils/helpers';
 
+const BASE_URL = `https://rendering-basecamp-production-1371.up.railway.app`;
+
 export const renderMovieDetailPage = (movie: MovieDetail): string => {
   const posterUrl = getImageUrl(movie.poster_path);
   const rating = formatRating(movie.vote_average);
   const genres = getGenreNamesFromDetail(movie.genres);
 
-  // OG 태그를 위한 URL (Railway 배포 후 실제 URL로 변경 필요)
-  const baseUrl = process.env.BASE_URL || 'http://localhost:8080';
-  const pageUrl = `${baseUrl}/detail/${movie.id}`;
+  const pageUrl = `${BASE_URL}/detail/${movie.id}`;
   const ogImage = getImageUrl(movie.poster_path, 'w500');
 
   return `<!DOCTYPE html>
