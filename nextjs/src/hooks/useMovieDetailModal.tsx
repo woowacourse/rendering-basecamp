@@ -12,7 +12,10 @@ export const useMovieDetailModal = () => {
         <MovieDetailModal
           movie={movie}
           onClose={() => {
-            router.push("/");
+            router.push(`/?movieId=${movie.id}`, undefined, {
+              shallow: true,
+              scroll: false,
+            });
             resolve();
             unmount();
           }}
