@@ -19,7 +19,7 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
   return (
     <div className="top-rated-movie">
       <div className="rate">
-        <Image src="/images/star_empty.png" width="32" height="32" alt='star empty' />
+        <Image src="/images/star_empty.png" width={32} height={32} alt='star empty' />
         <span className="text-2xl font-semibold text-yellow">
           {movie.vote_average}
         </span>
