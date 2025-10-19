@@ -26,21 +26,23 @@ app.get("/", async (_req: Request, res: Response): Promise<void> => {
       .map(
         (movie) => `
       <li class="movie-item">
-        <div class="item">
-          <img class="thumbnail" 
-               src="https://media.themoviedb.org/t/p/w440_and_h660_face${
-                 movie.poster_path
-               }" 
-               alt="${movie.title}" 
-               loading="lazy" />
-          <div class="item-desc">
-            <p class="rate">
-              <img src="/images/star_empty.png" class="star" />
-              <span>${movie.vote_average.toFixed(1)}</span>
-            </p>
-            <strong>${movie.title}</strong>
+        <a href="/detail/${movie.id}">
+          <div class="item">
+            <img class="thumbnail"
+                 src="https://media.themoviedb.org/t/p/w440_and_h660_face${
+                   movie.poster_path
+                 }"
+                 alt="${movie.title}"
+                 loading="lazy" />
+            <div class="item-desc">
+              <p class="rate">
+                <img src="/images/star_empty.png" class="star" />
+                <span>${movie.vote_average.toFixed(1)}</span>
+              </p>
+              <strong>${movie.title}</strong>
+            </div>
           </div>
-        </div>
+        </a>
       </li>
     `
       )
@@ -229,6 +231,23 @@ app.get("/detail/:id", async (req: Request, res: Response): Promise<void> => {
               </div>
             </div>
           </div>
+          <script>
+            const closeBtn = document.querySelector('.modal-close-btn');
+            if (closeBtn) {
+              closeBtn.addEventListener('click', () => {
+                window.location.href = '/';
+              });
+            }
+
+            const modalBackground = document.querySelector('.modal-background');
+            if (modalBackground) {
+              modalBackground.addEventListener('click', (e) => {
+                if (e.target === modalBackground) {
+                  window.location.href = '/';
+                }
+              });
+            }
+          </script>
         </body>
       </html>
     `);
