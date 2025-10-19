@@ -80,9 +80,7 @@ homeRouter.get("/", async (req: Request, res: Response) => {
                     <span class="text-2xl font-semibold text-yellow">${heroRating}</span>
                   </div>
                   <h1 class="text-3xl font-semibold">${heroTitle}</h1>
-                  <a class="primary detail" href="/detail/${
-                    featured?.id ?? ""
-                  }">자세히 보기</a>
+                  <button class="primary detail">자세히 보기</button>
                 </div>
               </div>
             </div>
