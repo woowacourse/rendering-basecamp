@@ -3,8 +3,13 @@ dotenv.config();
 
 import express, { Request, Response } from "express";
 import path from "path";
+import TopRatedMovieCard from "./components/TopRatedMovieCard";
+import Home from "./page/home";
 import { moviesApi } from "./service/tmdbApi";
-import { Movie, MovieResponse } from "./service/types";
+import { MovieDetailResponse, MovieResponse } from "./service/types";
+import { getMoviesCard } from "./utils/getMoviesCard";
+import getTopRatedMovieCard from "./utils/getTopRatedMovieCard";
+import ErrorPage from "./page/error";
 
 const app = express();
 const PORT = 8080;
@@ -15,53 +20,32 @@ app.get("/", async (_req: Request, res: Response) => {
   try {
     const movieList: MovieResponse = await moviesApi.getPopular(1);
 
-    const moviesComponent = movieList.results
-      .map((movie: Movie) => {
-        const { title, poster_path, vote_average } = movie;
-        const imageUrl = poster_path
-          ? `https://image.tmdb.org/t/p/w500${poster_path}`
-          : "/images/no_image.png";
-        return /* html */ `
-          <li class="movie-item">
-              <div class="item">
-                <img class="thumbnail" src=${imageUrl} alt=${title} loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>${vote_average.toFixed(1)}</span>
-                  </p>
-                  <strong>${title}</strong>
-                </div>
-              </div>
-            </li>
-  `;
-      })
-      .join("");
+    const moviesComponent = await getMoviesCard({ movieList });
+    const topRatedMovieComponent = getTopRatedMovieCard({ movieList });
 
-    const topRatedMovie = movieList.results.reduce((prev, current) => {
-      return prev.vote_average > current.vote_average ? prev : current;
-    });
+    res.send(Home({ topRatedMovieComponent, moviesComponent }));
+  } catch (error) {
+    console.error("Error processing movie data:", error);
+    res
+      .status(500)
+      .send(
+        ErrorPage({ message: "영화 정보를 불러오는 중 오류가 발생했습니다." })
+      );
+  }
+});
 
-    const topRatedMovieComponent = /* html */ `
-      <div class="background-container" style="background-image: url(https://image.tmdb.org/t/p/w500${
-        topRatedMovie.poster_path
-      });">
-          <div class="overlay"></div>
-          <div class="top-rated-container">
-            <img src="/images/logo.png" width="117" height="20" class="logo" alt="MovieLogo" />
-            <div class="top-rated-movie">
-              <div class="rate">
-                <img src="/images/star_empty.png" width="32" height="32" />
-                <span class="text-2xl font-semibold text-yellow">${topRatedMovie.vote_average.toFixed(
-                  1
-                )}</span>
-              </div>
-              <h1 class="text-3xl font-semibold">${topRatedMovie.title}</h1>
-              <button class="primary detail">자세히 보기</button>
-            </div>
-          </div>
-        </div>
-    `;
+app.get("detail/:id", async (req: Request, res: Response) => {
+  const movieId = req.params.id;
+  try {
+    const movieDetail: MovieDetailResponse = await moviesApi.getDetail(
+      Number(movieId)
+    );
+
+    const { title, overview, poster_path, vote_average } = movieDetail;
+
+    const imageUrl = poster_path
+      ? `https://image.tmdb.org/t/p/w500${poster_path}`
+      : "/images/no_image.png";
 
     res.send(/* html */ `
       <!DOCTYPE html>
@@ -70,30 +54,32 @@ app.get("/", async (_req: Request, res: Response) => {
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <link rel="stylesheet" href="/styles/index.css" />
-          <title>영화 리뷰</title>
+          <title>${title} - 영화 상세 정보</title>
         </head>
         <body>
           <div id="wrap">
-            <header>
-              ${topRatedMovieComponent}
+            <header class="detail-header">
+              <h1 class="text-3xl font-bold mb-16">${title}</h1>
             </header>
-            <main>
-              <section class="container">
-                <h2 class="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
-                <ul class="thumbnail-list">
-                ${moviesComponent}
-                </ul>
-              </section>
+            <main class="container detail-main">
+              <div class="detail-content">
+                <img class="detail-poster" src=${imageUrl} alt=${title} loading="lazy" />
+                <div class="detail-info">
+                  <p class="detail-rate">
+                    <img src="/images/star_empty.png" class="star" />
+                    <span>${vote_average.toFixed(1)}</span>
+                  </p>
+                  <p class="detail-overview">${overview}</p>
+                  <button onclick="window.history.back()" class="primary back-button">뒤로 가기</button>
+                </div>
+              </div>
             </main>
-            <footer class="footer">
-              <p>&copy; 우아한테크코스 All Rights Reserved.</p>
-              <p><img src="/images/woowacourse_logo.png" width="180" alt="우아한테크코스" /></p>
-            </footer>
           </div>
         </body>
-`);
+      </html>
+    `);
   } catch (error) {
-    console.error("Error processing movie data:", error);
+    console.error("Error fetching movie details:", error);
     res.status(500).send("서버 오류가 발생했습니다.");
   }
 });
