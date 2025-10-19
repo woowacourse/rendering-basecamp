@@ -51,9 +51,17 @@ router.get("/", async (_: Request, res: Response) => {
     </script>
   `
   );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
+
+  const renderedHTMLWithInitialDataAndBody =
+    renderedHTMLWithInitialData.replace("<!--{BODY_AREA}-->", renderedApp);
+
+  const renderedHTML = renderedHTMLWithInitialDataAndBody.replace(
+    "<!--{OG_TAGS}-->",
+    /*html*/ `
+    <meta property="og:title" content="마빈의 영화 리뷰" />
+    <meta property="og:description" content="마빈의 영화 리뷰1 !!!!" />
+    <meta property="og:image" content="/images/logo.png" />
+  `
   );
 
   res.send(renderedHTML);
@@ -92,11 +100,17 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     </script>
   `
   );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+  const renderedHTMLWithInitialDataAndBody =
+    renderedHTMLWithInitialData.replace("<!--{BODY_AREA}-->", renderedApp);
 
+  const renderedHTML = renderedHTMLWithInitialDataAndBody.replace(
+    "<!--{OG_TAGS}-->",
+    /*html*/ `
+    <meta property="og:title" content="${movieDetailResult.data.title}" />
+    <meta property="og:description" content="${movieDetailResult.data.overview}" />
+    <meta property="og:image" content="${movieDetailResult.data.poster_path}" />
+  `
+  );
   res.send(renderedHTML);
 });
 
