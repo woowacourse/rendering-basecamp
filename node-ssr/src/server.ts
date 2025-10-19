@@ -7,10 +7,11 @@ import DetailPage from "./page/detail";
 import ErrorPage from "./page/error";
 import Home from "./page/home";
 import { moviesApi } from "./service/tmdbApi";
-import { MovieResponse } from "./service/types";
+import { MovieDetailResponse, MovieResponse } from "./service/types";
 import getModal from "./utils/getModal";
 import { getMoviesCard } from "./utils/getMoviesCard";
 import getTopRatedMovieCard from "./utils/getTopRatedMovieCard";
+import { SeoHead } from "./components/SeoHead";
 
 const app = express();
 const PORT = 8080;
@@ -24,7 +25,14 @@ app.get("/", async (_req: Request, res: Response) => {
     const moviesComponent = await getMoviesCard({ movieList });
     const topRatedMovieComponent = getTopRatedMovieCard({ movieList });
 
-    res.send(Home({ topRatedMovieComponent, moviesComponent }));
+    const seoHead = SeoHead({
+      title: "인기 영화 추천",
+      description: "지금 인기 있는 영화들을 만나보세요.",
+      image: `https://image.tmdb.org/t/p/w1280${movieList.results[0].backdrop_path}`,
+      url: "https://rendering-basecamp-production-8f18.up.railway.app/",
+    });
+
+    res.send(Home({ topRatedMovieComponent, moviesComponent, seoHead }));
   } catch (error) {
     console.error("Error processing movie data:", error);
     res
@@ -39,14 +47,25 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
   const movieId = req.params.id;
   try {
     const movieList: MovieResponse = await moviesApi.getPopular(1);
+    const movieDetail: MovieDetailResponse = await moviesApi.getDetail(
+      Number(movieId)
+    );
 
-    const modalComponent = await getModal({ movieId });
+    const modalComponent = await getModal({ movieDetail });
 
     const moviesComponent = await getMoviesCard({ movieList });
     const topRatedMovieComponent = getTopRatedMovieCard({ movieList });
 
+    const seoHead = SeoHead({
+      title: movieDetail.title,
+      description: movieDetail.overview,
+      image: `https://image.tmdb.org/t/p/w1280${movieDetail.backdrop_path}`,
+      url: `https://rendering-basecamp-production-8f18.up.railway.app/detail/${movieDetail.id}`,
+    });
+
     res.send(
       DetailPage({
+        seoHead,
         topRatedMovieComponent,
         moviesComponent,
         modalComponent,

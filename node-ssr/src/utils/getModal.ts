@@ -1,11 +1,10 @@
 import Modal from "../components/Modal";
-import { moviesApi } from "../service/tmdbApi";
-import { MovieDetailResponse } from "../service/types";
+import { MovieDetail } from "../service/types";
 
-export default async function getModal({ movieId }: { movieId: string }) {
-  const movieDetail: MovieDetailResponse = await moviesApi.getDetail(
-    Number(movieId)
-  );
-
+export default async function getModal({
+  movieDetail,
+}: {
+  movieDetail: MovieDetail;
+}) {
   return Modal({ movieDetail });
 }

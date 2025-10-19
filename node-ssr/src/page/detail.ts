@@ -1,10 +1,12 @@
 interface DetailPageProps {
+  seoHead: string;
   topRatedMovieComponent: string;
   moviesComponent: string;
   modalComponent: string;
 }
 
 export default function DetailPage({
+  seoHead,
   topRatedMovieComponent,
   moviesComponent,
   modalComponent,
@@ -16,7 +18,7 @@ export default function DetailPage({
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/styles/index.css" />
-    <title>영화 리뷰</title>
+    ${seoHead}
   </head>
   <body>
     <div id="wrap">

@@ -1,9 +1,11 @@
 interface HomeProps {
+  seoHead: string;
   topRatedMovieComponent: string;
   moviesComponent: string;
 }
 
 export default function Home({
+  seoHead,
   topRatedMovieComponent,
   moviesComponent,
 }: HomeProps) {
@@ -14,7 +16,7 @@ export default function Home({
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/styles/index.css" />
-    <title>영화 리뷰</title>
+    ${seoHead}
   </head>
   <body>
     <div id="wrap">
