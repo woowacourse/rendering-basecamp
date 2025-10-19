@@ -1,14 +1,15 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { moviesApi } from '@/api/movies';
-import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
 import { useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import { overlay } from 'overlay-kit';
 import type { MovieDetailResponse } from '@/types/MovieDetail.types';
 import type { MovieItem } from '@/types/Movie.types';
 import { Header } from '@/components/Header';
 import { MovieList } from '@/components/MovieList';
 import { Footer } from '@/components/Footer';
+import { MovieDetailModal } from '@/components/MovieDetailModal';
 
 export const getServerSideProps = (async (context) => {
   const { id } = context.params as { id: string };
@@ -79,7 +80,6 @@ function DetailPageOpenModal({
 }: {
   movieDetail: MovieDetailResponse;
 }) {
-  const { openMovieDetailModal } = useMovieDetailModal();
   const router = useRouter();
   const hasOpenedRef = useRef(false);
   const isDirectAccessRef = useRef(false);
@@ -99,14 +99,22 @@ function DetailPageOpenModal({
 
     hasOpenedRef.current = true;
 
-    openMovieDetailModal(movieDetail).then(() => {
-      if (isDirectAccessRef.current) {
-        router.back();
-      } else {
-        router.push('/');
-      }
+    overlay.open(({ unmount }) => {
+      return (
+        <MovieDetailModal
+          movie={movieDetail}
+          onClose={() => {
+            unmount();
+            if (isDirectAccessRef.current) {
+              router.back();
+            } else {
+              router.push('/');
+            }
+          }}
+        />
+      );
     });
-  }, [movieDetail, openMovieDetailModal, router]);
+  }, [movieDetail, router]);
 
   return null;
 }
