@@ -13,7 +13,7 @@ export const useMovieDetailModal = () => {
           onClose={() => {
             resolve();
             unmount();
-            router.replace('/');
+            router.replace('/', undefined, { shallow: true });
           }}
         />
       ));
