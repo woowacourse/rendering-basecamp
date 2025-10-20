@@ -27,7 +27,7 @@ function generateHTML() {
     `;
 }
 
-router.get("/detail/:id", (req: Request, res: Response) => {
+router.get("/:id", (req: Request, res: Response) => {
   const template = generateHTML();
   const movieId = req.params.id;
 
