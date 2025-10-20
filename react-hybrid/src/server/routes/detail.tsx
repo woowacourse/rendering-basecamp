@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express";
 import { renderToString } from "react-dom/server";
 import { moviesApi } from "../../client/api/movies";
-import MovieDetailPage from "../../client/pages/MovieDetailPage";
 import { OverlayProvider } from "overlay-kit";
+import App from "../../client/App";
 
 const router = Router();
 
@@ -36,10 +36,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 
   const renderedApp = renderToString(
     <OverlayProvider>
-      <MovieDetailPage
-        movie={movie.data}
-        moviesServerData={movies.data.results}
-      />
+      <App initialData={{ movie: movie.data, movies: movies.data.results }} />
     </OverlayProvider>
   );
 
@@ -51,13 +48,19 @@ router.get("/:id", async (req: Request, res: Response) => {
   const ogTags = /*html*/ `
     <meta property="og:type" content="video.movie" />
     <meta property="og:title" content="${movieData.title} - 영화 리뷰" />
-    <meta property="og:description" content="${movieData.overview || "영화 상세 정보를 확인해보세요."}" />
-    <meta property="og:url" content="${req.protocol}://${req.get("host")}${req.originalUrl}" />
+    <meta property="og:description" content="${
+      movieData.overview || "영화 상세 정보를 확인해보세요."
+    }" />
+    <meta property="og:url" content="${req.protocol}://${req.get("host")}${
+    req.originalUrl
+  }" />
     <meta property="og:site_name" content="영화 리뷰" />
     ${imageUrl ? `<meta property="og:image" content="${imageUrl}" />` : ""}
     ${imageUrl ? `<meta property="og:image:width" content="500" />` : ""}
     ${imageUrl ? `<meta property="og:image:height" content="750" />` : ""}
-    <meta name="description" content="${movieData.overview || "영화 상세 정보를 확인해보세요."}" />
+    <meta name="description" content="${
+      movieData.overview || "영화 상세 정보를 확인해보세요."
+    }" />
     <meta name="keywords" content="영화, 영화리뷰, ${movieData.title}" />
   `;
 

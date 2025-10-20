@@ -3,7 +3,7 @@ import { moviesApi } from "../../api/movies";
 import { MovieItem } from "../../types/Movie.types";
 
 /**
- * 영화 상세 정보를 조회하는 훅
+ * 영화 정보를 조회하는 훅
  */
 export const usePopularMovies = (moviesServerData: MovieItem[] | null) => {
   const [data, setData] = useState<MovieItem[] | null>(moviesServerData);
@@ -12,8 +12,6 @@ export const usePopularMovies = (moviesServerData: MovieItem[] | null) => {
 
   useEffect(() => {
     const fetchPopularMovies = async () => {
-      if (data) return;
-
       setIsLoading(true);
       setError(null);
 

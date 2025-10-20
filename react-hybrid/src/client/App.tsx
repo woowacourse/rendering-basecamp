@@ -1,27 +1,48 @@
-import React from "react";
-import { OverlayProvider } from "overlay-kit";
+import { OverlayProvider, overlay } from "overlay-kit";
+import { useEffect } from "react";
+import { MovieDetailModalLoader } from "./components/MovieDetailModalLoader";
 import MovieHomePage from "./pages/MovieHomePage";
 import { InitialData } from "./types/global";
-import MovieDetailPage from "./pages/MovieDetailPage";
 
-export type Page = "home" | "detail";
 interface AppProps {
   initialData: InitialData;
-  page?: Page;
 }
 
-function App({ initialData, page = "home" }: AppProps) {
+function App({ initialData }: AppProps) {
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      const detailMatch = path.match(/^\/detail\/(\d+)$/);
+
+      if (detailMatch) {
+        const movieId = parseInt(detailMatch[1], 10);
+        overlay.open(({ unmount }) => (
+          <MovieDetailModalLoader
+            movieId={movieId}
+            close={() => {
+              unmount();
+              if (window.location.pathname !== "/") {
+                window.history.pushState({}, "", "/");
+              }
+            }}
+          />
+        ));
+      } else {
+        overlay.unmountAll();
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    handlePopState();
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
   return (
     <OverlayProvider>
-      {page === "home" && (
-        <MovieHomePage moviesServerData={initialData.movies} />
-      )}
-      {page === "detail" && (
-        <MovieDetailPage
-          moviesServerData={initialData.movies}
-          movie={initialData.movie}
-        />
-      )}
+      <MovieHomePage moviesServerData={initialData.movies} />
     </OverlayProvider>
   );
 }

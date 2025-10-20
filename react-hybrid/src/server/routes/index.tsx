@@ -32,14 +32,16 @@ router.get("/", async (req: Request, res: Response) => {
   const movies = await moviesApi.getPopular();
 
   const renderedApp = renderToString(
-    <App initialData={{ movies: movies.data.results }} page="home" />
+    <App initialData={{ movies: movies.data.results }} />
   );
 
   const ogTags = /*html*/ `
     <meta property="og:type" content="website" />
     <meta property="og:title" content="영화 리뷰 - 인기 영화 목록" />
     <meta property="og:description" content="최신 인기 영화를 확인하고 리뷰를 작성해보세요." />
-    <meta property="og:url" content="${req.protocol}://${req.get("host")}${req.originalUrl}" />
+    <meta property="og:url" content="${req.protocol}://${req.get("host")}${
+    req.originalUrl
+  }" />
     <meta property="og:site_name" content="영화 리뷰" />
     <meta name="description" content="최신 인기 영화를 확인하고 리뷰를 작성해보세요." />
     <meta name="keywords" content="영화, 영화리뷰, 인기영화, 최신영화" />

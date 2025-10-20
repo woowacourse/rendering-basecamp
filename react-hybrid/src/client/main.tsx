@@ -1,11 +1,6 @@
 import { hydrateRoot } from "react-dom/client";
-import App, { Page } from "./App";
+import App from "./App";
 
 const initialData = window.__INITIAL_DATA__;
 
-const page = (window.location.pathname.split("/")[1] || "home") as Page;
-
-hydrateRoot(
-  document.getElementById("root"),
-  <App initialData={initialData} page={page} />
-);
+hydrateRoot(document.getElementById("root"), <App initialData={initialData} />);

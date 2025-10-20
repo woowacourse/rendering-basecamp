@@ -1,22 +1,8 @@
-import { overlay } from "overlay-kit";
-import { MovieDetailResponse } from "../types/MovieDetail.types";
-import { MovieDetailModal } from "../components/MovieDetailModal";
-
 export const useMovieDetailModal = () => {
-  const openMovieDetailModal = (movie: MovieDetailResponse) => {
-    window.history.pushState({}, "", `/detail/${movie.id}`);
-    return new Promise<void>((resolve) => {
-      overlay.open(({ unmount }) => (
-        <MovieDetailModal
-          movie={movie}
-          onClose={() => {
-            resolve();
-            unmount();
-            window.history.pushState({}, "", "/");
-          }}
-        />
-      ));
-    });
+  const openMovieDetailModal = (movieId: number) => {
+    window.history.pushState({}, "", `/detail/${movieId}`);
+
+    window.dispatchEvent(new PopStateEvent("popstate"));
   };
 
   return { openMovieDetailModal };
