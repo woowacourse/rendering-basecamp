@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:client": "webpack --config ./webpack.client.config.js",
-    "build:server": "webpack --config ./webpack.server.config.js",
+    "build:client": "webpack --config webpack.client.config.js",
+    "build:server": "webpack --config webpack.server.config.js",
     "build": "rm -rf dist && npm run build:client && npm run build:server",
     "start": "npm run build && node dist/server/server.js",
     "dev": "concurrently \"npm run build:client -- --watch\" \"npm run build:server -- --watch\" \"node dist/server/server.js\"",
@@ -19,8 +19,7 @@
     "express": "^5.1.0",
     "overlay-kit": "^1.8.5",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.4"
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",
