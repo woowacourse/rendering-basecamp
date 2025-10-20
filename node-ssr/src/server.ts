@@ -132,7 +132,7 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
                   </div>
                   <div class="overview-section">
                     <p class="overview-text">
-                      ${movieData.overview}
+                      ${movieData.overview || '줄거리 정보가 없습니다.'}
                     </p>
                   </div>
                   <div class="my-rating-section">
