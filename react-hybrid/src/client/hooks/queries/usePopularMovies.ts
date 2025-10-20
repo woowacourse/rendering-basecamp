@@ -5,14 +5,14 @@ import { MovieItem } from "../../types/Movie.types";
 /**
  * 영화 정보를 조회하는 훅
  */
-export const usePopularMovies = (movies: MovieItem[] | null) => {
-  const [data, setData] = useState<MovieItem[] | null>(movies);
+export const usePopularMovies = (moviewsServerData: MovieItem[] | null) => {
+  const [data, setData] = useState<MovieItem[] | null>(moviewsServerData);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchPopularMovies = async () => {
-      if (movies) return;
+      if (moviewsServerData) return;
 
       setIsLoading(true);
       setError(null);
