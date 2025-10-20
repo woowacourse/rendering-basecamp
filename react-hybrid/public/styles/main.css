@@ -9,7 +9,7 @@ a {
 
 body {
   font-size: 16px;
-  color: var(--color-white);
+  color: #000;
   background-color: var(--color-bluegray-10);
 }
 
