@@ -1,8 +1,8 @@
 interface OpenGraphMetadata {
-  type?: string;
   title: string;
   description: string;
   url: string;
+  type?: string;
   siteName?: string;
   image?: string;
   imageWidth?: string;
@@ -55,16 +55,23 @@ export function generateHTMLTemplate({
 
 function generateOpenGraphTags(metadata: OpenGraphMetadata): string {
   return [
-    `<meta property="og:type" content="${metadata.type || "website"}" />`,
     `<meta property="og:title" content="${metadata.title}" />`,
     `<meta name="description" content="${metadata.description}" />`,
-    `<meta name="keywords" content="${metadata.keywords}" />`,
-    `<meta property="og:description" content="${metadata.description}" />`,
     `<meta property="og:url" content="${metadata.url}" />`,
-    `<meta property="og:site_name" content="${metadata.siteName}" />`,
-    `<meta property="og:image" content="${metadata.image}" />`,
-    `<meta property="og:image:width" content="${metadata.imageWidth}" />`,
-    `<meta property="og:image:height" content="${metadata.imageHeight}" />`,
+    `<meta property="og:type" content="${metadata.type ?? "website"} " />`,
+    metadata.keywords &&
+      `<meta name="keywords" content="${metadata.keywords}" />`,
+    `<meta property="og:description" content="${metadata.description}" />`,
+    metadata.siteName &&
+      `<meta property="og:site_name" content="${metadata.siteName}" />`,
+    metadata.image &&
+      `<meta property="og:image" content="${metadata.image}" />`,
+    `<meta property="og:image:width" content="${
+      metadata.imageWidth ?? 450
+    }" />`,
+    `<meta property="og:image:height" content="${
+      metadata.imageHeight ?? 300
+    } " />`,
   ]
     .flat()
     .filter(Boolean)
