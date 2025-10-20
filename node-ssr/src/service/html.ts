@@ -94,15 +94,43 @@ export const html = {
     </html>
   `,
 
-  detailHtml: (movie: MovieDetailResponse) => `
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles/index.css" />
-    <title>${movie.title}</title>
-  </head>
+  detailHtml: (movie: MovieDetailResponse) => {
+    const description = (movie.overview || "영화 상세 정보를 확인해보세요!")
+      .replace(/"/g, "&quot;")
+      .slice(0, 100);
+    const image = movie.poster_path
+      ? `https://image.tmdb.org/t/p/w1280${movie.poster_path}`
+      : `/images/og-image.jpg`;
+    const siteUrl = process.env.SITE_URL || "http://localhost:8080";
+    const url = `${siteUrl}/detail/${movie.id}`;
+
+    return `
+    <!DOCTYPE html>
+    <html lang="ko">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>${movie.title}</title>
+        <meta name="description" content="${description}" />
+  
+        <!-- ✅ Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="${url}" />
+        <meta property="og:title" content="${movie.title}" />
+        <meta property="og:description" content="${description}" />
+        <meta property="og:image" content="${image}" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+  
+        <!-- ✅ Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="${movie.title}" />
+        <meta name="twitter:description" content="${description}" />
+        <meta name="twitter:image" content="${image}" />
+  
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="stylesheet" href="/styles/index.css" />
+      </head>
   <body>
     <div id="wrap">
       <header>
@@ -236,5 +264,6 @@ export const html = {
     </div>
   </body>
 </html>
-`,
+`;
+  },
 };
