@@ -1,7 +1,6 @@
-import { Router, Request, Response } from "express";
+import { Request, Response, Router } from "express";
 import { renderToString } from "react-dom/server";
 import { moviesApi } from "../../client/api/movies";
-import { OverlayProvider } from "overlay-kit";
 import App from "../../client/App";
 
 const router = Router();
@@ -35,9 +34,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   const movie = await moviesApi.getDetail(Number(id));
 
   const renderedApp = renderToString(
-    <OverlayProvider>
-      <App initialData={{ movie: movie.data, movies: movies.data.results }} />
-    </OverlayProvider>
+    <App initialData={{ movie: movie.data, movies: movies.data.results }} />
   );
 
   const movieData = movie.data;
