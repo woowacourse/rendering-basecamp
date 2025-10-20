@@ -3,6 +3,8 @@ dotenv.config();
 
 import express, { Request, Response } from "express";
 import path from "path";
+import { moviesApi } from "./service/tmdbApi";
+import { html } from "./service/html";
 
 const app = express();
 const PORT = 8080;
@@ -10,17 +12,26 @@ const PORT = 8080;
 app.use(express.json());
 
 app.get("/", async (_req: Request, res: Response) => {
-  res.send(/*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <title>영화 리뷰</title>
-      </head>
-      <body>
-        테스트
-      </body>
-    </html>
-        `);
+  try {
+    const movies = (await moviesApi.getPopular()).results;
+
+    res.send(html.mainHtml(movies));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("서버 오류가 발생했습니다.");
+  }
+});
+
+app.get("/detail/:id", async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const movie = await moviesApi.getDetail(id);
+
+    res.send(html.detailHtml(movie));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("영화 상세 정보를 불러오는 데 실패했습니다.");
+  }
 });
 
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
