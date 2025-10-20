@@ -37,6 +37,16 @@ async function getDetail(id: number): Promise<Movie> {
   return (await res.json()) as Movie;
 }
 
+function getOrigin(req: Request) {
+  const proto =
+    (req.headers["x-forwarded-proto"] as string) || (req.protocol ?? "http");
+  const host =
+    (req.headers["x-forwarded-host"] as string) ||
+    (req.headers.host as string) ||
+    "localhost:8080";
+  return `${proto}://${host}`;
+}
+
 const esc = (s: string) =>
   s
     .replace(/&/g, "&amp;")
@@ -157,17 +167,39 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
     const movie = await getDetail(id);
     const banner = img.backdrop(movie.backdrop_path);
     const poster = img.posterOriginal(movie.poster_path);
+
     const rating = movie.vote_average?.toFixed(1) ?? "0.0";
     const genres = (movie.genres ?? []).map((g) => g.name).join(", ");
     const overview = movie.overview?.trim() || "줄거리 정보가 없습니다.";
+
+    const origin = getOrigin(req);
+    const pageUrl = `${origin}/detail/${movie.id}`;
+    const pageTitle = `${movie.title} | 영화 리뷰`;
+    const pageDesc =
+      overview.length > 100 ? `${overview.slice(0, 100)}...` : overview;
+    const ogImage = poster;
 
     const html = `<!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${esc(pageTitle)}</title>
+    <meta name="description" content="${esc(pageDesc)}" />
+
+    <meta property="og:url" content="${pageUrl}" />
+    <meta property="og:title" content="${esc(pageTitle)}" />
+    <meta property="og:description" content="${esc(pageDesc)}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="${ogImage}" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${esc(pageTitle)}" />
+    <meta name="twitter:description" content="${esc(pageDesc)}" />
+    <meta name="twitter:image" content="${ogImage}" />
+
+    <link rel="canonical" href="${pageUrl}" />
     <link rel="stylesheet" href="/styles/index.css" />
-    <title>영화 리뷰</title>
   </head>
   <body>
     <div id="wrap">
@@ -190,7 +222,6 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
       <main>
         <section class="container">
           <h2 class="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
-          <!-- 썸네일 목록은 모달 데모라 비움 -->
           <ul class="thumbnail-list"></ul>
         </section>
       </main>
@@ -217,11 +248,9 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
                 <span class="rating-value">${rating}</span>
               </div>
             </div>
-
             <div class="overview-section">
               <p class="overview-text">${esc(overview)}</p>
             </div>
-
             <div class="my-rating-section">
               <div class="rating-header">
                 <span class="rating-label">내 별점</span>
@@ -241,7 +270,6 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
     </div>
   </body>
 </html>`;
-
     return res.status(200).send(html);
   } catch (e) {
     console.error(e);
