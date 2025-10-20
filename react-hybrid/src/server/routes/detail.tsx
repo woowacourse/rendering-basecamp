@@ -43,7 +43,27 @@ router.get("/:id", async (req: Request, res: Response) => {
     </OverlayProvider>
   );
 
-  const renderedHTMLWithInitialData = template.replace(
+  const movieData = movie.data;
+  const imageUrl = movieData.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movieData.poster_path}`
+    : "";
+
+  const ogTags = /*html*/ `
+    <meta property="og:type" content="video.movie" />
+    <meta property="og:title" content="${movieData.title} - 영화 리뷰" />
+    <meta property="og:description" content="${movieData.overview || "영화 상세 정보를 확인해보세요."}" />
+    <meta property="og:url" content="${req.protocol}://${req.get("host")}${req.originalUrl}" />
+    <meta property="og:site_name" content="영화 리뷰" />
+    ${imageUrl ? `<meta property="og:image" content="${imageUrl}" />` : ""}
+    ${imageUrl ? `<meta property="og:image:width" content="500" />` : ""}
+    ${imageUrl ? `<meta property="og:image:height" content="750" />` : ""}
+    <meta name="description" content="${movieData.overview || "영화 상세 정보를 확인해보세요."}" />
+    <meta name="keywords" content="영화, 영화리뷰, ${movieData.title}" />
+  `;
+
+  const renderedHTMLWithOgTags = template.replace("<!--{OG_TAGS}-->", ogTags);
+
+  const renderedHTMLWithInitialData = renderedHTMLWithOgTags.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
