@@ -1,8 +1,9 @@
 import { Router, Request, Response } from "express";
 
 import { renderToString } from "react-dom/server";
+import App from "../../client/App";
+import MovieDetailPage from "../../client/pages/MovieDetailPage";
 import React from "react";
-import MovieHomePage from "../../client/pages/MovieHomePage";
 
 const router = Router();
 
@@ -26,17 +27,19 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get("/detail/:id", (req: Request, res: Response) => {
   const template = generateHTML();
+  const movieId = req.params.id;
 
-  const renderedApp = renderToString(<MovieHomePage />);
+  const renderedApp = renderToString(<MovieDetailPage />);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify([])},
+        movieId: ${movieId}
       }
     </script>
   `
