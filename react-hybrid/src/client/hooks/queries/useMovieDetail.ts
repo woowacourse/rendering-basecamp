@@ -17,8 +17,6 @@ export const useMovieDetail = (
     if (!id) return;
 
     const fetchMovieDetail = async () => {
-      if (movieServerData) return;
-
       setIsLoading(true);
       setError(null);
 
