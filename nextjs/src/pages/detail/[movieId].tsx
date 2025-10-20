@@ -43,7 +43,10 @@ export default function MovieDetailPage({
   const { title, overview, poster_path } = movieDetail;
   const imageUrl = poster_path
     ? `https://image.tmdb.org/t/p/w500${poster_path}`
-    : '/images/no_image.png';
+    : `${
+        process.env.NEXT_PUBLIC_BASE_URL ||
+        'https://kirin-rendering-basecamp-nextjs.vercel.app'
+      }/images/no_image.png`;
 
   return (
     <>
