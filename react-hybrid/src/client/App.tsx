@@ -18,6 +18,7 @@ function App({ initialData }: AppProps) {
         const movieId = parseInt(detailMatch[1], 10);
         overlay.open(({ unmount }) => (
           <MovieDetailModalLoader
+            movieServerData={initialData.movie}
             movieId={movieId}
             close={() => {
               unmount();
@@ -32,9 +33,9 @@ function App({ initialData }: AppProps) {
       }
     };
 
-    window.addEventListener("popstate", handlePopState);
     handlePopState();
 
+    window.addEventListener("popstate", handlePopState);
     return () => {
       window.removeEventListener("popstate", handlePopState);
     };
