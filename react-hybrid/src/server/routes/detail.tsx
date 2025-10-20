@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 
 import { renderToString } from "react-dom/server";
-import App from "../../client/App";
+import { OverlayProvider } from "overlay-kit";
 import MovieDetailPage from "../../client/pages/MovieDetailPage";
 import React from "react";
 
@@ -31,7 +31,11 @@ router.get("/detail/:id", (req: Request, res: Response) => {
   const template = generateHTML();
   const movieId = req.params.id;
 
-  const renderedApp = renderToString(<MovieDetailPage />);
+  const renderedApp = renderToString(
+    <OverlayProvider>
+      <MovieDetailPage />
+    </OverlayProvider>
+  );
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",

@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 
 import { renderToString } from "react-dom/server";
 import React from "react";
+import { OverlayProvider } from "overlay-kit";
 import MovieHomePage from "../../client/pages/MovieHomePage";
 
 const router = Router();
@@ -29,7 +30,11 @@ function generateHTML() {
 router.get("/", (_: Request, res: Response) => {
   const template = generateHTML();
 
-  const renderedApp = renderToString(<MovieHomePage />);
+  const renderedApp = renderToString(
+    <OverlayProvider>
+      <MovieHomePage />
+    </OverlayProvider>
+  );
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
