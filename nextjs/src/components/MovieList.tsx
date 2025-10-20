@@ -5,8 +5,7 @@ import { MovieItem } from './MovieItem';
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
   const router = useRouter();
   const handleMovieClick = async (movie: MovieItemType) => {
-    const movieId = movie.id;
-    router.push({ query: { movieId } }, undefined, { shallow: true });
+    router.push(`/detail/${movie.id}`, undefined, { shallow: true });
   };
 
   return (
