@@ -52,7 +52,7 @@ app.get('/', async (_req: Request, res: Response) => {
     <meta property="og:type" content="website" />
     <meta property="og:title" content="${featuredMovie.title}" />
     <meta property="og:description" content="${featuredMovie.overview || '영화 상세 정보'}" />
-    <meta property="og:image" content="https://image.tmdb.org/t/original${featuredMovie.poster_path}" />
+    <meta property="og:image" content="https://image.tmdb.org/t/p/original${featuredMovie.poster_path}" />
     <meta property="og:url" content="http://localhost:8080" />
   </head>
   <body>
