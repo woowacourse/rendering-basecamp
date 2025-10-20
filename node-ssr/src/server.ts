@@ -21,16 +21,18 @@ app.get("/", async (_req: Request, res: Response) => {
       .map(
         (movie: Movie) => `
             <li class="movie-item">
-              <div class="item">
-                <img class="thumbnail" src="https://media.themoviedb.org/t/p/w440_and_h660_face${movie.poster_path}" alt="${movie.title}" loading="lazy" />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span>${movie.vote_average.toFixed(1)}</span>
-                  </p>
-                  <strong>${movie.title}</strong>
+              <a href="/detail/${movie.id}">
+                <div class="item">
+                  <img class="thumbnail" src="https://media.themoviedb.org/t/p/w440_and_h660_face${movie.poster_path}" alt="${movie.title}" loading="lazy" />
+                  <div class="item-desc">
+                    <p class="rate">
+                      <img src="/images/star_empty.png" class="star" />
+                      <span>${movie.vote_average.toFixed(1)}</span>
+                    </p>
+                    <strong>${movie.title}</strong>
+                  </div>
                 </div>
-              </div>
+              </a>
             </li>`
       )
       .join("");
@@ -52,11 +54,13 @@ app.get("/", async (_req: Request, res: Response) => {
                 <img src="/images/logo.png" width="117" height="20" class="logo" alt="MovieLogo" />
                 <div class="top-rated-movie">
                   <div class="rate">
-                    <img src="/images/star_empty.png" width="32" height="32" />
+                    <img src="/images/star_empty.png" width="32" height="32" alt="rating" />
                     <span class="text-2xl font-semibold text-yellow">${featuredMovie.vote_average.toFixed(1)}</span>
                   </div>
                   <h1 class="text-3xl font-semibold">${featuredMovie.title}</h1>
-                  <button class="primary detail">자세히 보기</button>
+                  <a href="/detail/${featuredMovie.id}">
+                    <button class="primary detail">자세히 보기</button>
+                  </a>
                 </div>
               </div>
             </div>
