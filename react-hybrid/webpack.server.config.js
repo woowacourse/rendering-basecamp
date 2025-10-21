@@ -1,16 +1,7 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 const webpack = require('webpack');
-const dotenv = require('dotenv');
-
-// .env 파일 로드
-const env = dotenv.config().parsed;
-
-// 환경 변수를 webpack DefinePlugin에 전달할 형태로 변환
-const envKeys = Object.keys(env || {}).reduce((prev, next) => {
-  prev[`process.env.${next}`] = JSON.stringify(env[next]);
-  return prev;
-}, {});
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: 'development',
@@ -24,7 +15,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
-  plugins: [new webpack.DefinePlugin(envKeys)],
+  plugins: [new Dotenv()],
   module: {
     rules: [
       {
