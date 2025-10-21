@@ -69,7 +69,6 @@ router.get('/detail/:movieId', async (req: Request, res: Response) => {
       return res.status(400).send('Invalid movie ID');
     }
 
-    // 인기 영화 목록과 선택된 영화 상세 정보를 가져옴
     const [popularResponse, detailResponse] = await Promise.all([
       moviesApi.getPopular(),
       moviesApi.getDetail(movieId),
