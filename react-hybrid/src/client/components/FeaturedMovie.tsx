@@ -25,7 +25,7 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
       </div>
       <h1 className="text-3xl font-semibold">{movie.title}</h1>
       <Button variant="primary" onClick={handleDetailClick} className="detail">
-        자세히 보기
+        <a href={`/detail/${movie.id}`}>자세히 보기</a>
       </Button>
     </div>
   );
