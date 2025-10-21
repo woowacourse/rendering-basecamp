@@ -1,9 +1,9 @@
 import { Request, Response, Router } from "express";
-
 import { renderToString } from "react-dom/server";
 import { moviesApi } from "../../client/api/movies";
 import App from "../../client/App";
 import { MovieItem } from "../../client/types/Movie.types";
+import { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 import { getOGMetaTagsHTML } from "../utils/getOGMetaTagsHTML";
 import { getUrl } from "../utils/getUrl";
 
@@ -13,10 +13,9 @@ router.get("/", async (req: Request, res: Response) => {
   const movies = await fetchPopularMovies();
   const topMovie = movies[0];
 
-  const renderedApp = renderApp(movies);
-
+  const renderedApp = renderApp({ movies });
   const ogTagsHTML = buildOGTags(req, topMovie);
-  const initialDataScript = buildInitialDataScript(movies);
+  const initialDataScript = buildInitialDataScript({ movies });
 
   const finalHTML = injectHTMLParts({
     template: generateHTMLTemplate(),
@@ -28,34 +27,76 @@ router.get("/", async (req: Request, res: Response) => {
   res.send(finalHTML);
 });
 
+router.get("/detail/:id", async (req: Request, res: Response) => {
+  const movieId = Number(req.params.id);
+  const { movies, selectedMovieDetail } = await fetchMovieDetailPageData(
+    movieId
+  );
+
+  const renderedApp = renderApp({ movies, selectedMovieDetail });
+  const ogTagsHTML = buildOGTags(req, selectedMovieDetail);
+  const initialDataScript = buildInitialDataScript({
+    movies,
+    selectedMovieDetail,
+  });
+
+  const finalHTML = injectHTMLParts({
+    template: generateHTMLTemplate(),
+    body: renderedApp,
+    ogTags: ogTagsHTML,
+    initialData: initialDataScript,
+  });
+
+  res.send(finalHTML);
+});
+
+export default router;
+
 async function fetchPopularMovies() {
   const response = await moviesApi.getPopular();
   return response?.data.results ?? [];
 }
 
-function renderApp(movies: MovieItem[]) {
-  return renderToString(<App initialData={{ movies: movies }} />);
+async function fetchMovieDetailPageData(movieId: number): Promise<{
+  movies: MovieItem[];
+  selectedMovieDetail: MovieDetailResponse;
+}> {
+  const [{ data: popularData }, { data: selectedMovieDetail }] =
+    await Promise.all([moviesApi.getPopular(), moviesApi.getDetail(movieId)]);
+
+  return {
+    movies: popularData.results ?? [],
+    selectedMovieDetail,
+  };
 }
 
-function buildOGTags(req: Request, topMovie: MovieItem) {
-  const topMovieImageUrl = topMovie.poster_path
-    ? `https://image.tmdb.org/t/p/original${topMovie.poster_path}`
+function renderApp(initialData: {
+  movies: MovieItem[];
+  selectedMovieDetail?: MovieDetailResponse;
+}) {
+  return renderToString(<App initialData={initialData} />);
+}
+
+function buildOGTags(req: Request, movie: MovieItem | MovieDetailResponse) {
+  const imageUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
     : "/images/no_image.png";
 
   return getOGMetaTagsHTML({
-    title: "영화 추천 사이트",
-    description: `현재 인기 영화: ${topMovie.title}. ${
-      topMovie?.overview || "최신 인기 영화를 확인해보세요."
-    }`,
+    title: movie.title || "영화 추천 사이트",
+    description: movie.overview || "최신 인기 영화와 상세 정보를 확인해보세요.",
     url: getUrl(req),
-    image: topMovieImageUrl,
+    image: imageUrl,
   });
 }
 
-function buildInitialDataScript(movies: MovieItem[]) {
+function buildInitialDataScript(initialData: {
+  movies: MovieItem[];
+  selectedMovieDetail?: MovieDetailResponse;
+}) {
   return /*html*/ `
     <script>
-      window.__INITIAL_DATA__ = { movies: ${JSON.stringify(movies)} };
+      window.__INITIAL_DATA__ = ${JSON.stringify(initialData)};
     </script>
   `;
 }
@@ -96,5 +137,3 @@ function generateHTMLTemplate() {
     </html>
   `;
 }
-
-export default router;
