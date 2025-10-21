@@ -32,7 +32,7 @@ router.get("/", async (_: Request, res: Response) => {
   } = await moviesApi.getPopular();
   const template = generateHTML();
 
-  const renderedApp = renderToString(<App />);
+  const renderedApp = renderToString(<App initialMovies={movies} />);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
