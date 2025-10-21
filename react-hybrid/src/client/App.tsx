@@ -3,12 +3,12 @@ import MovieDetailPage from "./pages/MovieDetailPage";
 import MovieHomePage from "./pages/MovieHomePage";
 import { InitialData } from "./types/global";
 
-interface AppProps {
+interface Props {
   routeType: "home" | "detail";
   initialData: InitialData;
 }
 
-function App({ routeType, initialData }: AppProps) {
+function App({ routeType, initialData }: Props) {
   const { movies, selectedMovieDetail } = initialData;
 
   return (
