@@ -13,6 +13,15 @@ const PORT = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+app.use(
+  "/images",
+  express.static(path.join(__dirname, "../../dist/static/images"))
+);
+app.use(
+  "/styles",
+  express.static(path.join(__dirname, "../../dist/static/styles"))
+);
+
 app.use("/static", express.static(path.join(__dirname, "../../dist/static")));
 
 app.use("/", movieRouter);
