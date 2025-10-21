@@ -23,7 +23,9 @@ export const useMovieRating = (movieId: number, movieName: string) => {
   const setRating = useCallback(
     (rate: number) => {
       const ratings = getRatings();
-      const existingIndex = ratings.findIndex(item => item.movieId === movieId);
+      const existingIndex = ratings.findIndex(
+        (item) => item.movieId === movieId,
+      );
 
       if (existingIndex > -1) {
         ratings[existingIndex].rate = rate;
@@ -39,12 +41,12 @@ export const useMovieRating = (movieId: number, movieName: string) => {
       saveRatings(ratings);
       setRatingState(rate);
     },
-    [movieId, movieName, getRatings, saveRatings]
+    [movieId, movieName, getRatings, saveRatings],
   );
 
   useEffect(() => {
     const ratings = getRatings();
-    const movieRating = ratings.find(item => item.movieId === movieId);
+    const movieRating = ratings.find((item) => item.movieId === movieId);
     setRatingState(movieRating?.rate ?? 0);
   }, [movieId, getRatings]);
 
