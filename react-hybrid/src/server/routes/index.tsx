@@ -3,6 +3,7 @@ import { Router, Request, Response } from "express";
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import { moviesApi } from "../../client/api/movies";
+import { createSEO } from "../../client/utils/createSEO";
 
 const router = Router();
 
@@ -14,7 +15,6 @@ function generateHTML() {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
         <!--{OG_TAGS}-->
       </head>
       <body>
@@ -30,6 +30,8 @@ router.get("/", async (_: Request, res: Response) => {
   const {
     data: { results: movies },
   } = await moviesApi.getPopular();
+  const firstMovie = movies[0];
+  const imagePath = firstMovie.poster_path;
   const template = generateHTML();
 
   const renderedApp = renderToString(<App initialMovies={movies} />);
@@ -49,7 +51,20 @@ router.get("/", async (_: Request, res: Response) => {
     renderedApp
   );
 
-  res.send(renderedHTML);
+  const seoHTML = renderedHTML.replace(
+    "<!--{OG_TAGS}-->",
+    createSEO({
+      title: "영화 리뷰",
+      description: "영화 리뷰",
+      ogType: "video.movie",
+      ogTitle: "영화 리뷰",
+      ogDescription: "보고싶은 영화의 리뷰를 확인하세요",
+      ogImage: `https://image.tmdb.org/t/p/w1280${imagePath}`,
+      ogUrl: "https://www.example.com",
+    })
+  );
+
+  res.send(seoHTML);
 });
 
 router.get("/detail/:id", async (req: Request, res: Response) => {
@@ -64,19 +79,12 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
   const movies = popularResponse.data?.results ?? [];
   const detail = detailResponse.data ?? null;
 
-  console.log("detail", detail);
-
   const renderedApp = renderToString(
     <App initialMovies={movies} initialDetail={detail} />
   );
 
   const initialData = { movies, detail };
-
-  const baseUrl = `${req.protocol}://${req.get("host")}`;
-  const imagePath = detail?.backdrop_path || detail?.poster_path || "";
-  const ogImage = imagePath
-    ? `https://image.tmdb.org/t/p/w1280${imagePath}`
-    : `${baseUrl}/images/logo.png`;
+  const ogImageUrl = `https://image.tmdb.org/t/p/w500${detail?.poster_path}`;
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
@@ -92,7 +100,20 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     renderedApp
   );
 
-  res.send(renderedHTML);
+  const seoHTML = renderedHTML.replace(
+    "<!--{OG_TAGS}-->",
+    createSEO({
+      title: `${detail?.title} - 영화 리뷰`,
+      description: `${detail?.overview}`,
+      ogType: "video.movie",
+      ogTitle: detail?.title,
+      ogDescription: detail?.overview,
+      ogImage: ogImageUrl,
+      ogUrl: req.url,
+    })
+  );
+
+  res.send(seoHTML);
 });
 
 export default router;
