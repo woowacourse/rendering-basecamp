@@ -4,18 +4,38 @@ import { MovieDetailResponse } from "../types/MovieDetail.types";
 
 export const useMovieDetailModal = () => {
   const openMovieDetailModal = (movie: MovieDetailResponse) => {
-    return new Promise<void>((resolve) => {
-      overlay.open(({ unmount }) => (
-        <MovieDetailModal
-          movie={movie}
-          onClose={() => {
-            window.history.pushState({}, "", "/");
-            resolve();
-            unmount();
-          }}
-        />
-      ));
-    });
+    const unmountRef = { current: null as null | (() => void) };
+
+    const open = () => {
+      overlay.open(({ unmount }) => {
+        unmountRef.current = unmount;
+
+        return (
+          <MovieDetailModal
+            movie={movie}
+            onClose={() => {
+              window.history.pushState({}, "", "/");
+              unmount();
+            }}
+          />
+        );
+      });
+    };
+
+    const handlePopState = () => {
+      const path = window.location.pathname;
+
+      if (path === "/") unmountRef.current?.();
+      else if (path.startsWith("/detail/")) open();
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    open();
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      unmountRef.current?.();
+    };
   };
 
   return { openMovieDetailModal };
