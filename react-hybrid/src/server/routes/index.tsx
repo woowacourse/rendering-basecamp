@@ -4,6 +4,7 @@ import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
 import { moviesApi } from "../../client/api/movies";
+import { SeoHead } from "../utils/SeoHead";
 
 const router = Router();
 
@@ -15,7 +16,6 @@ function generateHTML() {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
         <!--{OG_TAGS}-->
       </head>
       <body>
@@ -30,21 +30,33 @@ function generateHTML() {
 router.get("/", async (_: Request, res: Response) => {
   const template = generateHTML();
 
-  const movies = await moviesApi.getPopular();
+  const movieList = await moviesApi.getPopular();
+
   const renderedApp = renderToString(
-    <App initialMovies={movies.data.results} />
+    <App initialMovies={movieList.data.results} />
   );
 
-  const renderedHTMLWithInitialData = template.replace(
+  const renderedHTMLWithSeo = template.replace(
+    "<!--{OG_TAGS}-->",
+    SeoHead({
+      title: "인기 영화 추천",
+      description: "지금 인기 있는 영화들을 만나보세요.",
+      image: `https://image.tmdb.org/t/p/w1280${movieList.data.results[0].backdrop_path}`,
+      url: "https://rendering-basecamp-production-8f18.up.railway.app/",
+    })
+  );
+
+  const renderedHTMLWithInitialData = renderedHTMLWithSeo.replace(
     "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
+    `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify(movies.data.results)}
+        movies: ${JSON.stringify(movieList.data.results)}
       }
     </script>
   `
   );
+
   const renderedHTML = renderedHTMLWithInitialData.replace(
     "<!--{BODY_AREA}-->",
     renderedApp
