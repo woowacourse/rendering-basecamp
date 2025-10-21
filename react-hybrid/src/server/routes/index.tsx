@@ -39,7 +39,7 @@ router.get("/", async (_: Request, res: Response) => {
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify(movies)}
       }
     </script>
   `
