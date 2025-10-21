@@ -1,13 +1,7 @@
 import { OverlayProvider } from "overlay-kit";
 import MovieDetailPage from "./pages/MovieDetailPage";
 import MovieHomePage from "./pages/MovieHomePage";
-import { MovieItem } from "./types/Movie.types";
-import { MovieDetailResponse } from "./types/MovieDetail.types";
-
-interface InitialData {
-  movies: MovieItem[];
-  selectedMovieDetail?: MovieDetailResponse;
-}
+import { InitialData } from "./types/global";
 
 interface AppProps {
   routeType: "home" | "detail";
