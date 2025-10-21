@@ -82,6 +82,7 @@ function generateInitialDataScript(data: Record<string, unknown>): string {
   return /*html*/ `
     <script>
       window.__INITIAL_DATA__ = ${JSON.stringify(data)}
+      window.__INITIAL_PATH__ = "/";
     </script>
   `;
 }

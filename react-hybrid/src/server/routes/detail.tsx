@@ -13,7 +13,10 @@ router.get("/:id", async (req: Request, res: Response) => {
   const movie = await moviesApi.getDetail(Number(id));
 
   const renderedApp = renderToString(
-    <App initialData={{ movie: movie.data, movies: movies.data.results }} />
+    <App
+      Component={MovieDetailPage}
+      props={{ movie: movie.data, movies: movies.data.results }}
+    />
   );
 
   const movieData = movie.data;

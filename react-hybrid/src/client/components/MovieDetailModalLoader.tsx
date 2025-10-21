@@ -20,6 +20,8 @@ export const MovieDetailModalLoader = ({
     error,
   } = useMovieDetail(movieId, movieServerData);
 
+  console.log({ movie });
+
   if (isLoading) {
     return <Loading />;
   }

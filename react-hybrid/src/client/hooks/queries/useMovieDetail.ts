@@ -14,9 +14,11 @@ export const useMovieDetail = (
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    console.log(id);
     if (!id) return;
 
     const fetchMovieDetail = async () => {
+      console.log(id);
       setIsLoading(true);
       setError(null);
 

@@ -3,6 +3,7 @@ import { renderToString } from "react-dom/server";
 import { moviesApi } from "../../client/api/movies";
 import App from "../../client/App";
 import { generateHTMLTemplate } from "../utils/htmlTemplate";
+import MovieHomePage from "../../client/pages/MovieHomePage";
 
 const router = Router();
 
@@ -10,7 +11,10 @@ router.get("/", async (req: Request, res: Response) => {
   const movies = await moviesApi.getPopular();
 
   const renderedApp = renderToString(
-    <App initialData={{ movies: movies.data.results }} />
+    <App
+      Component={MovieHomePage}
+      initialData={{ movies: movies.data.results }}
+    />
   );
 
   const html = generateHTMLTemplate({
