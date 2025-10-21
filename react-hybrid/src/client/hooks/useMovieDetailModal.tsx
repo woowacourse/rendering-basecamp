@@ -9,6 +9,7 @@ export const useMovieDetailModal = () => {
         <MovieDetailModal
           movie={movie}
           onClose={() => {
+            window.history.pushState({}, "", "/");
             resolve();
             unmount();
           }}
