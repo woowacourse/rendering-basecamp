@@ -3,6 +3,7 @@ import { Router, Request, Response } from "express";
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
+import { moviesApi } from "../../client/api/movies";
 
 const router = Router();
 
@@ -26,17 +27,19 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get("/", async (_: Request, res: Response) => {
   const template = generateHTML();
+  const popularMovies = await moviesApi.getPopular();
+  const movies = popularMovies.data.results || [];
 
-  const renderedApp = renderToString(<App />);
+  const renderedApp = renderToString(<App movies={movies} />);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify({ movies })}
       }
     </script>
   `
