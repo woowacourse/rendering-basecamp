@@ -1,8 +1,12 @@
-import React from "react";
 import { OverlayProvider } from "overlay-kit";
 import { MovieItem } from "./types/Movie.types";
 
-function App({ movies }: { movies: MovieItem[] }) {
+interface InitialData {
+  movies: MovieItem[];
+  selectedMovieDetail?: MovieItem;
+}
+
+function App({ initialData }: { initialData: InitialData }) {
   return <OverlayProvider>App</OverlayProvider>;
 }
 

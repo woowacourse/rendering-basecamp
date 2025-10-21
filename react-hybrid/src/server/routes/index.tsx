@@ -34,7 +34,7 @@ async function fetchPopularMovies() {
 }
 
 function renderApp(movies: MovieItem[]) {
-  return renderToString(<App movies={movies} />);
+  return renderToString(<App initialData={{ movies: movies }} />);
 }
 
 function buildOGTags(req: Request, topMovie: MovieItem) {
