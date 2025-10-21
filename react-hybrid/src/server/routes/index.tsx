@@ -1,9 +1,9 @@
 import { Router, Request, Response } from "express";
-
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
 import axios from "axios";
+import { moviesApi } from "../../client/api/movies";
 
 const router = Router();
 
@@ -72,15 +72,7 @@ router.get("/", async (req: Request, res: Response) => {
   try {
     const template = generateHTML();
 
-    const popularResponse = await axios.get(
-      `https://api.themoviedb.org/3/movie/popular?page=1&language=ko-KR`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const popularResponse = await moviesApi.getPopular();
 
     const movies = popularResponse.data?.results ?? [];
 
@@ -133,21 +125,8 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     const template = generateHTML();
 
     const [popularResponse, detailResponse] = await Promise.all([
-      axios.get(
-        `https://api.themoviedb.org/3/movie/popular?page=1&language=ko-KR`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-            "Content-Type": "application/json",
-          },
-        }
-      ),
-      axios.get(`https://api.themoviedb.org/3/movie/${id}?language=ko-KR`, {
-        headers: {
-          Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-      }),
+      moviesApi.getPopular(),
+      moviesApi.getDetail(Number(id)),
     ]);
 
     const movies = popularResponse.data?.results ?? [];
