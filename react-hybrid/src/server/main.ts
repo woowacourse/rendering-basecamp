@@ -17,7 +17,6 @@ app.use("/static", express.static(path.join(__dirname, "../../dist/static")));
 
 app.use("/", movieRouter);
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
