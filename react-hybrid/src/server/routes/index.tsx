@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
-import React from "react";
+import { moviesApi } from "../../client/api/movies";
 
 const router = Router();
 
@@ -26,7 +26,10 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get("/", async (_: Request, res: Response) => {
+  const {
+    data: { results: movies },
+  } = await moviesApi.getPopular();
   const template = generateHTML();
 
   const renderedApp = renderToString(<App />);
