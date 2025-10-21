@@ -9,25 +9,27 @@ interface MovieDetailPageProps {
   selectedMovieDetail: MovieDetailResponse;
 }
 
-export default function MovieDetailPage({
+const MovieDetailPage = ({
   initialMovies,
   selectedMovieDetail,
-}: MovieDetailPageProps) {
+}: MovieDetailPageProps) => {
   return (
     <>
       <MovieHomePage initialMovies={initialMovies} />
       <DetailPageOpenModal selectedMovieDetail={selectedMovieDetail} />
     </>
   );
-}
+};
+
+export default MovieDetailPage;
 
 interface DetailPageOpenModalProps {
   selectedMovieDetail: MovieDetailResponse;
 }
 
-function DetailPageOpenModal({
+const DetailPageOpenModal = ({
   selectedMovieDetail,
-}: DetailPageOpenModalProps) {
+}: DetailPageOpenModalProps) => {
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
@@ -39,4 +41,4 @@ function DetailPageOpenModal({
   }, [selectedMovieDetail, openMovieDetailModal]);
 
   return null;
-}
+};

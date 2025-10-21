@@ -1,4 +1,4 @@
-export function getBaseHTMLTemplate() {
+export const getBaseHTMLTemplate = () => {
   return /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -16,4 +16,4 @@ export function getBaseHTMLTemplate() {
       </body>
     </html>
   `;
-}
+};

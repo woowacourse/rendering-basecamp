@@ -5,14 +5,12 @@ import { MovieList } from "../components/MovieList";
 import { usePopularMovies } from "../hooks/queries/usePopularMovies";
 import { MovieItem } from "../types/Movie.types";
 
-interface Props {
+interface MovieHomePageProps {
   initialMovies: MovieItem[];
 }
 
-export default function MovieHomePage({ initialMovies }: Props) {
-  const { data: popularMovies, isLoading } = usePopularMovies({
-    initialMovies,
-  });
+const MovieHomePage = ({ initialMovies }: MovieHomePageProps) => {
+  const { data: popularMovies, isLoading } = usePopularMovies(initialMovies);
 
   if (isLoading === true) {
     return <Loading />;
@@ -29,4 +27,6 @@ export default function MovieHomePage({ initialMovies }: Props) {
       <Footer />
     </div>
   );
-}
+};
+
+export default MovieHomePage;

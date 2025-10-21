@@ -3,12 +3,12 @@ import MovieDetailPage from "./pages/MovieDetailPage";
 import MovieHomePage from "./pages/MovieHomePage";
 import { InitialData } from "./types/global";
 
-interface Props {
+interface AppProps {
   routeType: "home" | "detail";
   initialData: InitialData;
 }
 
-function App({ routeType, initialData }: Props) {
+const App = ({ routeType, initialData }: AppProps) => {
   const { movies, selectedMovieDetail } = initialData;
 
   return (
@@ -22,6 +22,6 @@ function App({ routeType, initialData }: Props) {
       )}
     </OverlayProvider>
   );
-}
+};
 
 export default App;

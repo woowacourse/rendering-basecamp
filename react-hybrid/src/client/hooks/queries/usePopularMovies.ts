@@ -2,11 +2,7 @@ import { useState, useEffect } from "react";
 import { moviesApi } from "../../api/movies";
 import { MovieItem } from "../../types/Movie.types";
 
-interface Props {
-  initialMovies: MovieItem[];
-}
-
-export const usePopularMovies = ({ initialMovies }: Props) => {
+export const usePopularMovies = (initialMovies: MovieItem[]) => {
   const [data, setData] = useState<MovieItem[]>(initialMovies);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);

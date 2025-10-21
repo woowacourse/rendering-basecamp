@@ -10,7 +10,7 @@ import {
   injectHTMLParts,
 } from "./buildHTML";
 
-export async function renderPage(
+export const renderPage = async (
   req: Request,
   {
     routeType,
@@ -24,7 +24,7 @@ export async function renderPage(
     };
     ogTarget: MovieItem | MovieDetailResponse;
   }
-): Promise<string> {
+): Promise<string> => {
   const appHTML = renderToString(
     <App routeType={routeType} initialData={initialData} />
   );
@@ -37,4 +37,4 @@ export async function renderPage(
     body: appHTML,
     initialData: initialDataScript,
   });
-}
+};

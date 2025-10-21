@@ -3,10 +3,10 @@ import { MovieItem } from "../../client/types/Movie.types";
 import { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 import { getFullRequestUrl, getOGMetaTagsHTML } from "../utils";
 
-export function buildOGTags(
+export const buildOGTags = (
   req: Request,
   movie: MovieItem | MovieDetailResponse
-) {
+) => {
   const imageUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
     : "/static/images/no_image.png";
@@ -17,23 +17,23 @@ export function buildOGTags(
     url: getFullRequestUrl(req),
     image: imageUrl,
   });
-}
+};
 
-export function buildInitialDataScript(
+export const buildInitialDataScript = (
   routeType: "home" | "detail",
   initialData: {
     movies: MovieItem[];
     selectedMovieDetail?: MovieDetailResponse;
   }
-) {
+) => {
   return /*html*/ `
     <script>
       window.__INITIAL_DATA__ = ${JSON.stringify({ routeType, initialData })};
     </script>
   `;
-}
+};
 
-export function injectHTMLParts({
+export const injectHTMLParts = ({
   template,
   ogTags,
   body,
@@ -43,9 +43,9 @@ export function injectHTMLParts({
   ogTags: string;
   body: string;
   initialData: string;
-}) {
+}) => {
   return template
     .replace("<!--{OG_TAGS}-->", ogTags)
     .replace("<!--{BODY_AREA}-->", body)
     .replace("<!--{INIT_DATA_AREA}-->", initialData);
-}
+};
