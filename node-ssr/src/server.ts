@@ -3,6 +3,8 @@ dotenv.config();
 
 import express, { Request, Response } from "express";
 import path from "path";
+import { getIndexHtml } from "./html";
+import { getDetailHtml } from "./html/detail";
 
 const app = express();
 const PORT = 8080;
@@ -10,20 +12,15 @@ const PORT = 8080;
 app.use(express.json());
 
 app.get("/", async (_req: Request, res: Response) => {
-  res.send(/*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <title>영화 리뷰</title>
-      </head>
-      <body>
-        테스트
-      </body>
-    </html>
-        `);
+  const indexHtml = await getIndexHtml();
+  res.send(indexHtml);
+});
+app.get("/detail/:movieId", async (req: Request, res: Response) => {
+  const { movieId } = req.params;
+  const detailHtml = await getDetailHtml(Number(movieId));
+  res.send(detailHtml);
 });
 
-// public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
 app.use(express.static(path.join(__dirname, "../public")));
 
 app.listen(PORT, (): void => {
