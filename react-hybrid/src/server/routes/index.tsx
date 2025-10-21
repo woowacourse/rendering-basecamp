@@ -96,3 +96,5 @@ function generateHTMLTemplate() {
     </html>
   `;
 }
+
+export default router;
