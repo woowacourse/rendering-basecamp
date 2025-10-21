@@ -11,12 +11,14 @@
 프로젝트는 **클라이언트**와 **서버** 두 개의 별도 번들을 생성합니다:
 
 #### 클라이언트 빌드
+
 - **Entry**: `src/client/main.tsx`
 - **Output**: `dist/static/bundle.js`
 - **목적**: 브라우저에서 실행될 JavaScript 번들 생성
 - **역할**: React hydration 및 인터랙션 처리
 
 #### 서버 빌드
+
 - **Entry**: `src/server/main.ts`
 - **Output**: `dist/server/server.js`
 - **목적**: Node.js 환경에서 실행될 Express 서버 생성
@@ -49,6 +51,7 @@ window.__INITIAL_DATA__ = {
 ```
 
 **장점**:
+
 - 사용자는 JavaScript 실행 전에도 콘텐츠 확인 가능
 - 검색 엔진 최적화 (SEO)
 - 빠른 First Contentful Paint (FCP)
@@ -63,6 +66,7 @@ hydrateRoot(document.getElementById("root"), <App />);
 ```
 
 **장점**:
+
 - 서버에서 생성된 DOM 재사용
 - 빠른 초기 인터랙티비티
 - 완전한 SPA 경험 제공
@@ -140,28 +144,31 @@ react-hybrid/
 ## 기술 스택
 
 ### 런타임 & 프레임워크
-| 기술 | 버전 | 역할 |
-|-----|------|-----|
-| React | 19.1.1 | UI 라이브러리 |
-| Express | 5.1.0 | Node.js 웹 서버 |
-| TypeScript | 5.9.2 | 타입 안전성 |
-| Node.js | - | 서버 런타임 |
+
+| 기술       | 버전   | 역할            |
+| ---------- | ------ | --------------- |
+| React      | 19.1.1 | UI 라이브러리   |
+| Express    | 5.1.0  | Node.js 웹 서버 |
+| TypeScript | 5.9.2  | 타입 안전성     |
+| Node.js    | -      | 서버 런타임     |
 
 ### 빌드 도구
-| 도구 | 역할 |
-|-----|-----|
-| Webpack 5 | 모듈 번들러 (클라이언트 + 서버) |
-| Babel | JSX/TypeScript 트랜스파일링 |
-| ts-loader | TypeScript 로더 |
-| babel-loader | Babel 로더 |
+
+| 도구         | 역할                              |
+| ------------ | --------------------------------- |
+| Webpack 5    | 모듈 번들러 (클라이언트 + 서버)   |
+| Babel        | JSX/TypeScript 트랜스파일링       |
+| ts-loader    | TypeScript 로더                   |
+| babel-loader | Babel 로더                        |
 | concurrently | 개발 중 클라이언트/서버 동시 빌드 |
 
 ### 주요 라이브러리
-| 라이브러리 | 용도 |
-|---------|-----|
+
+| 라이브러리  | 용도               |
+| ----------- | ------------------ |
 | overlay-kit | 모달/오버레이 관리 |
-| axios | HTTP 클라이언트 |
-| dotenv | 환경 변수 관리 |
+| axios       | HTTP 클라이언트    |
+| dotenv      | 환경 변수 관리     |
 
 ## 빌드 설정
 
@@ -233,18 +240,22 @@ npm run build:server
 ## 하이브리드 렌더링의 장점
 
 ### 1. 초기 로딩 속도 개선
+
 - **문제**: 전통적인 SPA는 JavaScript 로드 및 실행 전까지 빈 화면
 - **해결**: 서버에서 완성된 HTML 전송 → 빠른 First Contentful Paint (FCP)
 
 ### 2. SEO 최적화
+
 - **문제**: 검색 엔진이 JavaScript 실행 없이는 콘텐츠 크롤링 불가
 - **해결**: 서버에서 완성된 HTML 제공 → 검색 엔진 최적화
 
 ### 3. 부드러운 인터랙티비티
+
 - **문제**: 서버 렌더링만으로는 동적 인터랙션 제한
 - **해결**: Hydration 후 완전한 SPA 경험 제공
 
 ### 4. 데이터 프리페칭
+
 - **문제**: 클라이언트에서 데이터 페칭 시 추가 로딩 시간 발생
 - **해결**: 서버에서 초기 데이터 미리 주입 (`window.__INITIAL_DATA__`)
 
@@ -300,17 +311,17 @@ hydrateRoot(document.getElementById("root"), <App />);
 **파일**: `src/server/main.ts`
 
 ```typescript
-import express from "express";
-import movieRouter from "./routes/index";
+import express from 'express';
+import movieRouter from './routes/index';
 
 const app = express();
 const PORT = 3000;
 
 // 정적 파일 제공 (bundle.js, CSS, 이미지 등)
-app.use("/static", express.static(path.join(__dirname, "../../dist/static")));
+app.use('/static', express.static(path.join(__dirname, '../../dist/static')));
 
 // SSR 라우트
-app.use("/", movieRouter);
+app.use('/', movieRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
@@ -320,11 +331,13 @@ app.listen(PORT, () => {
 ## 렌더링 흐름 상세
 
 ### 1. 사용자 요청 (`GET /`)
+
 ```
 브라우저 → http://localhost:3000/
 ```
 
 ### 2. 서버 처리
+
 ```typescript
 // src/server/routes/index.tsx
 1. React 컴포넌트를 HTML로 변환
@@ -338,8 +351,9 @@ app.listen(PORT, () => {
 ```
 
 ### 3. 브라우저 수신
+
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <link rel="stylesheet" href="/static/styles/index.css" />
@@ -352,7 +366,7 @@ app.listen(PORT, () => {
 
     <!-- 초기 데이터 -->
     <script>
-      window.__INITIAL_DATA__ = { movies: [] }
+      window.__INITIAL_DATA__ = { movies: [] };
     </script>
 
     <!-- 클라이언트 번들 (비동기 로드) -->
@@ -362,6 +376,7 @@ app.listen(PORT, () => {
 ```
 
 ### 4. Hydration 실행
+
 ```typescript
 // bundle.js 실행
 1. 초기 데이터 읽기: window.__INITIAL_DATA__
@@ -373,49 +388,60 @@ app.listen(PORT, () => {
 ## 성능 최적화 포인트
 
 ### 1. Code Splitting (향후 개선 가능)
+
 - 현재: 단일 번들 (`bundle.js`)
 - 개선: Route 기반 코드 스플리팅 → 초기 로딩 크기 감소
 
 ### 2. CSS 최적화
+
 - 현재: `style-loader` (JavaScript에 CSS 번들링)
 - 개선: `MiniCssExtractPlugin` → 별도 CSS 파일 추출
 
 ### 3. 이미지 최적화
+
 - 현재: 이미지를 `public/` 폴더에서 복사
 - 개선: 이미지 압축 및 최적화 파이프라인
 
 ### 4. 캐싱 전략
+
 - 현재: 기본 Express 정적 파일 제공
 - 개선: `Cache-Control` 헤더 설정, CDN 활용
 
 ## 트러블슈팅
 
 ### 1. Hydration Mismatch 오류
+
 **증상**: React가 서버/클라이언트 HTML 불일치 경고
 
 **원인**:
+
 - 서버와 클라이언트에서 다른 데이터 렌더링
 - 브라우저 전용 API 사용 (window, document)
 
 **해결**:
+
 - `useEffect`에서 클라이언트 전용 로직 실행
 - 서버/클라이언트 동일한 초기 상태 보장
 
 ### 2. Module Not Found 오류
+
 **증상**: Webpack 빌드 시 모듈을 찾을 수 없음
 
 **해결**:
+
 ```javascript
 // webpack.config.js
 resolve: {
-  extensions: [".js", ".jsx", ".ts", ".tsx"]
+  extensions: ['.js', '.jsx', '.ts', '.tsx'];
 }
 ```
 
 ### 3. CSS가 적용되지 않음
+
 **증상**: 스타일이 렌더링되지 않음
 
 **해결**:
+
 - `public/styles/` → `dist/static/styles/` 복사 확인
 - HTML에서 올바른 경로 참조: `/static/styles/index.css`
 

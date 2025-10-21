@@ -1,4 +1,4 @@
-import type { MovieItem as MovieItemType } from "../types/Movie.types";
+import type { MovieItem as MovieItemType } from '../types/Movie.types';
 
 interface MovieItemProps {
   movie: MovieItemType;
@@ -11,7 +11,7 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
 
   const imageUrl = poster_path
     ? `https://image.tmdb.org/t/p/w500${poster_path}`
-    : "/static/images/no_image.png";
+    : '/static/images/no_image.png';
 
   const handleClick = () => {
     onClick(movie);
@@ -38,4 +38,4 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
   );
 };
 
-MovieItem.displayName = "MovieItem";
+MovieItem.displayName = 'MovieItem';

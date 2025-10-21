@@ -1,12 +1,12 @@
-import MovieHomePage from "./pages/MovieHomePage";
+import MovieHomePage from './pages/MovieHomePage';
 
 export const routes = [
   {
-    path: "/",
+    path: '/',
     component: MovieHomePage,
   },
   {
-    path: "/detail/:id",
+    path: '/detail/:id',
     component: MovieHomePage,
   },
   // { path: "/404", component: NotFoundPage },

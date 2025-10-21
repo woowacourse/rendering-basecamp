@@ -19,18 +19,18 @@ interface HTMLTemplateOptions {
   scripts?: string[];
 }
 
-const JOINNER = "\n        ";
+const JOINNER = '\n        ';
 
 export function generateHTMLTemplate({
   title,
   metadata,
-  bodyContent = "<!--{BODY_AREA}-->",
+  bodyContent = '<!--{BODY_AREA}-->',
   initialData,
-  stylesheets = ["/static/styles/index.css"],
-  scripts = ["/static/bundle.js"],
+  stylesheets = ['/static/styles/index.css'],
+  scripts = ['/static/bundle.js'],
 }: HTMLTemplateOptions): string {
   const ogTags = generateOpenGraphTags(metadata);
-  const dataScript = initialData ? generateInitialDataScript(initialData) : "";
+  const dataScript = initialData ? generateInitialDataScript(initialData) : '';
 
   return /*html*/ `
     <!DOCTYPE html>
@@ -58,7 +58,7 @@ function generateOpenGraphTags(metadata: OpenGraphMetadata): string {
     `<meta property="og:title" content="${metadata.title}" />`,
     `<meta name="description" content="${metadata.description}" />`,
     `<meta property="og:url" content="${metadata.url}" />`,
-    `<meta property="og:type" content="${metadata.type ?? "website"} " />`,
+    `<meta property="og:type" content="${metadata.type ?? 'website'} " />`,
     metadata.keywords &&
       `<meta name="keywords" content="${metadata.keywords}" />`,
     `<meta property="og:description" content="${metadata.description}" />`,

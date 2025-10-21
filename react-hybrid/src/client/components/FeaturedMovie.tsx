@@ -1,6 +1,6 @@
-import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
-import { Button } from "./common/Button";
-import type { MovieItem } from "../types/Movie.types";
+import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
+import { Button } from './common/Button';
+import type { MovieItem } from '../types/Movie.types';
 
 interface FeaturedMovieProps {
   movie: MovieItem;

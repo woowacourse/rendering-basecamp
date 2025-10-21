@@ -1,12 +1,12 @@
-import { overlay } from "overlay-kit";
-import { Loading } from "../components/common/Loading";
-import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
-import { MovieDetailModalLoader } from "../components/MovieDetailModalLoader";
-import { MovieList } from "../components/MovieList";
-import { usePopularMovies } from "../hooks/queries/usePopularMovies";
-import { useEffect } from "react";
-import { InitialData } from "../types/global";
+import { overlay } from 'overlay-kit';
+import { Loading } from '../components/common/Loading';
+import { Footer } from '../components/Footer';
+import { Header } from '../components/Header';
+import { MovieDetailModalLoader } from '../components/MovieDetailModalLoader';
+import { MovieList } from '../components/MovieList';
+import { usePopularMovies } from '../hooks/queries/usePopularMovies';
+import { useEffect } from 'react';
+import { InitialData } from '../types/global';
 
 interface MovieHomePageProps {
   initialData: InitialData;
@@ -30,8 +30,8 @@ export default function MovieHomePage({ initialData }: MovieHomePageProps) {
             movieId={movieId}
             close={() => {
               unmount();
-              if (window.location.pathname !== "/") {
-                window.history.pushState({}, "", "/");
+              if (window.location.pathname !== '/') {
+                window.history.pushState({}, '', '/');
               }
             }}
           />
@@ -43,9 +43,9 @@ export default function MovieHomePage({ initialData }: MovieHomePageProps) {
 
     handlePopState();
 
-    window.addEventListener("popstate", handlePopState);
+    window.addEventListener('popstate', handlePopState);
     return () => {
-      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener('popstate', handlePopState);
     };
   }, []);
 
