@@ -4,7 +4,10 @@ import App from "./App";
 
 const initialData = window.__INITIAL_DATA__ ?? {};
 
+performance.mark("beforeRender");
 hydrateRoot(
   document.getElementById("root")!,
-  <App initialMovies={initialData.movies} initialDetail={initialData.detail} />
+  <App initialMovies={initialData.movies} />
 );
+performance.mark("afterHydrate");
+performance.measure("hydration", "beforeRender", "afterHydrate");
