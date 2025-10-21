@@ -9,7 +9,7 @@ export function buildOGTags(
 ) {
   const imageUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
-    : "/images/no_image.png";
+    : "/static/images/no_image.png";
 
   return getOGMetaTagsHTML({
     title: movie.title || "영화 추천 사이트",

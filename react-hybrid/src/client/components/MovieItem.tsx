@@ -11,7 +11,7 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
 
   const imageUrl = poster_path
     ? `https://image.tmdb.org/t/p/w500${poster_path}`
-    : "/images/no_image.png";
+    : "/static/images/no_image.png";
 
   const handleClick = () => {
     onClick(movie);
