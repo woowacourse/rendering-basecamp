@@ -1,27 +1,13 @@
-import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
-import { Button } from "./common/Button";
+import { useMovieClickHandler } from "../hooks/useMovieClickHandler";
 import type { MovieItem } from "../types/Movie.types";
-import { moviesApi } from "../api/movies";
+import { Button } from "./common/Button";
 
 interface FeaturedMovieProps {
   movie: MovieItem;
 }
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  const handleDetailClick = async () => {
-    try {
-      const detailUrl = `/detail/${movie.id}`;
-      window.history.pushState({ movieId: movie.id }, "", detailUrl);
-
-      const movieDetail = await moviesApi.getDetail(movie.id);
-      await openMovieDetailModal(movieDetail.data);
-    } catch {
-      alert("영화 정보를 불러오지 못했습니다.");
-      window.history.back();
-    }
-  };
+  const { handleMovieClick } = useMovieClickHandler();
 
   return (
     <div className="top-rated-movie">
@@ -32,7 +18,11 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
         </span>
       </div>
       <h1 className="text-3xl font-semibold">{movie.title}</h1>
-      <Button variant="primary" onClick={handleDetailClick} className="detail">
+      <Button
+        variant="primary"
+        onClick={() => handleMovieClick(movie)}
+        className="detail"
+      >
         자세히 보기
       </Button>
     </div>

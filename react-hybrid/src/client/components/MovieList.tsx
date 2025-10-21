@@ -1,23 +1,9 @@
-import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
-import { MovieItem } from "./MovieItem";
+import { useMovieClickHandler } from "../hooks/useMovieClickHandler";
 import type { MovieItem as MovieItemType } from "../types/Movie.types";
-import { moviesApi } from "../api/movies";
+import { MovieItem } from "./MovieItem";
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  const handleMovieClick = async (movie: MovieItemType) => {
-    try {
-      const detailUrl = `/detail/${movie.id}`;
-      window.history.pushState({ movieId: movie.id }, "", detailUrl);
-
-      const movieDetail = await moviesApi.getDetail(movie.id);
-      await openMovieDetailModal(movieDetail.data);
-    } catch {
-      alert("영화 정보를 불러오지 못했습니다.");
-      window.history.back();
-    }
-  };
+  const { handleMovieClick } = useMovieClickHandler();
 
   return (
     <main>
