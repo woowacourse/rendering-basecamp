@@ -19,8 +19,8 @@ export const usePopularMovies = ({ initialMovies }: Props) => {
       setError(null);
 
       try {
-        const movieDetail = await moviesApi.getPopular();
-        setData(movieDetail.data.results);
+        const movies = await moviesApi.getPopular();
+        setData(movies.data.results);
       } catch (err) {
         setError(
           err instanceof Error
