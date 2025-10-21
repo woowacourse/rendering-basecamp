@@ -1,8 +1,10 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response } from 'express';
 
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
+import { renderToString } from 'react-dom/server';
+import App from '../../client/App';
+import React from 'react';
+import { moviesApi } from '../../client/api/movies';
+import MovieHomePage from '../../client/pages/MovieHomePage';
 
 const router = Router();
 
@@ -26,27 +28,35 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
+router.get('/', async (_: Request, res: Response) => {
+  try {
+    const response = await moviesApi.getPopular();
+    const movies = response.data.results;
 
-  const renderedApp = renderToString(<App />);
+    const template = generateHTML();
 
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+    const renderedApp = renderToString(<MovieHomePage movies={movies} />);
 
-  res.send(renderedHTML);
+    const renderedHTMLWithInitialData = template.replace(
+      '<!--{INIT_DATA_AREA}-->',
+      /*html*/ `
+      <script>
+        window.__INITIAL_DATA__ = {
+          movies: ${JSON.stringify(movies)}
+        }
+      </script>
+    `
+    );
+    const renderedHTML = renderedHTMLWithInitialData.replace(
+      '<!--{BODY_AREA}-->',
+      renderedApp
+    );
+
+    res.send(renderedHTML);
+  } catch (error) {
+    console.error('Failed to fetch movies:', error);
+    res.status(500).send('영화 정보를 불러오는데 실패했습니다.');
+  }
 });
 
 export default router;
