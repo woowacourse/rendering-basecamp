@@ -13,18 +13,13 @@ router.get("/", async (req: Request, res: Response) => {
   const movies = await fetchPopularMovies();
   const topMovie = movies[0];
 
-  const renderedApp = renderApp({ movies });
-  const ogTagsHTML = buildOGTags(req, topMovie);
-  const initialDataScript = buildInitialDataScript({ movies });
-
-  const finalHTML = injectHTMLParts({
-    template: generateHTMLTemplate(),
-    body: renderedApp,
-    ogTags: ogTagsHTML,
-    initialData: initialDataScript,
+  const html = await renderPage(req, {
+    routeType: "home",
+    initialData: { movies },
+    ogTarget: topMovie,
   });
 
-  res.send(finalHTML);
+  res.send(html);
 });
 
 router.get("/detail/:id", async (req: Request, res: Response) => {
@@ -33,26 +28,47 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     movieId
   );
 
-  const renderedApp = renderApp({ movies, selectedMovieDetail });
-  const ogTagsHTML = buildOGTags(req, selectedMovieDetail);
-  const initialDataScript = buildInitialDataScript({
-    movies,
-    selectedMovieDetail,
+  const html = await renderPage(req, {
+    routeType: "detail",
+    initialData: { movies, selectedMovieDetail },
+    ogTarget: selectedMovieDetail,
   });
 
-  const finalHTML = injectHTMLParts({
-    template: generateHTMLTemplate(),
-    body: renderedApp,
-    ogTags: ogTagsHTML,
-    initialData: initialDataScript,
-  });
-
-  res.send(finalHTML);
+  res.send(html);
 });
 
 export default router;
 
-async function fetchPopularMovies() {
+async function renderPage(
+  req: Request,
+  {
+    routeType,
+    initialData,
+    ogTarget,
+  }: {
+    routeType: "home" | "detail";
+    initialData: {
+      movies: MovieItem[];
+      selectedMovieDetail?: MovieDetailResponse;
+    };
+    ogTarget: MovieItem | MovieDetailResponse;
+  }
+): Promise<string> {
+  const appHTML = renderToString(
+    <App routeType={routeType} initialData={initialData} />
+  );
+  const ogTagsHTML = buildOGTags(req, ogTarget);
+  const initialDataScript = buildInitialDataScript(routeType, initialData);
+
+  return injectHTMLParts({
+    template: getBaseHTMLTemplate(),
+    ogTags: ogTagsHTML,
+    body: appHTML,
+    initialData: initialDataScript,
+  });
+}
+
+async function fetchPopularMovies(): Promise<MovieItem[]> {
   const response = await moviesApi.getPopular();
   return response?.data.results ?? [];
 }
@@ -70,13 +86,6 @@ async function fetchMovieDetailPageData(movieId: number): Promise<{
   };
 }
 
-function renderApp(initialData: {
-  movies: MovieItem[];
-  selectedMovieDetail?: MovieDetailResponse;
-}) {
-  return renderToString(<App initialData={initialData} />);
-}
-
 function buildOGTags(req: Request, movie: MovieItem | MovieDetailResponse) {
   const imageUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
@@ -90,13 +99,16 @@ function buildOGTags(req: Request, movie: MovieItem | MovieDetailResponse) {
   });
 }
 
-function buildInitialDataScript(initialData: {
-  movies: MovieItem[];
-  selectedMovieDetail?: MovieDetailResponse;
-}) {
+function buildInitialDataScript(
+  routeType: "home" | "detail",
+  initialData: {
+    movies: MovieItem[];
+    selectedMovieDetail?: MovieDetailResponse;
+  }
+) {
   return /*html*/ `
     <script>
-      window.__INITIAL_DATA__ = ${JSON.stringify(initialData)};
+      window.__INITIAL_DATA__ = ${JSON.stringify({ routeType, initialData })};
     </script>
   `;
 }
@@ -118,7 +130,7 @@ function injectHTMLParts({
     .replace("<!--{INIT_DATA_AREA}-->", initialData);
 }
 
-function generateHTMLTemplate() {
+function getBaseHTMLTemplate() {
   return /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
