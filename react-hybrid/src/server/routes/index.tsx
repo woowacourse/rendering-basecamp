@@ -62,6 +62,13 @@ router.get('/detail/:id', async (_: Request, res: Response) => {
   const movie = await moviesApi.getDetail(Number(movieId));
   const template = generateHTML();
 
+  const ogTags = `
+    <meta property="og:title" content="${movie.data.title}" />
+    <meta property="og:description" content="${movie.data.overview}" />
+    <meta property="og:image" content="https://image.tmdb.org/t/p/original${movie.data.poster_path}" />
+    <meta property="og:type" content="website" />
+  `;
+
   const renderedApp = renderToString(
     <App
       Component={MovieDetailPage}
@@ -81,7 +88,13 @@ router.get('/detail/:id', async (_: Request, res: Response) => {
       </script>
     `
   );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
+
+  const renderedHTMLWithOgTag = renderedHTMLWithInitialData.replace(
+    '<!--{OG_TAGS}-->',
+    ogTags
+  );
+
+  const renderedHTML = renderedHTMLWithOgTag.replace(
     '<!--{BODY_AREA}-->',
     renderedApp
   );
