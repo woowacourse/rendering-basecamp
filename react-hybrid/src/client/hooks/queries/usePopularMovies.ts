@@ -34,7 +34,7 @@ export const usePopularMovies = ({ initialMovies }: UsePopularMoviesProps) => {
     };
 
     fetchPopularMovies();
-  }, []);
+  }, [initialMovies]);
 
   return { data, isLoading, error };
 };
