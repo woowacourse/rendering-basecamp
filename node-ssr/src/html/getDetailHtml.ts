@@ -1,6 +1,12 @@
 import { MovieDetailResponse } from '../service/types';
+import { escapeHtml } from '../utils/escapeHtml';
 
-export const getDetailHtml = (movie: MovieDetailResponse): string => {
+interface GetDetailHtmlParams {
+  movie: MovieDetailResponse;
+  baseUrl: string;
+}
+
+export const getDetailHtml = ({ movie, baseUrl }: GetDetailHtmlParams): string => {
   const { title, genres, overview, vote_average, poster_path, backdrop_path, release_date } = movie;
 
   const genreNames = genres.map((genre) => genre.name).join(', ');
@@ -20,20 +26,30 @@ export const getDetailHtml = (movie: MovieDetailResponse): string => {
         <link rel="stylesheet" href="/styles/index.css" />
         
         <!-- SEO 및 OG 태그 -->
-        <title>${title} - 영화 리뷰</title>
-        <meta name="description" content="${overview.slice(0, 150)}..." />
+        <title>${escapeHtml(title)} - 영화 리뷰</title>
+        <meta name="description" content="${escapeHtml(overview.slice(0, 150))}..." />
         
         <!-- Open Graph -->
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="${title} - 영화 리뷰" />
-        <meta property="og:description" content="${overview.slice(0, 150)}..." />
+        <meta property="og:type" content="movie" />
+        <meta property="og:site_name" content="영화 리뷰" />
+        <meta property="og:title" content="${escapeHtml(title)} - 영화 리뷰" />
+        <meta property="og:description" content="${escapeHtml(overview.slice(0, 150))}..." />
         <meta property="og:image" content="${imageUrl}" />
-        <meta property="og:url" content="https://your-domain.com/detail/${movie.id}" />
+        <meta property="og:image:width" content="500" />
+        <meta property="og:image:height" content="750" />
+        <meta property="og:url" content="${baseUrl}/detail/${movie.id}" />
+        <meta property="og:locale" content="ko_KR" />
+        
+        <!-- 추가 영화 메타데이터 -->
+        <meta property="og:release_date" content="${release_date}" />
+        <meta property="og:rating" content="${vote_average}" />
+        <meta property="og:genre" content="${escapeHtml(genreNames)}" />
         
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="${title} - 영화 리뷰" />
-        <meta name="twitter:description" content="${overview.slice(0, 150)}..." />
+        <meta name="twitter:site" content="@moviereview" />
+        <meta name="twitter:title" content="${escapeHtml(title)} - 영화 리뷰" />
+        <meta name="twitter:description" content="${escapeHtml(overview.slice(0, 150))}..." />
         <meta name="twitter:image" content="${imageUrl}" />
       </head>
       <body>

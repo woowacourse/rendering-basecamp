@@ -28,7 +28,8 @@ app.get('/detail/:id', async (req: Request, res: Response) => {
   try {
     const movieId = parseInt(req.params.id);
     const movie = await moviesApi.getDetail(movieId);
-    const html = getDetailHtml(movie);
+
+    const html = getDetailHtml({ movie, baseUrl: 'https://api.themoviedb.org/3' });
     res.send(html);
   } catch (error) {
     console.error('Error fetching movie detail:', error);
