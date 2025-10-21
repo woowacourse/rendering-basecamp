@@ -8,7 +8,10 @@ export interface InitialData {
 
 declare global {
   interface Window {
-    __INITIAL_DATA__: InitialData;
+    __INITIAL_DATA__: {
+      routeType: "home" | "detail";
+      initialData: InitialData;
+    };
   }
 }
 
