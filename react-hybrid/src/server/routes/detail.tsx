@@ -3,6 +3,7 @@ import { renderToString } from "react-dom/server";
 import { moviesApi } from "../../client/api/movies";
 import App from "../../client/App";
 import { generateHTMLTemplate } from "../utils/htmlTemplate";
+import MovieHomePage from "../../client/pages/MovieHomePage";
 
 const router = Router();
 
@@ -14,8 +15,8 @@ router.get("/:id", async (req: Request, res: Response) => {
 
   const renderedApp = renderToString(
     <App
-      Component={MovieDetailPage}
-      props={{ movie: movie.data, movies: movies.data.results }}
+      Component={MovieHomePage}
+      initialData={{ movie: movie.data, movies: movies.data.results }}
     />
   );
 
