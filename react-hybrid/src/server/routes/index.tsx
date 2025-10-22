@@ -4,6 +4,7 @@ import { renderToString } from 'react-dom/server';
 import App from '../../client/App';
 import React from 'react';
 import { moviesApi } from '../../client/api/movies';
+import { generateMetaTags } from '../../client/utils/metaTags';
 
 const router = Router();
 
@@ -44,7 +45,13 @@ router.get('/', async (_: Request, res: Response) => {
     </script>
   `,
     );
-    const renderedHTML = renderedHTMLWithInitialData.replace('<!--{BODY_AREA}-->', renderedApp);
+
+    const metaTags = generateMetaTags();
+    const renderedHTMLWithMetaTags = renderedHTMLWithInitialData.replace(
+      '<!--{OG_TAGS}-->',
+      metaTags,
+    );
+    const renderedHTML = renderedHTMLWithMetaTags.replace('<!--{BODY_AREA}-->', renderedApp);
 
     res.send(renderedHTML);
   } catch (error) {
@@ -78,8 +85,22 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
     `,
     );
 
+    const metaTags = generateMetaTags({
+      title: detail?.title,
+      description: detail?.overview,
+      image: detail?.poster_path
+        ? `https://image.tmdb.org/t/p/w500${detail.poster_path}`
+        : undefined,
+      url: `https://movie-review.com/detail/${detail?.id}`,
+    });
+
+    const renderedHTMLWithMetaTags = renderedHTMLWithInitialData.replace(
+      '<!--{OG_TAGS}-->',
+      metaTags,
+    );
+
     const renderedApp = renderToString(<App initialMovies={movies} />);
-    const renderedHTML = renderedHTMLWithInitialData.replace('<!--{BODY_AREA}-->', renderedApp);
+    const renderedHTML = renderedHTMLWithMetaTags.replace('<!--{BODY_AREA}-->', renderedApp);
 
     res.send(renderedHTML);
   } catch (error) {
