@@ -53,4 +53,39 @@ router.get('/', async (_: Request, res: Response) => {
   }
 });
 
+router.get('/detail/:id', async (req: Request, res: Response) => {
+  try {
+    const movieId = Number(req.params.id);
+    const template = generateHTML();
+
+    const [popularResponse, detailResponse] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(movieId),
+    ]);
+
+    const movies = popularResponse.data.results ?? [];
+    const detail = detailResponse.data ?? null;
+
+    const renderedHTMLWithInitialData = template.replace(
+      '<!--{INIT_DATA_AREA}-->',
+      /*html*/ `
+      <script>
+        window.__INITIAL_DATA__ = {
+          movies: ${JSON.stringify(movies)},
+          detail: ${JSON.stringify(detail)}
+        }
+      </script>
+    `,
+    );
+
+    const renderedApp = renderToString(<App initialMovies={movies} />);
+    const renderedHTML = renderedHTMLWithInitialData.replace('<!--{BODY_AREA}-->', renderedApp);
+
+    res.send(renderedHTML);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 export default router;
