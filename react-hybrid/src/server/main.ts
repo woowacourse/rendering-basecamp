@@ -14,7 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use("/static", express.static(path.join(__dirname, "../../dist/static")));
-
+app.use("/images", express.static(path.join(__dirname, "../../public/images")));
 app.use("/", movieRouter);
 
 // Start server
