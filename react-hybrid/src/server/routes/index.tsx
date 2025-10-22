@@ -1,8 +1,9 @@
 import { Router, Request, Response } from "express";
 
 import { renderToString } from "react-dom/server";
-import App from "../../client/App";
 import React from "react";
+import { moviesApi } from '../../client/api/movies';
+import MovieHomePage from '../../client/pages/MovieHomePage';
 
 const router = Router();
 
@@ -26,27 +27,55 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
+router.get("/", async (_: Request, res: Response) => {
+  try {
+    // 서버에서 영화 데이터 패칭
+    const movieResponse = await moviesApi.getPopular();
+    const movies = movieResponse.data.results;
 
-  const renderedApp = renderToString(<App />);
+    const template = generateHTML();
 
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+    // MovieHomePageSSR 컴포넌트를 SSR로 렌더링
+    const renderedApp = renderToString(
+      <MovieHomePage movies={movies} />
+    );
 
-  res.send(renderedHTML);
+    const renderedHTMLWithInitialData = template.replace(
+      "<!--{INIT_DATA_AREA}-->",
+      /*html*/ `
+      <script>
+        window.__INITIAL_DATA__ = {
+          movies: ${JSON.stringify(movies)}
+        }
+      </script>
+    `
+    );
+    const renderedHTML = renderedHTMLWithInitialData.replace(
+      "<!--{BODY_AREA}-->",
+      renderedApp
+    );
+
+    res.send(renderedHTML);
+  } catch (error) {
+    console.error("Error fetching movies:", error);
+    const template = generateHTML();
+    const errorHTML = template
+      .replace(
+        "<!--{BODY_AREA}-->",
+        "<div>영화 정보를 불러오는데 실패했습니다.</div>"
+      )
+      .replace(
+        "<!--{INIT_DATA_AREA}-->",
+        /*html*/ `
+        <script>
+          window.__INITIAL_DATA__ = {
+            movies: []
+          }
+        </script>
+      `
+      );
+    res.send(errorHTML);
+  }
 });
 
 export default router;
