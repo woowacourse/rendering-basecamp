@@ -12,14 +12,14 @@ export const generateMetaTags = ({
   url = 'https://movie-review.com',
 }: MetaTagsProps = {}) => {
   return `
-    // Open Graph
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
     <meta property="og:image" content="${image}" />
     <meta property="og:url" content="${url}" />
 
-    // Twitter
+    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content="${title}" />
     <meta property="twitter:description" content="${description}" />
