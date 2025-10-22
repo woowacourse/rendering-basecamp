@@ -7,7 +7,7 @@ import { moviesApi } from '../api/movies';
 export default function MovieDetailPage() {
   return (
     <>
-      <MovieHomePage />
+      <MovieHomePage movies={[]} />
       <DetailPageOpenModal />
     </>
   );

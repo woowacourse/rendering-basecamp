@@ -1,7 +1,7 @@
 import React from "react";
 import { OverlayProvider } from "overlay-kit";
-import MovieHomePageSSR from "./pages/MovieHomePageSSR";
 import type { MovieItem } from "./types/Movie.types";
+import MovieHomePage from './pages/MovieHomePage';
 
 function App() {
   const initialData = typeof window !== 'undefined' ? window.__INITIAL_DATA__ : { movies: [] };
@@ -9,7 +9,7 @@ function App() {
 
   return (
     <OverlayProvider>
-      <MovieHomePageSSR movies={movies as MovieItem[]} />
+      <MovieHomePage movies={movies as MovieItem[]} />
     </OverlayProvider>
   );
 }
