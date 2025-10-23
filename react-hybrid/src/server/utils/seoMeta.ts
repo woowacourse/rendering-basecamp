@@ -6,6 +6,7 @@ export type PageMeta = {
   description: string;
   image: string;
   url: string;
+  type?: string;
 };
 
 export function updatePageMeta(meta: PageMeta) {
@@ -21,7 +22,7 @@ export function updatePageMeta(meta: PageMeta) {
   updateMetaTag('property', 'og:description', meta.description);
   updateMetaTag('property', 'og:image', meta.image);
   updateMetaTag('property', 'og:url', absoluteUrl);
-  updateMetaTag('property', 'og:type', 'website');
+  updateMetaTag('property', 'og:type', meta.type || 'website');
   updateMetaTag('property', 'og:locale', 'ko_KR');
 
   updateMetaTag('name', 'twitter:card', 'summary_large_image');
@@ -60,7 +61,7 @@ export function buildOgTags(meta: PageMeta): string {
     <title>${safeTitle}</title>
     <meta property="og:title" content="${safeTitle}" />
     <meta property="og:description" content="${safeDesc}" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="${meta.type || 'website'}" />
     <meta property="og:image" content="${meta.image}" />
     <meta property="og:url" content="${meta.url}" />
     <meta property="og:locale" content="ko_KR" />
