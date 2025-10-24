@@ -6,8 +6,13 @@ import React from "react";
 import { generateHTML } from '../utils/generateHTML';
 import { moviesApi } from '../../client/api/movies';
 import { buildOgTags } from '../utils/seoMeta';
+import { MovieItem } from '../../client/types/Movie.types';
+import { MovieDetailResponse } from '../../client/types/MovieDetail.types';
 
-
+interface InitialData {
+  movies: MovieItem[];
+  detail?: MovieDetailResponse | null;
+}
 
 const router = Router();
 
@@ -79,7 +84,7 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
 
     const renderedApp = renderToString(<App initialMovies={movies} />);
 
-    const initialData = { movies, detail };
+    const initialData: InitialData = { movies, detail };
 
     const baseUrl = `${req.protocol}://${req.get("host")}`;
     const imagePath = detail?.backdrop_path || detail?.poster_path || "";
