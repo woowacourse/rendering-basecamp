@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import { moviesApi } from "../../client/api/movies";
+import { generateOGTags } from "../../client/utils/generateOGTags";
 
 const router = Router();
 
@@ -33,6 +34,15 @@ router.get("/", async (_: Request, res: Response) => {
 
     const renderedApp = renderToString(<App initialData={popularMovies} />);
 
+    const ogTags = generateOGTags({
+      title: "영화 리뷰 - 인기 영화",
+      description: "지금 인기 있는 영화를 확인하세요",
+      url: "https://rendering-basecamp-production-f101.up.railway.app/",
+      image: `https://image.tmdb.org/t/p/w500${
+        popularMovies[0]?.poster_path || ""
+      }`,
+    });
+
     const renderedHTMLWithInitialData = template.replace(
       "<!--{INIT_DATA_AREA}-->",
       /*html*/ `
@@ -43,7 +53,13 @@ router.get("/", async (_: Request, res: Response) => {
     </script>
   `
     );
-    const renderedHTML = renderedHTMLWithInitialData.replace(
+
+    const renderedHTMLWithOG = renderedHTMLWithInitialData.replace(
+      "<!--{OG_TAGS}-->",
+      ogTags
+    );
+
+    const renderedHTML = renderedHTMLWithOG.replace(
       "<!--{BODY_AREA}-->",
       renderedApp
     );
@@ -70,6 +86,13 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
 
     const renderedApp = renderToString(<App initialData={popularMovies} />);
 
+    const ogTags = generateOGTags({
+      title: `${movieDetail?.title || "영화 상세"}`,
+      description: movieDetail?.overview || "영화 상세 정보를 확인하세요",
+      url: `https://rendering-basecamp-production-f101.up.railway.app/detail/${movieId}`,
+      image: `https://image.tmdb.org/t/p/w500${movieDetail?.poster_path || ""}`,
+    });
+
     const renderedHTMLWithInitialData = template.replace(
       "<!--{INIT_DATA_AREA}-->",
       /*html*/ `
@@ -81,7 +104,13 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     </script>
   `
     );
-    const renderedHTML = renderedHTMLWithInitialData.replace(
+
+    const renderedHTMLWithOG = renderedHTMLWithInitialData.replace(
+      "<!--{OG_TAGS}-->",
+      ogTags
+    );
+
+    const renderedHTML = renderedHTMLWithOG.replace(
       "<!--{BODY_AREA}-->",
       renderedApp
     );
