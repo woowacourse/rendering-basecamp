@@ -7,7 +7,7 @@ import { moviesApi } from "../../client/api/movies";
 
 const router = Router();
 
-function generateHTML() {
+function generateHTML(appHTML: string, initialData: any) {
   return /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -19,8 +19,10 @@ function generateHTML() {
         <!--{OG_TAGS}-->
       </head>
       <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
+        <div id="root">${appHTML}</div>
+        <script>
+          window.__INITIAL_DATA__ = ${JSON.stringify(initialData)}
+        </script>
         <script src="/static/bundle.js"></script>
       </body>
     </html>
@@ -28,29 +30,14 @@ function generateHTML() {
 }
 
 router.get("/", async (_: Request, res: Response) => {
-  const template = generateHTML();
-
   const { data } = await moviesApi.getPopular();
   const movies = data.results.slice(0, 12);
 
   const renderedApp = renderToString(<App movies={movies} />);
 
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify(movies)}
-      }
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+  const html = generateHTML(renderedApp, movies);
 
-  res.send(renderedHTML);
+  res.send(html);
 });
 
 export default router;
