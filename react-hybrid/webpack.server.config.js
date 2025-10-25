@@ -1,7 +1,6 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
-const Dotenv = require("dontenv-webpack");
-const { sys } = require("typescript");
+const Dotenv = require("dotenv-webpack");
 
 module.exports = {
   mode: "development",
