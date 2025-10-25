@@ -55,4 +55,42 @@ router.get("/", async (_: Request, res: Response) => {
   }
 });
 
+router.get("/detail/:id", async (req: Request, res: Response) => {
+  try {
+    const template = generateHTML();
+    const movieId = Number(req.params.id);
+
+    const [popularResponse, detailResponse] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(movieId),
+    ]);
+
+    const popularMovies = popularResponse.data.results ?? [];
+    const movieDetail = detailResponse.data ?? null;
+
+    const renderedApp = renderToString(<App initialData={popularMovies} />);
+
+    const renderedHTMLWithInitialData = template.replace(
+      "<!--{INIT_DATA_AREA}-->",
+      /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = {
+        movie: ${JSON.stringify(popularMovies)},
+        detail: ${JSON.stringify(movieDetail)}
+      } 
+    </script>
+  `
+    );
+    const renderedHTML = renderedHTMLWithInitialData.replace(
+      "<!--{BODY_AREA}-->",
+      renderedApp
+    );
+
+    res.send(renderedHTML);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("Server Error");
+  }
+});
+
 export default router;
