@@ -1,28 +1,38 @@
-import { useState, useEffect } from 'react';
-import { moviesApi } from '../../api/movies';
-import { MovieItem } from '../../types/Movie.types';
+import { useState, useEffect } from "react";
+import { moviesApi } from "../../api/movies";
+import { MovieItem } from "../../types/Movie.types";
+import { useInitialData } from "../../lib/InitialDataContext";
 
-/**
- * 영화 상세 정보를 조회하는 훅
- */
 export const usePopularMovies = () => {
-  const [data, setData] = useState<MovieItem[] | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const ssrData = useInitialData();
+
+  const hasSSRMovies = ssrData?.movies != null && ssrData.movies.length > 0;
+
+  const [data, setData] = useState<MovieItem[] | null>(
+    hasSSRMovies ? (ssrData!.movies as MovieItem[]) : null
+  );
+
+  const [isLoading, setIsLoading] = useState<boolean>(
+    hasSSRMovies ? false : true
+  );
+
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchPopularMovies = async () => {
-      setIsLoading(true);
-      setError(null);
+    if (hasSSRMovies) return;
 
+    const fetchPopularMovies = async () => {
       try {
+        setIsLoading(true);
+        setError(null);
+
         const movieDetail = await moviesApi.getPopular();
         setData(movieDetail.data.results);
       } catch (err) {
         setError(
           err instanceof Error
             ? err
-            : new Error('영화 정보를 불러오는데 실패했습니다.')
+            : new Error("영화 정보를 불러오는데 실패했습니다.")
         );
       } finally {
         setIsLoading(false);
@@ -30,7 +40,7 @@ export const usePopularMovies = () => {
     };
 
     fetchPopularMovies();
-  }, []);
+  }, [hasSSRMovies]);
 
   return { data, isLoading, error };
 };
