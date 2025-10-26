@@ -56,10 +56,12 @@ router.get('/', async (_: Request, res: Response) => {
   res.send(renderedHTML);
 });
 
-router.get('/detail/:id', async (_: Request, res: Response) => {
-  const movieId = _.params.id;
-  const movies = await moviesApi.getPopular();
-  const movie = await moviesApi.getDetail(Number(movieId));
+router.get('/detail/:id', async (req: Request, res: Response) => {
+  const movieId = req.params.id;
+  const [movies, movie] = await Promise.all([
+    moviesApi.getPopular(),
+    await moviesApi.getDetail(Number(movieId)),
+  ]);
   const template = generateHTML();
 
   const ogTags = `
