@@ -34,7 +34,7 @@ router.get('/', async (req: Request, res: Response) => {
     const moviesResponse = await moviesApi.getPopular(1);
     const movies = moviesResponse.data.results;
 
-    const renderedApp = renderToString(<App url={req.url} />);
+    const renderedApp = renderToString(<App url={req.url} initialMovies={movies} />);
 
     const renderedHTMLWithInitialData = template.replace(
       '<!--{INIT_DATA_AREA}-->',
@@ -63,16 +63,22 @@ router.get('/detail/:movieId', async (req: Request, res: Response) => {
     const template = generateHTML();
     const movieId = parseInt(req.params.movieId, 10);
 
-    const movieDetailResponse = await moviesApi.getDetail(movieId);
+    // 영화 목록과 상세 정보 동시 조회
+    const [moviesResponse, movieDetailResponse] = await Promise.all([
+      moviesApi.getPopular(1),
+      moviesApi.getDetail(movieId)
+    ]);
+    const movies = moviesResponse.data.results;
     const movieDetail = movieDetailResponse.data;
 
-    const renderedApp = renderToString(<App url={req.url} />);
+    const renderedApp = renderToString(<App url={req.url} initialMovies={movies} />);
 
     const renderedHTMLWithInitialData = template.replace(
       '<!--{INIT_DATA_AREA}-->',
       /*html*/ `
       <script>
         window.__INITIAL_DATA__ = {
+          movies: ${JSON.stringify(movies)},
           movieDetail: ${JSON.stringify(movieDetail)}
         }
       </script>

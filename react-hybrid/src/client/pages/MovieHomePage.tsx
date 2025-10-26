@@ -3,9 +3,14 @@ import { MovieList } from '../components/MovieList';
 import { Footer } from '../components/Footer';
 import { usePopularMovies } from '../hooks/queries/usePopularMovies';
 import { Loading } from '../components/common/Loading';
+import { MovieItem } from '../types/Movie.types';
 
-export default function MovieHomePage() {
-  const { data: movies, isLoading } = usePopularMovies();
+interface MovieHomePageProps {
+  initialMovies?: MovieItem[];
+}
+
+export default function MovieHomePage({ initialMovies }: MovieHomePageProps) {
+  const { data: movies, isLoading } = usePopularMovies(initialMovies);
 
   if (isLoading === true) {
     return <Loading />;

@@ -7,7 +7,10 @@ console.log('initialData', initialData);
 
 performance.mark('beforeRender');
 
-hydrateRoot(document.getElementById('root'), <App />);
+hydrateRoot(
+  document.getElementById('root')!,
+  <App initialMovies={initialData.movies} />
+);
 
 performance.mark('afterHydrate');
 

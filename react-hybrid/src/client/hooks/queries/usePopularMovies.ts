@@ -5,9 +5,10 @@ import { MovieItem } from '../../types/Movie.types';
 /**
  * 인기 영화 목록을 조회하는 훅
  */
-export const usePopularMovies = () => {
+export const usePopularMovies = (initialMoviesFromProps?: MovieItem[] | null) => {
   const initialMovies =
-    typeof window !== 'undefined' ? window.__INITIAL_DATA__?.movies : null;
+    initialMoviesFromProps ||
+    (typeof window !== 'undefined' ? window.__INITIAL_DATA__?.movies : null);
 
   const [data, setData] = useState<MovieItem[] | null>(initialMovies || null);
   const [isLoading, setIsLoading] = useState(!initialMovies);
