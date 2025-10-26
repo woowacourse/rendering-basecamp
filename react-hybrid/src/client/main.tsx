@@ -10,7 +10,10 @@ performance.mark("beforeHydrate");
 hydrateRoot(
   document.getElementById("root"),
   <BrowserRouter>
-    <App initialMovies={initialData?.movies} />
+    <App
+      initialMovies={initialData?.movies}
+      movieDetail={initialData?.movieDetail}
+    />
   </BrowserRouter>
 );
 performance.mark("afterHydrate");
