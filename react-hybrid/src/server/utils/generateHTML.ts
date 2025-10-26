@@ -5,7 +5,7 @@ export default function generateHTML() {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/styles/index.css" />
+        <link rel="stylesheet" href="/static/styles/index.css" />
         <!--{OG_TAGS}-->
       </head>
       <body>

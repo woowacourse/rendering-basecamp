@@ -15,9 +15,9 @@ function App({ initialMovies }: AppProps) {
   return (
     <OverlayProvider>
       {initialMovies.details ? (
-        <MovieHomePage initialMovies={initialMovies} />
-      ) : (
         <MovieDetailPage initialMovies={initialMovies} />
+      ) : (
+        <MovieHomePage initialMovies={initialMovies} />
       )}
     </OverlayProvider>
   );
