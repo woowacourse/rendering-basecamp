@@ -2,6 +2,7 @@ import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
 import { Button } from './common/Button';
 import type { MovieItem } from '../types/Movie.types';
 import { moviesApi } from '../api/movies';
+import { useHistory } from '../hooks/useHistory';
 
 interface FeaturedMovieProps {
   movie: MovieItem;
@@ -9,8 +10,10 @@ interface FeaturedMovieProps {
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
   const { openMovieDetailModal } = useMovieDetailModal();
+  const { navigate } = useHistory();
 
   const handleDetailClick = async () => {
+    navigate(`/detail/${movie.id}`);
     const movieDetail = await moviesApi.getDetail(movie.id);
     await openMovieDetailModal(movieDetail.data);
   };

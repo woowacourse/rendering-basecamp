@@ -5,6 +5,7 @@ import MovieDetailPage from './pages/MovieDetailPage';
 
 import { MovieItem } from './types/Movie.types';
 import { MovieDetailResponse } from './types/MovieDetail.types';
+import { useHistory } from './hooks/useHistory';
 
 interface AppProps {
   initialMovies?: MovieItem[];
@@ -19,9 +20,9 @@ function matchRoute(pathname: string): 'home' | 'detail' | 'notfound' {
 }
 
 function App({ initialMovies, initialMovieDetail, path }: AppProps) {
-  const pathname = path || (typeof window !== 'undefined' ? window.location.pathname : '/');
+  const { currentPath } = useHistory(path);
 
-  const currentPage = matchRoute(pathname);
+  const currentPage = matchRoute(currentPath);
 
   return (
     <OverlayProvider>
