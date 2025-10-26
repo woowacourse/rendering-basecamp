@@ -1,10 +1,18 @@
 import { Router, Request, Response } from "express";
-
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
+import axios from "axios";
 
 const router = Router();
+
+const tmdbClient = axios.create({
+  baseURL: "https://api.themoviedb.org/3",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+  },
+});
 
 function generateHTML() {
   return /*html*/ `
@@ -26,17 +34,19 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   const template = generateHTML();
 
-  const renderedApp = renderToString(<App />);
+  const movieData = await tmdbClient.get("/movie/popular?page=1&language=ko-KR");
+  const movies = movieData.data.results;
+  const renderedApp = renderToString(<App url={req.url} movies={movies}/>);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify(movies)}
       }
     </script>
   `
@@ -48,5 +58,7 @@ router.get("/", (_: Request, res: Response) => {
 
   res.send(renderedHTML);
 });
+
+// TODO: /detail/:id 라우트 추가
 
 export default router;

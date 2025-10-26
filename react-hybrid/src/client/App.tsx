@@ -2,21 +2,23 @@ import React from "react";
 import {OverlayProvider} from "overlay-kit";
 import MovieHomePage from "./pages/MovieHomePage";
 import MovieDetailPage from "./pages/MovieDetailPage";
+import {MovieItem} from "./types/Movie.types";
 
 interface AppProps {
   url?: string;
+  movies: MovieItem[];
   movieId?: string;
 }
 
-function App({url = "/", movieId}: AppProps) {
+function App({url = "/", movies, movieId}: AppProps) {
   const isDetailPage = url.startsWith("/detail/");
 
   return (
     <OverlayProvider>
       {isDetailPage && movieId ?
-        <MovieDetailPage movieId={movieId}/>
+        <MovieDetailPage movies={movies} movieId={movieId}/>
         :
-        <MovieHomePage/>
+        <MovieHomePage movies={movies}/>
       }
     </OverlayProvider>
   );
