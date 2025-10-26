@@ -9,9 +9,9 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
   const { openMovieDetailModal } = useMovieDetailModal();
 
   const handleMovieClick = async (movie: MovieItemType) => {
+    navigate(`/detail/${movie.id}`);
     const movieDetail = await moviesApi.getDetail(movie.id);
     await openMovieDetailModal(movieDetail.data);
-    navigate(`/detail/${movie.id}`);
   };
 
   return (
