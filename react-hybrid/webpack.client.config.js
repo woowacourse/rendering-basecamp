@@ -20,7 +20,7 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: [
-              "@babel/preset-env", 
+              "@babel/preset-env",
               ["@babel/preset-react", { "runtime": "automatic" }],
               ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
             ],
@@ -47,7 +47,9 @@ module.exports = {
         { from: "public/styles", to: "styles" },
       ],
     }),
-    new Dotenv(),
+    new Dotenv({
+      systemvars: true,
+    }),
   ],
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
