@@ -1,20 +1,11 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { Button } from './common/Button';
 import type { MovieItem } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
+import { Button } from './common/Button';
 
 interface FeaturedMovieProps {
   movie: MovieItem;
 }
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  const handleDetailClick = async () => {
-    const movieDetail = await moviesApi.getDetail(movie.id);
-    await openMovieDetailModal(movieDetail.data);
-  };
-
   return (
     <div className="top-rated-movie">
       <div className="rate">
@@ -24,9 +15,11 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
         </span>
       </div>
       <h1 className="text-3xl font-semibold">{movie.title}</h1>
-      <Button variant="primary" onClick={handleDetailClick} className="detail">
-        자세히 보기
-      </Button>
+      <a href={`/detail/${movie.id}`}>
+        <Button variant="primary" className="detail">
+          자세히 보기
+        </Button>
+      </a>
     </div>
   );
 };

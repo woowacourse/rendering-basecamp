@@ -1,11 +1,9 @@
-import { Router, Request, Response } from "express";
+import { Request, Response, Router } from "express";
 
 import { renderToString } from "react-dom/server";
-import React from "react";
 import { moviesApi } from '../../client/api/movies';
-import MovieHomePage from '../../client/pages/MovieHomePage';
-import { MovieDetailModal } from '../../client/components/MovieDetailModal';
 import MovieDetailPage from '../../client/pages/MovieDetailPage';
+import MovieHomePage from '../../client/pages/MovieHomePage';
 
 const router = Router();
 

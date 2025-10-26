@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
+import { MovieDetailModal } from '../components/MovieDetailModal';
 import { MovieItem } from '../types/Movie.types';
 import { MovieDetailResponse } from '../types/MovieDetail.types';
 import MovieHomePage from './MovieHomePage';
@@ -13,23 +12,12 @@ export default function MovieDetailPage({ movies, detail }: MovieDetailPageProps
   return (
     <>
       <MovieHomePage movies={movies} />
-      <DetailPageOpenModal detail={detail} />
+      <MovieDetailModal
+        movie={detail}
+        onClose={() => {
+          window.history.back();
+        }}
+      />
     </>
   );
-}
-
-interface DetailPageOpenModalProps {
-  detail: MovieDetailResponse
-}
-
-function DetailPageOpenModal({ detail }: DetailPageOpenModalProps) {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  useEffect(() => {
-    (async () => {
-      openMovieDetailModal(detail);
-    })();
-  }, [openMovieDetailModal]);
-
-  return null;
 }
