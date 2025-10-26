@@ -1,22 +1,24 @@
-import React, { Activity } from "react";
 import { OverlayProvider } from "overlay-kit";
-import MovieHomePage from "./pages/MovieHomePage";
+import { Activity } from "react";
 import MovieDetailPage from "./pages/MovieDetailPage";
-import { InitialMovieData } from "./types/global";
+import MovieHomePage from "./pages/MovieHomePage";
+import { MovieItem } from "./types/Movie.types";
+import { MovieDetailResponse } from "./types/MovieDetail.types";
 
 type Props = {
-  path: "/" | "/movies/:id";
-  initialData: InitialMovieData;
+  path: string;
+  movies: MovieItem[];
+  movieDetail?: MovieDetailResponse;
 };
 
-function App({ path, initialData }: Props) {
+function App({ path, movies, movieDetail }: Props) {
   return (
     <OverlayProvider>
       <Activity mode={path === "/" ? "visible" : "hidden"}>
-        <MovieHomePage movies={initialData.movies} />
+        <MovieHomePage movies={movies} />
       </Activity>
       <Activity mode={path.startsWith("/movies/") ? "visible" : "hidden"}>
-        <MovieDetailPage initialData={initialData} />
+        <MovieDetailPage movies={movies} movieDetail={movieDetail} />
       </Activity>
     </OverlayProvider>
   );
