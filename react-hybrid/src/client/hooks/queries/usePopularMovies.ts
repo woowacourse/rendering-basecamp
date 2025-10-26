@@ -6,17 +6,15 @@ import { MovieItem } from "../../types/Movie.types";
  * 영화 상세 정보를 조회하는 훅
  */
 export const usePopularMovies = () => {
-  const initialMovies =
-    typeof window !== "undefined"
-      ? window.__INITIAL_DATA__?.movies || null
-      : null;
-
-  const [data, setData] = useState<MovieItem[] | null>(initialMovies);
+  const [data, setData] = useState<MovieItem[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (initialMovies) return;
+    if (typeof window !== "undefined" && window.__INITIAL_DATA__?.movies) {
+      setData(window.__INITIAL_DATA__.movies);
+      return;
+    }
 
     const fetchPopularMovies = async () => {
       setIsLoading(true);
@@ -37,7 +35,7 @@ export const usePopularMovies = () => {
     };
 
     fetchPopularMovies();
-  }, [initialMovies]);
+  }, []);
 
   return { data, isLoading, error };
 };
