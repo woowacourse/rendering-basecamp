@@ -1,8 +1,10 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response } from 'express';
 
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
+import { renderToString } from 'react-dom/server';
+import App from '../../client/App';
+import React from 'react';
+import { moviesApi } from '../../client/api/movies';
+import { MovieItem } from '../../client/types/Movie.types';
 
 const router = Router();
 
@@ -26,23 +28,36 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get('/', async (_: Request, res: Response) => {
+  const popularMovieList: MovieItem[] | null = await moviesApi
+    .getPopular()
+    .then((res) => {
+      return res.data.results ?? null;
+    })
+    .catch((err) => {
+      console.log(err);
+      return null;
+    });
+
+  const renderedApp = renderToString(
+    <App initialPopularMovieList={popularMovieList} />
+  );
+
   const template = generateHTML();
 
-  const renderedApp = renderToString(<App />);
-
   const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
+    '<!--{INIT_DATA_AREA}-->',
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        popularMovieList: ${JSON.stringify(popularMovieList)},
       }
     </script>
   `
   );
+
   const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
+    '<!--{BODY_AREA}-->',
     renderedApp
   );
 
