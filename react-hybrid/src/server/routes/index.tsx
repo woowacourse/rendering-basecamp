@@ -31,7 +31,6 @@ router.get("/", async (_: Request, res: Response) => {
   const { data: popularMovies } = await moviesApi.getPopular();
 
   const template = generateHTML();
-
   const renderedApp = renderToString(<App movieData={popularMovies} />);
 
   const renderedHTMLWithInitialData = template.replace(
@@ -42,6 +41,38 @@ router.get("/", async (_: Request, res: Response) => {
     </script>
   `
   );
+
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    "<!--{BODY_AREA}-->",
+    renderedApp
+  );
+
+  res.send(renderedHTML);
+});
+
+router.get("/detail/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const { data: movieDetail } = await moviesApi.getDetail(id);
+  const { data: popularMovies } = await moviesApi.getPopular();
+
+  const template = generateHTML();
+
+  const renderedApp = renderToString(
+    <App movieData={popularMovies} movieDetail={movieDetail} />
+  );
+
+  const renderedHTMLWithInitialData = template.replace(
+    "<!--{INIT_DATA_AREA}-->",
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = ${JSON.stringify({
+        movies: popularMovies,
+        movieDetail,
+      })}
+    </script>
+  `
+  );
+
   const renderedHTML = renderedHTMLWithInitialData.replace(
     "<!--{BODY_AREA}-->",
     renderedApp
