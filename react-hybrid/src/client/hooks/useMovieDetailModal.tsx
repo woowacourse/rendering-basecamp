@@ -1,14 +1,15 @@
-import { overlay } from 'overlay-kit';
-import { MovieDetailResponse } from '../types/MovieDetail.types';
-import { MovieDetailModal } from '../components/MovieDetailModal';
+import { overlay } from "overlay-kit";
+import { MovieDetailResponse } from "../types/MovieDetail.types";
+import { MovieDetailModal } from "../components/MovieDetailModal";
 
 export const useMovieDetailModal = () => {
   const openMovieDetailModal = (movie: MovieDetailResponse) => {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       overlay.open(({ unmount }) => (
         <MovieDetailModal
           movie={movie}
           onClose={() => {
+            window.location.href = "/";
             resolve();
             unmount();
           }}
