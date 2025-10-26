@@ -1,36 +1,31 @@
-import { useState, useEffect } from 'react';
-import { moviesApi } from '../../api/movies';
-import { MovieItem } from '../../types/Movie.types';
+import { useEffect, useState } from "react";
+import { MovieItem } from "../types/Movie.types";
+import { moviesApi } from "../api/movies";
 
-/**
- * 영화 상세 정보를 조회하는 훅
- */
-export const usePopularMovies = () => {
-  const [data, setData] = useState<MovieItem[] | null>(null);
+export const usePopularMovies = (initialMovies: MovieItem[] = []) => {
+  const [data, setData] = useState<MovieItem[]>(initialMovies);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchPopularMovies = async () => {
-      setIsLoading(true);
-      setError(null);
+    // 이미 초기 데이터가 있으면 요청하지 않음
+    if (initialMovies.length > 0) {
+      return;
+    }
 
+    const fetchMovies = async () => {
+      setIsLoading(true);
       try {
-        const movieDetail = await moviesApi.getPopular();
-        setData(movieDetail.data.results);
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err
-            : new Error('영화 정보를 불러오는데 실패했습니다.')
-        );
+        const response = await moviesApi.getPopular();
+        setData(response.data.results);
+      } catch (error) {
+        console.error("Failed to fetch movies:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchPopularMovies();
+    fetchMovies();
   }, []);
 
-  return { data, isLoading, error };
+  return { data, isLoading };
 };
