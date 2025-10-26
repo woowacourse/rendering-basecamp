@@ -17,4 +17,5 @@ hydrateRoot(
 performance.mark("afterHydrate");
 performance.measure("hydration", "beforeRender", "afterHydrate");
 
-console.log("[Hydration] Completed");
+const measure = performance.getEntriesByName("hydration")[0];
+console.log(`Hydration 완료 (${measure.duration.toFixed(2)}ms)`);
