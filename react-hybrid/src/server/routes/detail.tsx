@@ -9,7 +9,7 @@ import generateHTML from "../utils/generateHTML";
 
 const router = Router();
 
-router.get("/detail/:id", async (req: Request, res: Response) => {
+router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const template = generateHTML();
@@ -38,7 +38,8 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify(movieList.data.results)}
+        movies: ${JSON.stringify(movieList.data.results)},
+        detail: ${JSON.stringify(movieDetail.data)}
       }
     </script>
   `

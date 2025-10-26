@@ -1,16 +1,22 @@
+import { Loading } from "../components/common/Loading";
+import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { MovieList } from "../components/MovieList";
-import { Footer } from "../components/Footer";
 import { usePopularMovies } from "../hooks/queries/usePopularMovies";
-import { Loading } from "../components/common/Loading";
 import { MovieItem } from "../types/Movie.types";
+import { MovieDetailResponse } from "../types/MovieDetail.types";
 
 interface MovieHomePageProps {
-  initialMovies?: MovieItem[];
+  initialMovies?: {
+    movies: MovieItem[];
+    details?: MovieDetailResponse | null;
+  };
 }
 
 export default function MovieHomePage({ initialMovies }: MovieHomePageProps) {
-  const { data: movies, isLoading } = usePopularMovies({ initialMovies });
+  const { data: movies, isLoading } = usePopularMovies({
+    initialMovies: initialMovies?.movies,
+  });
 
   if (isLoading === true) {
     return <Loading />;
