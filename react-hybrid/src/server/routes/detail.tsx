@@ -20,7 +20,12 @@ router.get("/:id", async (req: Request, res: Response) => {
   ]);
 
   const renderedApp = renderToString(
-    <App initialMovies={movieList.data.results} />
+    <App
+      initialMovies={{
+        movies: movieList.data.results,
+        details: movieDetail.data,
+      }}
+    />
   );
 
   const renderedHTMLWithSeo = template.replace(

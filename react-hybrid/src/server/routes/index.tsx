@@ -15,7 +15,7 @@ router.get("/", async (_: Request, res: Response) => {
   const movieList = await moviesApi.getPopular();
 
   const renderedApp = renderToString(
-    <App initialMovies={movieList.data.results} />
+    <App initialMovies={{ movies: movieList.data.results }} />
   );
 
   const renderedHTMLWithSeo = template.replace(
