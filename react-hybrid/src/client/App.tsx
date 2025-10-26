@@ -4,12 +4,14 @@ import { OverlayProvider } from "overlay-kit";
 import MovieHomePage from "./pages/MovieHomePage";
 import MovieDetailPage from "./pages/MovieDetailPage";
 import { MovieItem } from "./types/Movie.types";
+import { MovieDetailResponse } from "./types/MovieDetail.types";
 
 interface AppProps {
   initialMovies?: MovieItem[];
+  movieDetail?: MovieDetailResponse;
 }
 
-function App({ initialMovies }: AppProps) {
+function App({ initialMovies, movieDetail }: AppProps) {
   return (
     <OverlayProvider>
       <Routes>
@@ -17,7 +19,15 @@ function App({ initialMovies }: AppProps) {
           path="/"
           element={<MovieHomePage initialMovies={initialMovies} />}
         />
-        <Route path="/movie/:id" element={<MovieDetailPage />} />
+        <Route
+          path="/detail/:id"
+          element={
+            <MovieDetailPage
+              initialMovies={initialMovies}
+              movieDetail={movieDetail}
+            />
+          }
+        />
       </Routes>
     </OverlayProvider>
   );
