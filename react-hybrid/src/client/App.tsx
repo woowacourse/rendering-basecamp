@@ -11,10 +11,14 @@ type Props = {
 };
 
 function App({ movieData, movieDetail }: Props) {
+  const currentPath = window.location.pathname;
+
   return (
     <OverlayProvider>
-      {/* <MovieHomePage movieData={movieData} /> */}
-      <MovieDetailPage popularMovie={movieData} movieDetail={movieDetail} />
+      {currentPath === "/" && <MovieHomePage movieData={movieData} />}
+      {currentPath.startsWith("/detail") && (
+        <MovieDetailPage popularMovie={movieData} movieDetail={movieDetail} />
+      )}
     </OverlayProvider>
   );
 }
