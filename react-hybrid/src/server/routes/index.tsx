@@ -27,7 +27,7 @@ function generateHTML() {
     `;
 }
 
-router.get('/', async (_: Request, res: Response) => {
+const renderHome = async (_: Request, res: Response) => {
   const template = generateHTML();
   try {
     const popularMovies = await moviesApi.getPopular();
@@ -55,6 +55,54 @@ router.get('/', async (_: Request, res: Response) => {
     console.error(error);
     res.status(500).send('영화 데이터를 불러오는 중 오류가 발생했습니다.');
   }
-});
+};
+
+const renderDetail = async (req: Request, res: Response) => {
+  try {
+    const movieId = Number(req.params.movieId);
+
+    if (Number.isNaN(movieId)) {
+      res.status(404).send('잘못된 영화 ID 입니다.');
+      return;
+    }
+
+    const [popularMovies, detailResponse] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(movieId),
+    ]);
+
+    const movies = popularMovies.data?.results ?? [];
+    const detailMovie = detailResponse.data;
+    const requestPath = req.originalUrl || `/detail/${movieId}`;
+
+    const renderedApp = renderToString(
+      <App
+        initialMovies={movies}
+        initialDetailMovie={detailMovie}
+        initialPath={requestPath} //서버 렌더링 시 현재 요청 경로를 넘겨서 라우터 위치를 맞추는 용도
+      />
+    );
+
+    const template = generateHTML();
+    const withData = template.replace(
+      '<!--{INIT_DATA_AREA}-->',
+      /*html*/ `
+        <script>
+          window.__INITIAL_DATA__ = ${JSON.stringify({ movies, detailMovie })}
+        </script>
+      `
+    );
+
+    const html = withData.replace('<!--{BODY_AREA}-->', renderedApp);
+
+    res.send(html);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('영화 데이터를 불러오는 중 오류가 발생했습니다.');
+  }
+};
+
+router.get('/', renderHome);
+router.get('/detail/:movieId', renderDetail);
 
 export default router;
