@@ -7,3 +7,6 @@ hydrateRoot(
   document.getElementById("root"),
   <App initialMovies={initialData.movies} />
 );
+
+performance.mark("afterHydrate");
+performance.measure("hydration", "beforeRender", "afterHydrate");
