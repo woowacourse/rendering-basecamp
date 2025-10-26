@@ -27,29 +27,27 @@ function generateHTML() {
 }
 
 router.get("/", async (_: Request, res: Response) => {
-  try {
-    const template = generateHTML();
+  const template = generateHTML();
 
-    const popularMoviesResponse = await moviesApi.getPopular();
-    const movies = popularMoviesResponse.data.results ?? [];
-    const renderedApp = renderToString(<App initialMovie={movies} />);
-    const renderedHTMLWithInitialData = template.replace(
-      "<!--{INIT_DATA_AREA}-->",
-      /*html*/ `
+  const popularMoviesResponse = await moviesApi.getPopular();
+  const movies = popularMoviesResponse.data.results ?? [];
+  const renderedApp = renderToString(<App initialMovies={movies} />);
+  const renderedHTMLWithInitialData = template.replace(
+    "<!--{INIT_DATA_AREA}-->",
+    /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
         movies: ${JSON.stringify(movies ?? [])}
       }
     </script>
   `
-    );
-    const renderedHTML = renderedHTMLWithInitialData.replace(
-      "<!--{BODY_AREA}-->",
-      renderedApp
-    );
+  );
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    "<!--{BODY_AREA}-->",
+    renderedApp
+  );
 
-    res.send(renderedHTML);
-  } catch (error) {}
+  res.send(renderedHTML);
 });
 
 export default router;
