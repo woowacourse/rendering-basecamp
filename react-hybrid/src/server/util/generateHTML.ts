@@ -30,7 +30,7 @@ const createHTMLTemplate = () => {
 const createMetaTags = (movie?: MovieDetailResponse) => {
   if (!movie) {
     return `
-        <title>마빈의 영화 리뷰</title>
+        <title>마빈의 영화 리뷰 | ${VERSION} </title>
         <meta property="og:title" content="마빈의 영화 리뷰 | ${VERSION}" />
         <meta property="og:description" content="마빈의 영화 리뷰1 !!!! " />
         <meta property="og:image" content="/images/logo.png" />
