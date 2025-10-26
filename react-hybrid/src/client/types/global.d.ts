@@ -1,9 +1,11 @@
 declare global {
   interface Window {
     __INITIAL_DATA__: {
-      movies: any[];
+      page: 'home';
+      initialData: {
+        movies: MovieItem[];
+      };
     };
   }
 }
-
 export {};
