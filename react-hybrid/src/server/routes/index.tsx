@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { renderToString } from 'react-dom/server';
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
 import { OverlayProvider } from 'overlay-kit';
 import MovieHomePage from '../../client/pages/MovieHomePage';
 import MovieDetailPage from '../../client/pages/MovieDetailPage';
@@ -36,11 +35,9 @@ router.get('/', async (_: Request, res: Response) => {
     const moviesData = await moviesApi.getPopular(1);
 
     const renderedApp = renderToString(
-      <StaticRouter location="/">
-        <OverlayProvider>
-          <MovieHomePage />
-        </OverlayProvider>
-      </StaticRouter>
+      <OverlayProvider>
+        <MovieHomePage />
+      </OverlayProvider>
     );
 
     const html = generateHTML(renderedApp, { movies: moviesData.results, url: '/' }, '/');
@@ -62,11 +59,9 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
     ]);
 
     const renderedApp = renderToString(
-      <StaticRouter location={`/detail/${movieId}`}>
-        <OverlayProvider>
-          <MovieDetailPage />
-        </OverlayProvider>
-      </StaticRouter>
+      <OverlayProvider>
+        <MovieDetailPage />
+      </OverlayProvider>
     );
 
     const html = generateHTML(
