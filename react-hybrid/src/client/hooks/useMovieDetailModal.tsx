@@ -11,7 +11,7 @@ export const useMovieDetailModal = () => {
           onClose={() => {
             resolve();
             unmount();
-            history.back();
+            history.replaceState('/', '', '/');
           }}
         />
       ));
