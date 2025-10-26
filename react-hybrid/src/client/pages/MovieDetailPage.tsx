@@ -32,11 +32,14 @@ function DetailPageOpenModal({
   const onceRef = useRef(false);
 
   useEffect(() => {
+    if (movieDetail.id == null || onceRef.current === true) {
+      return;
+    }
     (async () => {
       onceRef.current = true;
       openMovieDetailModal(movieDetail);
     })();
-  }, [openMovieDetailModal]);
+  }, [movieDetail.id, openMovieDetailModal]);
 
   return null;
 }
