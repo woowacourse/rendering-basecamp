@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { dispatchNavigationEvent } from './useNavigationEvent';
 
 export const useHistory = (path?: string) => {
   const [currentPath, setCurrentPath] = useState(
@@ -9,6 +10,8 @@ export const useHistory = (path?: string) => {
     const handlePopState = () => {
       const newPath = window.location.pathname;
       setCurrentPath(newPath);
+
+      dispatchNavigationEvent(newPath);
     };
     handlePopState();
 
