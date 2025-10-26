@@ -3,6 +3,7 @@ import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
 import axios from "axios";
+import { MovieItem } from "../../client/types/Movie.types";
 
 const router = Router();
 
@@ -14,7 +15,7 @@ const tmdbClient = axios.create({
   },
 });
 
-function generateHTML() {
+function generateHTML(ogTags: string = "") {
   return /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -23,7 +24,7 @@ function generateHTML() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/styles/index.css" />
         <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
+        ${ogTags}
       </head>
       <body>
         <div id="root"><!--{BODY_AREA}--></div>
@@ -34,8 +35,36 @@ function generateHTML() {
     `;
 }
 
+function generateHomeOGTags() {
+  return /*html*/ `
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="영화 리뷰"/>
+    <meta property="og:title" content="인기 영화 목록"/>
+    <meta property="og:description" content="지금 인기 있는 영화를 확인하세요"/>
+    <meta property="og:locale" content="ko_KR"/>
+  `;
+}
+
+function generateMovieOGTags(movie: MovieItem) {
+  const title = movie.title || "영화 상세";
+  const description = movie.overview || "영화 정보를 확인하세요";
+  const image = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : "";
+
+  return /*html*/ `
+    <meta property="og:type" content="video.movie"/>
+    <meta property="og:site_name" content="영화 리뷰"/>
+    <meta property="og:title" content="${title}"/>
+    <meta property="og:description" content="${description}"/>
+    ${image ? `<meta property="og:image" content="${image}"/>` : ""}
+    <meta property="og:locale" content="ko_KR"/>
+  `;
+}
+
 router.get("/", async (req: Request, res: Response) => {
-  const template = generateHTML();
+  const ogTags = generateHomeOGTags();
+  const template = generateHTML(ogTags);
 
   const movieData = await tmdbClient.get("/movie/popular?page=1&language=ko-KR");
   const movies = movieData.data.results;
@@ -61,11 +90,17 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 router.get("/detail/:id", async (req: Request, res: Response) => {
-  const template = generateHTML();
-
   const id = req.params.id;
-  const movieData = await tmdbClient.get("/movie/popular?page=1&language=ko-KR");
-  const movies = movieData.data.results;
+  const [movieListData, movieDetailData] = await Promise.all([
+    tmdbClient.get("/movie/popular?page=1&language=ko-KR"),
+    tmdbClient.get(`/movie/${id}?language=ko-KR`)
+  ]);
+  const movies = movieListData.data.results;
+  const movieDetail = movieDetailData.data;
+
+  const ogTags = generateMovieOGTags(movieDetail);
+  const template = generateHTML(ogTags);
+
   const renderedApp = renderToString(<App url={req.url} movies={movies} movieId={Number(id)}/>);
 
   const renderedHTMLWithInitialData = template.replace(
