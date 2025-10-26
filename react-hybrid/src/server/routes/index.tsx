@@ -32,7 +32,7 @@ router.get("/", async (_: Request, res: Response) => {
   const popularMovies = await moviesApi.getPopular();
   const movies = popularMovies.data.results || [];
 
-  const renderedApp = renderToString(<App movies={movies} />);
+  const renderedApp = renderToString(<App initialMovies={movies} />);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
@@ -49,6 +49,40 @@ router.get("/", async (_: Request, res: Response) => {
     renderedApp
   );
 
+  res.send(renderedHTML);
+});
+
+router.get("/detail/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const template = generateHTML();
+  const [popularResponse, detailResponse] = await Promise.all([
+    moviesApi.getPopular(),
+    moviesApi.getDetail(Number(id)),
+  ]);
+  const movies = popularResponse.data?.results ?? [];
+  const detail = detailResponse.data ?? null;
+  console.log("detail", detail);
+  const renderedApp = renderToString(
+    <App initialMovies={movies} initialDetail={detail} />
+  );
+  const initialData = { movies, detail };
+  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  const imagePath = detail?.backdrop_path || detail?.poster_path || "";
+  const ogImage = imagePath
+    ? `https://image.tmdb.org/t/p/w1280${imagePath}`
+    : `${baseUrl}/images/logo.png`;
+  const renderedHTMLWithInitialData = template.replace(
+    "<!--{INIT_DATA_AREA}-->",
+    /*html*/ `
+      <script>
+        window.__INITIAL_DATA__ = ${JSON.stringify(initialData)}
+      </script>
+    `
+  );
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    "<!--{BODY_AREA}-->",
+    renderedApp
+  );
   res.send(renderedHTML);
 });
 

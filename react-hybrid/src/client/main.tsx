@@ -7,5 +7,5 @@ console.log("initialData", initialData);
 
 hydrateRoot(
   document.getElementById("root"),
-  <App movies={initialData?.movies} />
+  <App initialMovies={initialData?.movies} />
 );

@@ -1,8 +1,8 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import MovieHomePage from './MovieHomePage';
-import { moviesApi } from '../api/movies';
+import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
+import { useEffect, useRef } from "react";
+import MovieHomePage from "./MovieHomePage";
+import { moviesApi } from "../api/movies";
+import { useParams } from "react-router-dom";
 
 export default function MovieDetailPage() {
   return (
@@ -14,7 +14,7 @@ export default function MovieDetailPage() {
 }
 
 function DetailPageOpenModal() {
-  const { movieId } = useParams();
+  const { movieId } = useParams<{ movieId: string }>();
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
