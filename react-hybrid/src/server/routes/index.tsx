@@ -1,8 +1,9 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response } from 'express';
 
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
+import { renderToString } from 'react-dom/server';
+import App from '../../client/App';
+import React from 'react';
+import { getMovieList } from '../api/getMovieList';
 
 const router = Router();
 
@@ -26,25 +27,23 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get('/', async (_: Request, res: Response) => {
   const template = generateHTML();
+  const movieList = await getMovieList();
 
-  const renderedApp = renderToString(<App />);
+  const renderedApp = renderToString(<App initialMovies={movieList} />);
 
   const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
+    '<!--{INIT_DATA_AREA}-->',
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify(movieList)}
       }
     </script>
   `
   );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+  const renderedHTML = renderedHTMLWithInitialData.replace('<!--{BODY_AREA}-->', renderedApp);
 
   res.send(renderedHTML);
 });
