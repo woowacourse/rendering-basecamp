@@ -1,8 +1,8 @@
-import { Router, Request, Response } from "express";
+import { Router, type Request, type Response } from "express";
 
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
-import React from "react";
+import { moviesApi } from "../../client/api/movies";
 
 const router = Router();
 
@@ -14,7 +14,7 @@ function generateHTML() {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
+        <title>세오의 영화 리뷰</title>
         <!--{OG_TAGS}-->
       </head>
       <body>
@@ -26,27 +26,30 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
+router.get("/", async (_: Request, res: Response) => {
+  try {
+    const template = generateHTML();
 
-  const renderedApp = renderToString(<App />);
-
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
+    const popularMoviesResponse = await moviesApi.getPopular();
+    const movies = popularMoviesResponse.data.results ?? [];
+    const renderedApp = renderToString(<App initialMovie={movies} />);
+    const renderedHTMLWithInitialData = template.replace(
+      "<!--{INIT_DATA_AREA}-->",
+      /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify(movies ?? [])}
       }
     </script>
   `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+    );
+    const renderedHTML = renderedHTMLWithInitialData.replace(
+      "<!--{BODY_AREA}-->",
+      renderedApp
+    );
 
-  res.send(renderedHTML);
+    res.send(renderedHTML);
+  } catch (error) {}
 });
 
 export default router;
