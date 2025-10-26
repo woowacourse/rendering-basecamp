@@ -51,6 +51,7 @@ router.get("/", async (req: Request, res: Response) => {
     </script>
   `
   );
+
   const renderedHTML = renderedHTMLWithInitialData.replace(
     "<!--{BODY_AREA}-->",
     renderedApp
@@ -59,6 +60,31 @@ router.get("/", async (req: Request, res: Response) => {
   res.send(renderedHTML);
 });
 
-// TODO: /detail/:id 라우트 추가
+router.get("/detail/:id", async (req: Request, res: Response) => {
+  const template = generateHTML();
+
+  const id = req.params.id;
+  const movieData = await tmdbClient.get("/movie/popular?page=1&language=ko-KR");
+  const movies = movieData.data.results;
+  const renderedApp = renderToString(<App url={req.url} movies={movies} movieId={Number(id)}/>);
+
+  const renderedHTMLWithInitialData = template.replace(
+    "<!--{INIT_DATA_AREA}-->",
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = {
+        movies: ${JSON.stringify(movies)}
+      }
+    </script>
+  `
+  );
+
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    "<!--{BODY_AREA}-->",
+    renderedApp
+  );
+
+  res.send(renderedHTML);
+});
 
 export default router;
