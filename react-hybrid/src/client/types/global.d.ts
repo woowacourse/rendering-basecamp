@@ -1,7 +1,11 @@
 declare global {
   interface Window {
     __INITIAL_DATA__: {
-      movies: any[];
+      routeType: "home" | "detail";
+      initialData: {
+        movies: MovieItem[];
+        movieItem?: MovieDetailResponse;
+      };
     };
   }
 }
