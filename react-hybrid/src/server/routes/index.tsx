@@ -70,7 +70,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/detail:id", async (req: Request, res: Response) => {
+router.get("/detail/:id", async (req: Request, res: Response) => {
   try {
     const template = generateHTML();
     const { id } = req.params;
