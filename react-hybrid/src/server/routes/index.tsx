@@ -4,6 +4,8 @@ import { renderToString } from "react-dom/server";
 import React from "react";
 import { moviesApi } from '../../client/api/movies';
 import MovieHomePage from '../../client/pages/MovieHomePage';
+import { MovieDetailModal } from '../../client/components/MovieDetailModal';
+import MovieDetailPage from '../../client/pages/MovieDetailPage';
 
 const router = Router();
 
@@ -70,6 +72,66 @@ router.get("/", async (_: Request, res: Response) => {
         <script>
           window.__INITIAL_DATA__ = {
             movies: []
+          }
+        </script>
+      `
+      );
+    res.send(errorHTML);
+  }
+});
+
+router.get("/detail/:movieId", async (req: Request, res: Response) => {
+  try {
+    const { movieId } = req.params;
+
+    // 서버에서 영화 목록과 상세 정보 패칭
+    const [moviesResponse, detailResponse] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(Number(movieId))
+    ]);
+
+    const movies = moviesResponse.data.results;
+    const movieDetail = detailResponse.data;
+
+    const template = generateHTML();
+
+    // 홈페이지와 상세 정보 함께 렌더링
+    const renderedApp = renderToString(
+      <MovieDetailPage movies={movies} detail={movieDetail} />
+    );
+
+    const renderedHTMLWithInitialData = template.replace(
+      "<!--{INIT_DATA_AREA}-->",
+      /*html*/ `
+      <script>
+        window.__INITIAL_DATA__ = {
+          movies: ${JSON.stringify(movies)},
+          detail: ${JSON.stringify(movieDetail)}
+        }
+      </script>
+    `
+    );
+    const renderedHTML = renderedHTMLWithInitialData.replace(
+      "<!--{BODY_AREA}-->",
+      renderedApp
+    );
+
+    res.send(renderedHTML);
+  } catch (error) {
+    console.error("Error fetching movie detail:", error);
+    const template = generateHTML();
+    const errorHTML = template
+      .replace(
+        "<!--{BODY_AREA}-->",
+        "<div>영화 정보를 불러오는데 실패했습니다.</div>"
+      )
+      .replace(
+        "<!--{INIT_DATA_AREA}-->",
+        /*html*/ `
+        <script>
+          window.__INITIAL_DATA__ = {
+            movies: [],
+            movieDetail: null
           }
         </script>
       `
