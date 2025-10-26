@@ -8,7 +8,21 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
 
   const handleMovieClick = async (movie: MovieItemType) => {
     const movieDetail = await moviesApi.getDetail(movie.id);
-    await openMovieDetailModal(movieDetail.data);
+    const prevPath = window.location.pathname;
+
+    if (prevPath !== `/detail/${movie.id}`) {
+      window.history.pushState(
+        { movieId: movie.id },
+        '',
+        `/detail/${movie.id}`
+      );
+    }
+
+    try {
+      await openMovieDetailModal(movieDetail.data);
+    } finally {
+      window.history.replaceState({}, '', prevPath);
+    }
   };
 
   return (
@@ -16,7 +30,7 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
       <section className="container">
         <h2 className="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
         <ul className="thumbnail-list">
-          {movies.map(movie => (
+          {movies.map((movie) => (
             <MovieItem
               key={movie.id}
               movie={movie}
