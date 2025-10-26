@@ -8,6 +8,28 @@ import { moviesApi } from '../api/movie';
 
 const router = Router();
 
+router.get('/api/movie/popular', async (req: Request, res: Response) => {
+  try {
+    const page = req.query.page ? Number(req.query.page) : 1;
+    const data = await moviesApi.getPopular(page);
+    res.json(data);
+  } catch (error) {
+    console.error('API Proxy Error:', error);
+    res.status(500).json({ error: 'Failed to fetch movies' });
+  }
+});
+
+router.get('/api/movie/:id', async (req: Request, res: Response) => {
+  try {
+    const movieId = Number(req.params.id);
+    const data = await moviesApi.getDetail(movieId);
+    res.json(data);
+  } catch (error) {
+    console.error('API Proxy Error:', error);
+    res.status(500).json({ error: 'Failed to fetch movie detail' });
+  }
+});
+
 function getBaseUrl(req: Request): string {
   // Railway나 프로덕션 환경
   if (process.env.RAILWAY_PUBLIC_DOMAIN) {
