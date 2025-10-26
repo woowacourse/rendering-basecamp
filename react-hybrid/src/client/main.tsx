@@ -7,7 +7,10 @@ performance.mark("beforeRender");
 
 hydrateRoot(
   document.getElementById("root"),
-  <App initialMovies={initialData.movies} detail={initialData.detail} />
+  <App
+    initialMovies={initialData.movies ?? []}
+    detail={initialData.detail ?? undefined}
+  />
 );
 
 performance.mark("afterHydrate");

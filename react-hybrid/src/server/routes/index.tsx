@@ -35,13 +35,17 @@ router.get("/", async (req: Request, res: Response) => {
     const movies = popularMoviesResponse.data.results ?? [];
     const renderedApp = renderToString(<App initialMovies={movies} />);
 
+    const initialDataRoot = { movies: movies ?? [] };
+    const safeInitialRoot = JSON.stringify(initialDataRoot).replace(
+      /</g,
+      "\\u003c"
+    );
+
     const renderedHTMLWithInitialData = template.replace(
       "<!--{INIT_DATA_AREA}-->",
       /*html*/ `
     <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify(movies ?? [])}
-      }
+      window.__INITIAL_DATA__ = ${safeInitialRoot}
     </script>
   `
     );
@@ -94,14 +98,20 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
       image: `https://image.tmdb.org/t/p/w500${movieDetail?.poster_path || ""}`,
     });
 
+    const initialDataDetail = {
+      movies: popularMovies ?? [],
+      detail: movieDetail ?? null,
+    };
+    const safeInitialDetail = JSON.stringify(initialDataDetail).replace(
+      /</g,
+      "\\u003c"
+    );
+
     const renderedHTMLWithInitialData = template.replace(
       "<!--{INIT_DATA_AREA}-->",
       /*html*/ `
     <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify(popularMovies ?? [])}
-        detail: ${JSON.stringify(movieDetail)}
-      }
+      window.__INITIAL_DATA__ = ${safeInitialDetail}
     </script>
   `
     );
