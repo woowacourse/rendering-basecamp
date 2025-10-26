@@ -77,7 +77,7 @@ router.get("/detail/:movieId", async (req: Request, res: Response) => {
   const ogTags = `
   <meta property="og:title" content="${initialData.title}" />
   <meta property="og:description" content="${initialData.overview}" />
-  <meta property="og:image" content="${initialData.poster_path}" />
+  <meta property="og:image" content="https://image.tmdb.org/t/p/w500${initialData.poster_path}" />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="${req.url}" />
 `;
