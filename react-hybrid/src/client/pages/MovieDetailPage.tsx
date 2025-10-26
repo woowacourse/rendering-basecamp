@@ -1,20 +1,31 @@
 import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
 import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
 import MovieHomePage from './MovieHomePage';
 import { moviesApi } from '../api/movies';
+import { MovieItem } from '../types/Movie.types';
+import { MovieDetailResponse } from '../types/MovieDetail.types';
 
-export default function MovieDetailPage() {
+interface MovieDetailPageProps {
+  initialMovies?: MovieItem[];
+  initialMovieDetail?: MovieDetailResponse;
+}
+
+export default function MovieDetailPage({ initialMovies, initialMovieDetail }: MovieDetailPageProps) {
   return (
     <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
+      <MovieHomePage initialMovies={initialMovies} />
+      <DetailPageOpenModal initialMovieDetail={initialMovieDetail} />
     </>
   );
 }
 
-function DetailPageOpenModal() {
-  const { movieId } = useParams();
+interface DetailPageOpenModalProps {
+  initialMovieDetail?: MovieDetailResponse;
+}
+
+function DetailPageOpenModal({ initialMovieDetail }: DetailPageOpenModalProps) {
+  const movieId = typeof window !== 'undefined' ? window.location.pathname.split('/detail/')[1] : null;
+
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
@@ -22,12 +33,18 @@ function DetailPageOpenModal() {
     if (movieId == null || onceRef.current === true) {
       return;
     }
+
     (async () => {
       onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
+
+      if (initialMovieDetail) {
+        openMovieDetailModal(initialMovieDetail);
+      } else {
+        const movieDetail = await moviesApi.getDetail(Number(movieId));
+        openMovieDetailModal(movieDetail.data);
+      }
     })();
-  }, [movieId, openMovieDetailModal]);
+  }, [movieId, openMovieDetailModal, initialMovieDetail]);
 
   return null;
 }
