@@ -15,7 +15,7 @@ function generateHTML(body: string, initialData: any, url: string) {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
+        <link rel="stylesheet" href="/styles/index.css" />
         <title>영화 리뷰</title>
       </head>
       <body>
@@ -24,7 +24,7 @@ function generateHTML(body: string, initialData: any, url: string) {
           window.__INITIAL_DATA__ = ${JSON.stringify(initialData)};
           window.__INITIAL_URL__ = "${url}";
         </script>
-        <script src="/static/bundle.js"></script>
+        <script src="/bundle.js"></script>
       </body>
     </html>
   `;
