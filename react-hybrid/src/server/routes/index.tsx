@@ -42,7 +42,7 @@ function generateHTML(
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
-        <title>${ogTitle}</title>
+        <title>영화 리뷰</title>
 
         <!-- Open Graph 태그 -->
         <meta property="og:type" content="website" />
