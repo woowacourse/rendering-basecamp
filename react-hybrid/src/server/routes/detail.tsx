@@ -5,10 +5,11 @@ import { OverlayProvider } from "overlay-kit";
 import MovieDetailPage from "../../client/pages/MovieDetailPage";
 import React from "react";
 import { moviesApi } from "../../client/api/movies";
+import { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 
 const router = Router();
 
-function generateHTML() {
+function generateHTML({ detailMovie }: { detailMovie: MovieDetailResponse }) {
   return /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -16,7 +17,17 @@ function generateHTML() {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
+        <title>${detailMovie.title} - 영화 리뷰</title>
+        <meta property="og:type" content="video.movie" />
+        <meta property="og:title" content="${detailMovie.title}" />
+        <meta property="og:description" content="${
+          detailMovie.overview || "줄거리 정보가 없습니다."
+        }" />
+        <meta property="og:image" content="${
+          detailMovie.poster_path
+            ? `https://image.tmdb.org/t/p/original${detailMovie.poster_path}`
+            : ""
+        }" />
         <!--{OG_TAGS}-->
       </head>
       <body>
@@ -29,7 +40,6 @@ function generateHTML() {
 }
 
 router.get("/:id", async (req: Request, res: Response) => {
-  const template = generateHTML();
   const movieId = Number(req.params.id);
 
   const moviesResponse = await moviesApi.getPopular();
@@ -43,6 +53,8 @@ router.get("/:id", async (req: Request, res: Response) => {
       <MovieDetailPage movies={movies} detailMovie={detailMovie} />
     </OverlayProvider>
   );
+
+  const template = generateHTML({ detailMovie });
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
