@@ -41,9 +41,8 @@ module.exports = {
   },
   plugins: [
     new Dotenv({
-      path: path.resolve(__dirname, ".env"),
-      safe: false,
       systemvars: true,
+      silent: true,
     }),
   ],
 };

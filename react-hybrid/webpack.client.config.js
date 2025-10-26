@@ -50,11 +50,7 @@ module.exports = {
         { from: "public/styles", to: "styles" },
       ],
     }),
-    new Dotenv({
-      path: path.resolve(__dirname, ".env"),
-      safe: false,
-      systemvars: true,
-    }),
+    new Dotenv({ systemvars: true }),
   ],
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
