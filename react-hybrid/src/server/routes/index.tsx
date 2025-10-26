@@ -57,4 +57,41 @@ router.get('/', async (_: Request, res: Response) => {
   res.send(renderedHTML);
 });
 
+router.get('/detail/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const [popularResponse, detailResponse] = await Promise.all([
+    moviesApi.getPopular(),
+    moviesApi.getDetail(Number(id)),
+  ]);
+  const template = generateHTML();
+  const initialData = {
+    movies: popularResponse.data.results,
+    detail: detailResponse.data,
+  };
+
+  const renderedApp = renderToString(
+    <App initialData={initialData} page="detail" />
+  );
+
+  const renderedHTMLWithInitialData = template.replace(
+    '<!--{INIT_DATA_AREA}-->',
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = ${JSON.stringify({
+        page: 'detail',
+        initialData,
+      })}
+      
+    </script>
+  `
+  );
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    '<!--{BODY_AREA}-->',
+    renderedApp
+  );
+
+  res.send(renderedHTML);
+});
+
 export default router;
