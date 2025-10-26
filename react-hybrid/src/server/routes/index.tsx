@@ -1,8 +1,11 @@
-import { Router, Request, Response } from "express";
+import type { Request, Response } from "express";
+import { Router } from "express";
 
 import { renderToString } from "react-dom/server";
-import App from "../../client/App";
 import React from "react";
+import { getMovieDetail, getPopularMovies } from "../api/movies";
+import App from "../../client/App";
+import { StaticRouter } from "react-router-dom";
 
 const router = Router();
 
@@ -26,24 +29,75 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+const handleRequest = (req: Request) => {
+  return renderToString(
+    <StaticRouter location={req.url}>
+      <App />
+    </StaticRouter>,
+  );
+};
+
+router.get("/", async (req: Request, res: Response) => {
   const template = generateHTML();
 
-  const renderedApp = renderToString(<App />);
+  const ogTags = `
+    <meta property="og:title" content="영화 리뷰 사이트" />
+    <meta property="og:description" content="영화 리뷰도 할 수 있고, 영화 정보도 얻을 수 있는 영화 리뷰 사이트" />
+    <meta property="og:type" content="website" />
+  `;
+  const withOG = template.replace("<!--{OG_TAGS}-->", ogTags);
 
-  const renderedHTMLWithInitialData = template.replace(
+  const initialData = (await getPopularMovies()).results;
+
+  const renderedHTMLWithInitialData = withOG.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify(initialData)}
       }
     </script>
-  `
+  `,
   );
+
+  const renderedApp = handleRequest(req);
   const renderedHTML = renderedHTMLWithInitialData.replace(
     "<!--{BODY_AREA}-->",
-    renderedApp
+    renderedApp,
+  );
+
+  res.send(renderedHTML);
+});
+
+router.get("/detail/:movieId", async (req: Request, res: Response) => {
+  const template = generateHTML();
+
+  const initialData = await getMovieDetail(Number(req.params.movieId));
+
+  const ogTags = `
+  <meta property="og:title" content="${initialData.title}" />
+  <meta property="og:description" content="${initialData.overview}" />
+  <meta property="og:image" content="${initialData.poster_path}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="${req.url}" />
+`;
+  const withOG = template.replace("<!--{OG_TAGS}-->", ogTags);
+
+  const renderedHTMLWithInitialData = withOG.replace(
+    "<!--{INIT_DATA_AREA}-->",
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = {
+        movieDetail: ${JSON.stringify(initialData)}
+      }
+    </script>
+  `,
+  );
+
+  const renderedApp = handleRequest(req);
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    "<!--{BODY_AREA}-->",
+    renderedApp,
   );
 
   res.send(renderedHTML);
