@@ -15,6 +15,8 @@ const __dirname = path.dirname(__filename);
 
 app.use("/static", express.static(path.join(__dirname, "../../dist/static")));
 
+app.use("/images", express.static(path.join(__dirname, "../../dist/static/images")));
+
 app.use("/", movieRouter);
 
 // Start server
