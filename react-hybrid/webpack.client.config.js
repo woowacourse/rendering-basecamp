@@ -1,4 +1,4 @@
-const path = require("path");
+const path = require("node:path");
 const CopyPlugin = require("copy-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 
@@ -20,9 +20,12 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: [
-              "@babel/preset-env", 
-              ["@babel/preset-react", { "runtime": "automatic" }],
-              ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
+              "@babel/preset-env",
+              ["@babel/preset-react", { runtime: "automatic" }],
+              [
+                "@babel/preset-typescript",
+                { isTSX: true, allExtensions: true },
+              ],
             ],
           },
         },
