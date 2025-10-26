@@ -46,7 +46,17 @@ router.get('/', async (_: Request, res: Response) => {
 
   const template = generateHTML();
 
-  const renderedHTMLWithInitialData = template.replace(
+  const imageUrl = popularMovieList[0]?.poster_path
+    ? `https://image.tmdb.org/t/p/w500${popularMovieList[0]?.poster_path}`
+    : '/images/no_image.png';
+  const ogTags = `
+  <meta property="og:title" content="MovieList" />
+  <meta property="og:description" content="현재 인기 영화 목록을 확인해볼 수 있습니다!" />
+  <meta property="og:image" content="${imageUrl}" />
+`;
+  const withOG = template.replace('<!--{OG_TAGS}-->', ogTags);
+
+  const renderedHTMLWithInitialData = withOG.replace(
     '<!--{INIT_DATA_AREA}-->',
     /*html*/ `
     <script>
@@ -92,7 +102,19 @@ router.get('/details/:id', async (req: Request, res: Response) => {
 
   const template = generateHTML();
 
-  const renderedHTMLWithInitialData = template.replace(
+  const imageUrl = movieDetail.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`
+    : '/images/no_image.png';
+  const ogTags = `
+      <meta property="og:title" content="${movieDetail.title}" />
+      <meta property="og:description" content="${
+        movieDetail.overview || '상세 내용을 확인하세요.'
+      }" />
+      <meta property="og:image" content="${imageUrl}" />
+    `;
+  const withOG = template.replace('<!--{OG_TAGS}-->', ogTags);
+
+  const renderedHTMLWithInitialData = withOG.replace(
     '<!--{INIT_DATA_AREA}-->',
     /*html*/ `
     <script>
