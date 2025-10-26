@@ -3,7 +3,6 @@ import MovieHomePage from "./pages/MovieHomePage";
 import { MovieItem } from "./types/Movie.types";
 import { MovieDetailResponse } from "./types/MovieDetail.types";
 import { useEffect } from "react";
-import { usePopularMovies } from "./hooks/queries/usePopularMovies";
 import { MovieDetailModalLoader } from "./components/MovieDetailModalLoader";
 
 function App({
@@ -13,8 +12,6 @@ function App({
   initialMovies: MovieItem[];
   initialDetail?: MovieDetailResponse;
 }) {
-  const { data: movies, isLoading } = usePopularMovies(initialMovies);
-
   useEffect(() => {
     const handlePopState = () => {
       const path = window.location.pathname;
