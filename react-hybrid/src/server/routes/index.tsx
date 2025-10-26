@@ -83,7 +83,9 @@ router.get("/detail:id", async (req: Request, res: Response) => {
       ? popularMoviesResponse.data.results
       : [];
     const movieDetail = popularMovieDetailResponse.data ?? null;
-    const renderedApp = renderToString(<App initialMovies={popularMovies} />);
+    const renderedApp = renderToString(
+      <App initialMovies={popularMovies} detail={movieDetail} />
+    );
 
     const ogTags = generateOGTags({
       title: `${movieDetail?.title || "영화 상세"}`,
