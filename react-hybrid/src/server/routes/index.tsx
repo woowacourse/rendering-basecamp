@@ -4,6 +4,7 @@ import { renderToString } from "react-dom/server";
 import React from "react";
 import { OverlayProvider } from "overlay-kit";
 import MovieHomePage from "../../client/pages/MovieHomePage";
+import { moviesApi } from "../../client/api/movies";
 
 const router = Router();
 
@@ -27,12 +28,15 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get("/", async (_: Request, res: Response) => {
   const template = generateHTML();
+
+  const moviesResponse = await moviesApi.getPopular();
+  const movies = moviesResponse.data.results;
 
   const renderedApp = renderToString(
     <OverlayProvider>
-      <MovieHomePage />
+      <MovieHomePage movies={movies} />
     </OverlayProvider>
   );
 
@@ -40,9 +44,7 @@ router.get("/", (_: Request, res: Response) => {
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
+      window.__INITIAL_DATA__ = ${JSON.stringify({ movies })}
     </script>
   `
   );

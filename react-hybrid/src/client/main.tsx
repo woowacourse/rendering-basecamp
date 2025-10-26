@@ -1,8 +1,13 @@
 import React from "react";
 import { hydrateRoot } from "react-dom/client";
+import { OverlayProvider } from "overlay-kit";
 import App from "./App";
 
 const initialData = window.__INITIAL_DATA__;
-console.log("initialData", initialData);
 
-hydrateRoot(document.getElementById("root"), <App />);
+hydrateRoot(
+  document.getElementById("root"),
+  <OverlayProvider>
+    <App movies={initialData?.movies} detailMovie={initialData?.detailMovie} />
+  </OverlayProvider>
+);

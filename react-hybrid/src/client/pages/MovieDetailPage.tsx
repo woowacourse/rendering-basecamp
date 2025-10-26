@@ -2,17 +2,31 @@ import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
 import { useEffect, useRef } from "react";
 import MovieHomePage from "./MovieHomePage";
 import { moviesApi } from "../api/movies";
+import { MovieItem } from "../types/Movie.types";
+import { MovieDetailResponse } from "../types/MovieDetail.types";
 
-export default function MovieDetailPage() {
+interface MovieDetailPageProps {
+  movies?: MovieItem[];
+  detailMovie?: MovieDetailResponse;
+}
+
+export default function MovieDetailPage({
+  movies,
+  detailMovie,
+}: MovieDetailPageProps) {
   return (
     <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
+      <MovieHomePage movies={movies} />
+      <DetailPageOpenModal detailMovie={detailMovie} />
     </>
   );
 }
 
-function DetailPageOpenModal() {
+function DetailPageOpenModal({
+  detailMovie,
+}: {
+  detailMovie?: MovieDetailResponse;
+}) {
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
@@ -24,10 +38,11 @@ function DetailPageOpenModal() {
     }
     (async () => {
       onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
+      const movieDetail =
+        detailMovie || (await moviesApi.getDetail(Number(movieId))).data;
+      openMovieDetailModal(movieDetail);
     })();
-  }, [openMovieDetailModal]);
+  }, [openMovieDetailModal, detailMovie]);
 
   return null;
 }
