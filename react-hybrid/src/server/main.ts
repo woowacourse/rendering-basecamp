@@ -19,10 +19,6 @@ app.use(
   "/images",
   express.static(path.join(__dirname, "../../dist/static/images"))
 );
-app.use(
-  "/styles",
-  express.static(path.join(__dirname, "../../dist/static/styles"))
-);
 
 app.use("/", movieRouter);
 app.use("/detail", detailRouter);
