@@ -10,7 +10,7 @@ const TMDB_API_KEY = process.env.TMDB_ACCESS_TOKEN;
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 function generateHTML(bodyContent: string, initialData: any, ogTags: string = "") {
-  return /*html*/ `
+  return `
     <!DOCTYPE html>
     <html lang="ko">
       <head>
