@@ -6,7 +6,7 @@ import { MovieDetailResponse } from "./types/MovieDetail.types";
 import { useMovieDetailModal } from "./hooks/useMovieDetailModal";
 
 interface AppProps {
-  initialMovies: MovieItem[];
+  initialMovies?: MovieItem[];
   detailMovie?: MovieDetailResponse;
 }
 

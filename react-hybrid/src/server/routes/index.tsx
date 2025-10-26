@@ -77,8 +77,9 @@ router.get("/", async (req: Request, res: Response) => {
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
-      window.__INITIAL_DATA__ = ${JSON.stringify(movies)}
-      
+      window.__INITIAL_DATA__ = {
+        movies: ${JSON.stringify(movies)}
+      };
     </script>
   `
   );
@@ -105,7 +106,9 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
   const baseUrl = `${req.protocol}://${req.get("host")}`;
   const ogImage = `https://image.tmdb.org/t/p/w1280${detailMovie.poster_path}`;
 
-  const renderedApp = renderToString(<App initialMovies={movies} />);
+  const renderedApp = renderToString(
+    <App initialMovies={movies} detailMovie={detailMovie} />
+  );
 
   const renderedHTMLWithOgTags = template.replace(
     "<!--{OG_TAGS}-->",
@@ -122,8 +125,10 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
-      window.__INITIAL_DATA__ = ${JSON.stringify({ movies, detailMovie })}
-      
+    window.__INITIAL_DATA__ = {
+      movies: ${JSON.stringify(movies)},
+      detailMovie: ${JSON.stringify(detailMovie)}
+    };
     </script>
   `
   );
