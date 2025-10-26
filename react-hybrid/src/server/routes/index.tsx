@@ -14,6 +14,10 @@ const router = Router();
 router.get("/", async (_: Request, res: Response) => {
   const popularMoviesResult = await fetchApi(moviesApi.getPopular());
 
+  if (popularMoviesResult.error) {
+    return res.status(500).send("영화 목록을 불러오는데 실패했습니다.");
+  }
+
   const renderedApp = renderToString(
     <App Component={MovieHomePage} props={{ popularMoviesResult }} />
   );
@@ -33,6 +37,14 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     fetchApi(moviesApi.getPopular()),
     fetchApi(moviesApi.getDetail(Number(req.params.id))),
   ]);
+
+  if (movieDetailResult.error) {
+    return res.status(404).send("영화를 찾을 수 없습니다.");
+  }
+
+  if (popularMoviesResult.error) {
+    return res.status(500).send("영화 목록을 불러오는데 실패했습니다.");
+  }
 
   const renderedApp = renderToString(
     <App
