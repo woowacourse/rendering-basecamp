@@ -5,6 +5,7 @@ import App from '../../client/App';
 import React from 'react';
 import { moviesApi } from '../../client/api/movies';
 import { MovieItem } from '../../client/types/Movie.types';
+import { MovieDetailResponse } from '../../client/types/MovieDetail.types';
 
 const router = Router();
 
@@ -51,6 +52,53 @@ router.get('/', async (_: Request, res: Response) => {
     <script>
       window.__INITIAL_DATA__ = {
         popularMovieList: ${JSON.stringify(popularMovieList)},
+      }
+    </script>
+  `
+  );
+
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    '<!--{BODY_AREA}-->',
+    renderedApp
+  );
+
+  res.send(renderedHTML);
+});
+
+router.get('/details/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const popularMovieList: MovieItem[] | null = await moviesApi
+    .getPopular()
+    .then((res) => res.data.results ?? null)
+    .catch((err) => {
+      console.log(err);
+      return null;
+    });
+  const movieDetail: MovieDetailResponse | null = await moviesApi
+    .getDetail(Number(id))
+    .then((res) => res.data ?? null)
+    .catch((err) => {
+      console.log(err);
+      return null;
+    });
+
+  const renderedApp = renderToString(
+    <App
+      initialPopularMovieList={popularMovieList}
+      initialMovieDetail={movieDetail}
+    />
+  );
+
+  const template = generateHTML();
+
+  const renderedHTMLWithInitialData = template.replace(
+    '<!--{INIT_DATA_AREA}-->',
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = {
+        popularMovieList: ${JSON.stringify(popularMovieList)},
+        movieDetail: ${JSON.stringify(movieDetail)}
       }
     </script>
   `
