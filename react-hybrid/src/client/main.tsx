@@ -9,4 +9,4 @@ const path = window.location.pathname;
 const movieIdMatch = path.match(/\/detail\/(\d+)/);
 const movieId = movieIdMatch ? movieIdMatch[1] : undefined;
 
-hydrateRoot(document.getElementById("root"), <App movies={initialData.movies} url={path} movieId={movieId}/>);
+hydrateRoot(document.getElementById("root"), <App movies={initialData.movies} url={path} movieId={Number(movieId)}/>);

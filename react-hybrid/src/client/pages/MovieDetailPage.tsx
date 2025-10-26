@@ -5,7 +5,7 @@ import { moviesApi } from '../api/movies';
 import { MovieItem } from "../types/Movie.types";
 
 interface MovieDetailPageProps {
-  movieId: string;
+  movieId: number;
   movies: MovieItem[];
 }
 
@@ -19,7 +19,7 @@ export default function MovieDetailPage({ movieId, movies }: MovieDetailPageProp
 }
 
 interface DetailPageOpenModalProps {
-  movieId: string;
+  movieId: number;
 }
 
 function DetailPageOpenModal({movieId}: DetailPageOpenModalProps) {

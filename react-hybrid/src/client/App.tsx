@@ -7,7 +7,7 @@ import {MovieItem} from "./types/Movie.types";
 interface AppProps {
   url?: string;
   movies: MovieItem[];
-  movieId?: string;
+  movieId?: number;
 }
 
 function App({url = "/", movies, movieId}: AppProps) {
