@@ -1,15 +1,15 @@
-const path = require("path");
-const CopyPlugin = require("copy-webpack-plugin");
-const Dotenv = require("dotenv-webpack");
+const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-  mode: "development",
-  entry: "./src/client/main.tsx",
+  mode: 'development',
+  entry: './src/client/main.tsx',
   output: {
-    path: path.resolve("dist/static"),
-    filename: "bundle.js",
+    path: path.resolve('dist/static'),
+    filename: 'bundle.js',
     clean: true,
-    publicPath: "/static/",
+    publicPath: '/static/',
   },
   module: {
     rules: [
@@ -17,25 +17,25 @@ module.exports = {
         test: /\.(jsx?|tsx?)$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
             presets: [
-              "@babel/preset-env", 
-              ["@babel/preset-react", { "runtime": "automatic" }],
-              ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
+              '@babel/preset-env',
+              ['@babel/preset-react', { runtime: 'automatic' }],
+              ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
             ],
           },
         },
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/i,
-        type: "asset/resource",
+        type: 'asset/resource',
         generator: {
-          filename: "images/[name][ext]",
+          filename: 'images/[name][ext]',
         },
       },
     ],
@@ -43,13 +43,13 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "public/images", to: "images" },
-        { from: "public/styles", to: "styles" },
+        { from: 'public/images', to: 'images' },
+        { from: 'public/styles', to: 'styles' },
       ],
     }),
-    new Dotenv(),
+    new Dotenv({ systemvars: true }),
   ],
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
 };
