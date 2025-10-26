@@ -4,92 +4,71 @@ import { renderToString } from 'react-dom/server';
 import App from '../../client/App';
 import React from 'react';
 import { moviesApi } from '../../client/api/movies';
+import renderTags from '../views/renderTags';
+import renderHTML from '../views/renderHTML';
 
 const router = Router();
 
-function generateHTML() {
-  return /*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
-      </head>
-      <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
-}
-
-router.get('/', async (_: Request, res: Response) => {
-  const template = generateHTML();
+router.get('/', async (req: Request, res: Response) => {
   const popularMoviesResponse = await moviesApi.getPopular();
   const movies = popularMoviesResponse.data.results;
   const initialData = {
     movies,
     detail: undefined,
   };
+  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
 
   const renderedApp = renderToString(
     <App initialData={initialData} page="home" />
   );
 
-  const renderedHTMLWithInitialData = template.replace(
-    '<!--{INIT_DATA_AREA}-->',
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = ${JSON.stringify({ page: 'home', initialData })}
-      
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    '<!--{BODY_AREA}-->',
-    renderedApp
-  );
+  const metaTags = renderTags({
+    title: '영화 리뷰',
+    description: '인기 영화 정보를 확인할 수 있습니다.',
+    image: `https://image.tmdb.org/t/p/original${movies[0].backdrop_path}`,
+    url,
+  });
+
+  const renderedHTML = renderHTML({
+    renderApp: renderedApp,
+    page: 'home',
+    initialData,
+    title: '영화 리뷰',
+    metaTags,
+  });
 
   res.send(renderedHTML);
 });
 
 router.get('/detail/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
-
   const [popularResponse, detailResponse] = await Promise.all([
     moviesApi.getPopular(),
     moviesApi.getDetail(Number(id)),
   ]);
-  const template = generateHTML();
   const initialData = {
     movies: popularResponse.data.results,
     detail: detailResponse.data,
   };
-
+  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   const renderedApp = renderToString(
     <App initialData={initialData} page="detail" />
   );
 
-  const renderedHTMLWithInitialData = template.replace(
-    '<!--{INIT_DATA_AREA}-->',
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = ${JSON.stringify({
-        page: 'detail',
-        initialData,
-      })}
-      
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    '<!--{BODY_AREA}-->',
-    renderedApp
-  );
+  const metaTags = renderTags({
+    title: initialData.detail.title,
+    description: initialData.detail.overview,
+    image: `https://image.tmdb.org/t/p/original${initialData.detail.backdrop_path}`,
+    url,
+  });
+
+  const renderedHTML = renderHTML({
+    renderApp: renderedApp,
+    page: 'detail',
+    initialData,
+    title: initialData.detail.title,
+    metaTags,
+  });
 
   res.send(renderedHTML);
 });
