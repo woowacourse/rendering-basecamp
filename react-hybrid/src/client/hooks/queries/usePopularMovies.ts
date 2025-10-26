@@ -11,6 +11,10 @@ export const usePopularMovies = ({ movies }: { movies?: MovieItem[] }) => {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    if (movies && movies.length > 0) {
+      return;
+    }
+
     const fetchPopularMovies = async () => {
       setIsLoading(true);
       setError(null);
