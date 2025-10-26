@@ -11,7 +11,7 @@ export const useMovieDetailModal = () => {
           onClose={() => {
             resolve();
             unmount();
-            window.history.pushState(null, '', '/');
+            window.location.href = '/';
           }}
         />
       ));

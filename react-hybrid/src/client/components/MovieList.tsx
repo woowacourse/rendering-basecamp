@@ -1,11 +1,9 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
 import { MovieItem } from './MovieItem';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
-  const handleMovieClick = async (movie: MovieItemType) => {
-    window.history.pushState(null, '', `/detail/${movie.id}`);
+  const handleMovieClick = (movie: MovieItemType) => {
+    window.location.href = `/detail/${movie.id}`;
   };
 
   return (
