@@ -57,11 +57,28 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
 
   const template = generateHTML();
 
+  const title = `${movieDetail.title} | 인기 영화 리뷰`;
+  const description =
+    movieDetail.overview?.slice(0, 100) || "영화 상세 정보를 확인해보세요!";
+  const image = `https://image.tmdb.org/t/p/w780${movieDetail.poster_path}`;
+
+  const ogTags = `
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:image" content="${image}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+  `;
+
   const renderedApp = renderToString(
     <App movieData={popularMovies} movieDetail={movieDetail} />
   );
 
-  const renderedHTMLWithInitialData = template.replace(
+  const withOG = template.replace("<!--{OG_TAGS}-->", ogTags);
+
+  const renderedHTMLWithInitialData = withOG.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
