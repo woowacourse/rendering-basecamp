@@ -5,7 +5,6 @@ import App from "../../client/App";
 import React from "react";
 import { serverMoviesApi } from "../api/movies";
 import { StaticRouter } from "react-router-dom/server";
-import MovieHomePage from "../../client/pages/MovieHomePage";
 
 const router = Router();
 
@@ -57,12 +56,11 @@ router.get("/", async (req: Request, res: Response) => {
 
     res.send(html);
   } catch (error) {
-    console.error("Error fetching movies:", error);
-    res.status(500).send(`Internal Server Error: ${error}`);
+    res.status(500).send(`Internal Server Error: ${error.message || error}`);
   }
 });
 
-router.get("/movie/:id", async (req: Request, res: Response) => {
+router.get("/detail/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -72,7 +70,7 @@ router.get("/movie/:id", async (req: Request, res: Response) => {
     ]);
 
     const movieDetail = movieDetailResponse.data;
-    const movies = popularMoviesResponse.data.results;
+    const movies = popularMoviesResponse.data;
 
     const imageUrl = movieDetail.poster_path
       ? `https://image.tmdb.org/t/p/w550${movieDetail.poster_path}`
@@ -90,27 +88,28 @@ router.get("/movie/:id", async (req: Request, res: Response) => {
     }" />
     `;
 
+    const initialMoviesData = movies.results;
+
     const appHTML = renderToString(
-      <StaticRouter location={req.url}>
-        <App initialMovies={movies} />
+      <StaticRouter location={`/detail/${id}`}>
+        <App initialMovies={initialMoviesData} movieDetail={movieDetail} />
       </StaticRouter>
     );
 
     const html = buildHTML({
       appHTML,
-      initialData: { movies, movieDetail },
+      initialData: { movies: movies.results, movieDetail },
       ogTags,
     });
 
     res.send(html);
   } catch (error) {
-    console.error("Error fetching movie detail:", error);
-    res.status(500).send("Internal Server Error");
+    res
+      .status(500)
+      .send(
+        `Internal Server Error ${req.params.id}: ${error.message || error}`
+      );
   }
-});
-
-router.get("/debug", (_: Request, res: Response) => {
-  res.send("<h1>✅ 서버에서 HTML 응답은 됩니다.</h1>");
 });
 
 export default router;
