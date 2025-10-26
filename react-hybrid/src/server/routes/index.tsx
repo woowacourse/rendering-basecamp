@@ -1,52 +1,62 @@
 import { Router, Request, Response } from "express";
-
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
+import axios from "axios";
 
 const router = Router();
 
-function generateHTML() {
-  return /*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
-      </head>
-      <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
-}
+const tmdbClient = axios.create({
+  baseURL: "https://api.themoviedb.org/3",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+  },
+});
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
+const generateHTML = (initialData: any) => `<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/styles/index.css" />
+    <title>영화 리뷰</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>window.__INITIAL_DATA__ = ${JSON.stringify(initialData)};</script>
+    <script src="/static/bundle.js"></script>
+  </body>
+</html>`;
 
-  const renderedApp = renderToString(<App />);
+router.get("/", async (req: Request, res: Response) => {
+  try {
+    const moviesResponse = await tmdbClient.get(
+      "/movie/popular?page=1&language=ko-KR"
+    );
+    const movies = moviesResponse.data.results;
 
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+    const initialData = { movies };
 
-  res.send(renderedHTML);
+    res.send(generateHTML(initialData));
+  } catch (error) {
+    console.error("Error rendering page:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/detail/:movieId", async (req: Request, res: Response) => {
+  try {
+    const moviesResponse = await tmdbClient.get(
+      "/movie/popular?page=1&language=ko-KR"
+    );
+    const movies = moviesResponse.data.results;
+    const movieId = req.params.movieId;
+
+    const initialData = { movies, movieId };
+
+    res.send(generateHTML(initialData));
+  } catch (error) {
+    console.error("Error rendering page:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 export default router;
