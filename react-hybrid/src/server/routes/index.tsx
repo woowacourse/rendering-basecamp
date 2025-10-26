@@ -31,7 +31,9 @@ router.get("/", async (_: Request, res: Response) => {
   const { data: popularMovies } = await moviesApi.getPopular();
 
   const template = generateHTML();
-  const renderedApp = renderToString(<App movieData={popularMovies} />);
+  const renderedApp = renderToString(
+    <App movieData={popularMovies} path="/" />
+  );
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
@@ -73,7 +75,7 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
   `;
 
   const renderedApp = renderToString(
-    <App movieData={popularMovies} movieDetail={movieDetail} />
+    <App movieData={popularMovies} movieDetail={movieDetail} path="/detail" />
   );
 
   const withOG = template.replace("<!--{OG_TAGS}-->", ogTags);

@@ -13,5 +13,9 @@ console.log("initialData", initialData.movies);
 
 hydrateRoot(
   document.getElementById("root"),
-  <App movieData={initialData.movies} movieDetail={initialData.movieDetail} />
+  <App
+    movieData={initialData.movies}
+    movieDetail={initialData.movieDetail}
+    path={window.location.pathname}
+  />
 );
