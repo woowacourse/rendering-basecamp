@@ -75,6 +75,21 @@ const renderDetail = async (req: Request, res: Response) => {
     const detailMovie = detailResponse.data;
     const requestPath = req.originalUrl || `/detail/${movieId}`;
 
+    const imageUrl = detailMovie.poster_path
+      ? `https://image.tmdb.org/t/p/w500${detailMovie.poster_path}`
+      : `${
+          process.env.BASE_URL || 'https://yourdomain.com'
+        }/images/no_image.png`;
+
+    const ogTags = `
+      <meta property="og:title" content="${detailMovie.title}" />
+      <meta property="og:description" content="${
+        detailMovie.overview || '영화 상세 정보'
+      }" />
+      <meta property="og:image" content="${imageUrl}" />
+      <meta property="og:url" content="${process.env.BASE_URL}${requestPath}" />
+    `;
+
     const renderedApp = renderToString(
       <App
         initialMovies={movies}
@@ -83,7 +98,10 @@ const renderDetail = async (req: Request, res: Response) => {
       />
     );
 
-    const template = generateHTML();
+    let template = generateHTML();
+
+    template = template.replace('<!--{OG_TAGS}-->', ogTags);
+
     const withData = template.replace(
       '<!--{INIT_DATA_AREA}-->',
       /*html*/ `
