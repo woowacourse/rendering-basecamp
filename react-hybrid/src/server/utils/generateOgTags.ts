@@ -5,7 +5,7 @@ interface OgTag {
   [key: string]: string;
 }
 
-export const generateOgTag = (ogTagInfo: OgTag) => {
+export const generateOgTags = (ogTagInfo: OgTag) => {
   return /*html*/ `
     ${Object.keys(ogTagInfo)
       .map((key) => /*html*/ `<meta property="og:${key}" content="${ogTagInfo[key]}" />`)

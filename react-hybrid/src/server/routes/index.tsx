@@ -4,8 +4,8 @@ import { renderToString } from 'react-dom/server';
 import App from '../../client/App';
 import React from 'react';
 import { getMovieList } from '../api/getMovieList';
-import { generateOgTag } from '../utils/generateOGTag';
 import { getMovieDetail } from '../api/getMovieDetail';
+import { generateOgTags } from '../utils/generateOgTags';
 
 const router = Router();
 
@@ -48,7 +48,7 @@ router.get('/', async (_: Request, res: Response) => {
   const renderedHTML = renderedHTMLWithInitialData.replace('<!--{BODY_AREA}-->', renderedApp);
   const renderHTMLWithOGTag = renderedHTML.replace(
     '<!--{OG_TAGS}-->',
-    generateOgTag({
+    generateOgTags({
       title: 'REACT-HYBRID 영화 리뷰',
       description: '영화 목록을 HYBRID로 즐겨보세요!',
     })
@@ -79,7 +79,7 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
   const renderedHTML = renderedHTMLWithInitialData.replace('<!--{BODY_AREA}-->', renderedApp);
   const renderHTMLWithOGTag = renderedHTML.replace(
     '<!--{OG_TAGS}-->',
-    generateOgTag({
+    generateOgTags({
       title: detail.title,
       description: detail.overview,
       image: detail.poster_path
