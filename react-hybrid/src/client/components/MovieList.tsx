@@ -7,8 +7,12 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
   const { openMovieDetailModal } = useMovieDetailModal();
 
   const handleMovieClick = async (movie: MovieItemType) => {
+    window.history.pushState(null, '', `/detail/${movie.id}`);
+
     const movieDetail = await moviesApi.getDetail(movie.id);
     await openMovieDetailModal(movieDetail.data);
+
+    window.history.pushState(null, '', '/');
   };
 
   return (
