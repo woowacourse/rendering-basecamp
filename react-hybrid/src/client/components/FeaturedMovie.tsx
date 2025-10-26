@@ -12,7 +12,15 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
 
   const handleDetailClick = async () => {
     const movieDetail = await moviesApi.getDetail(movie.id);
-    await openMovieDetailModal(movieDetail.data);
+    const prevPath = window.location.pathname;
+
+    window.history.pushState({ movieId: movie.id }, '', `/detail/${movie.id}`);
+
+    try {
+      await openMovieDetailModal(movieDetail.data);
+    } finally {
+      window.history.replaceState({}, '', prevPath);
+    }
   };
 
   return (

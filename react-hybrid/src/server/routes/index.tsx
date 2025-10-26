@@ -34,14 +34,20 @@ router.get('/', async (req: Request, res: Response) => {
     const moviesResponse = await moviesApi.getPopular(1);
     const movies = moviesResponse.data.results;
 
-    const renderedApp = renderToString(<App url={req.url} initialMovies={movies} />);
+    const renderedApp = renderToString(
+      <App url={req.url} initialMovies={movies} />
+    );
 
-    // 홈 페이지 기본 OG 태그
     const ogTags = /*html*/ `
       <meta property="og:type" content="website" />
       <meta property="og:title" content="인기 영화 - 영화 리뷰" />
       <meta property="og:description" content="현재 인기있는 영화들을 확인하세요" />
-      <meta property="og:url" content="${req.protocol}://${req.get('host')}${req.originalUrl}" />
+      <meta property="og:image" content="https://image.tmdb.org/t/p/w500${
+        movies[0].poster_path
+      }" />
+      <meta property="og:url" content="${req.protocol}://${req.get('host')}${
+      req.originalUrl
+    }" />
     `;
 
     const renderedHTMLWithInitialData = template.replace(
@@ -78,20 +84,28 @@ router.get('/detail/:movieId', async (req: Request, res: Response) => {
     // 영화 목록과 상세 정보 동시 조회
     const [moviesResponse, movieDetailResponse] = await Promise.all([
       moviesApi.getPopular(1),
-      moviesApi.getDetail(movieId)
+      moviesApi.getDetail(movieId),
     ]);
     const movies = moviesResponse.data.results;
     const movieDetail = movieDetailResponse.data;
 
-    const renderedApp = renderToString(<App url={req.url} initialMovies={movies} />);
+    const renderedApp = renderToString(
+      <App url={req.url} initialMovies={movies} />
+    );
 
     // OG 태그 생성
     const ogTags = /*html*/ `
       <meta property="og:type" content="website" />
       <meta property="og:title" content="${movieDetail.title}" />
-      <meta property="og:description" content="${movieDetail.overview || '영화 상세 정보'}" />
-      <meta property="og:image" content="https://image.tmdb.org/t/p/w500${movieDetail.poster_path}" />
-      <meta property="og:url" content="${req.protocol}://${req.get('host')}${req.originalUrl}" />
+      <meta property="og:description" content="${
+        movieDetail.overview || '영화 상세 정보'
+      }" />
+      <meta property="og:image" content="https://image.tmdb.org/t/p/w500${
+        movieDetail.poster_path
+      }" />
+      <meta property="og:url" content="${req.protocol}://${req.get('host')}${
+      req.originalUrl
+    }" />
     `;
 
     const renderedHTMLWithInitialData = template.replace(

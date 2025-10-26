@@ -29,8 +29,14 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
     setRating(score);
   };
 
+  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="modal-background active">
+    <div className="modal-background active" onClick={handleBackgroundClick}>
       <div className="modal">
         {/* 모달 헤더 */}
         <div className="modal-header">
