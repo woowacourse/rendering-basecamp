@@ -18,13 +18,19 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
   return (
     <div className="top-rated-movie">
       <div className="rate">
-        <img src="/images/star_empty.png" width="32" height="32" />
-        <span className="text-2xl font-semibold text-yellow">
-          {movie.vote_average}
-        </span>
+        <img
+          src="/static/images/star_empty.png"
+          width="32"
+          height="32"
+        />
+        <span className="text-2xl font-semibold text-yellow">{movie.vote_average}</span>
       </div>
       <h1 className="text-3xl font-semibold">{movie.title}</h1>
-      <Button variant="primary" onClick={handleDetailClick} className="detail">
+      <Button
+        variant="primary"
+        onClick={handleDetailClick}
+        className="detail"
+      >
         자세히 보기
       </Button>
     </div>

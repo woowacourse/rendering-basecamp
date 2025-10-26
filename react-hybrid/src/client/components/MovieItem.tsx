@@ -9,9 +9,7 @@ interface MovieItemProps {
 export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
   const { title, poster_path, vote_average } = movie;
 
-  const imageUrl = poster_path
-    ? `https://image.tmdb.org/t/p/w500${poster_path}`
-    : '/images/no_image.png';
+  const imageUrl = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : '/static/images/no_image.png';
 
   const handleClick = () => {
     onClick(movie);
@@ -25,10 +23,18 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
       data-index={movie.id}
     >
       <div className="item">
-        <img className="thumbnail" src={imageUrl} alt={title} loading="lazy" />
+        <img
+          className="thumbnail"
+          src={imageUrl}
+          alt={title}
+          loading="lazy"
+        />
         <div className="item-desc">
           <p className="rate">
-            <img src="/images/star_empty.png" className="star" />
+            <img
+              src="/static/images/star_empty.png"
+              className="star"
+            />
             <span>{vote_average.toFixed(1)}</span>
           </p>
           <strong>{title}</strong>
