@@ -11,11 +11,12 @@ const tmdbClient = axios.create({
   },
 });
 
-const generateHTML = (initialData: any) => `<!DOCTYPE html>
+const generateHTML = (initialData: any, ogTags?: string) => `<!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    ${ogTags || ""}
     <link rel="stylesheet" href="/static/styles/index.css" />
     <title>영화 리뷰</title>
   </head>
@@ -57,7 +58,14 @@ router.get("/detail/:movieId", async (req: Request, res: Response) => {
 
     const initialData = { movies, detail };
 
-    res.send(generateHTML(initialData));
+    const ogTags = `
+    <meta property="og:title" content="${detail.title}" />
+    <meta property="og:description" content="${detail.overview}" />
+    <meta property="og:image" content="https://image.tmdb.org/t/p/w500${detail.poster_path}" />
+    <meta property="og:type" content="website" />
+    `;
+
+    res.send(generateHTML(initialData, ogTags));
   } catch (error) {
     console.error("Error rendering page:", error);
     res.status(500).send("Internal Server Error");
