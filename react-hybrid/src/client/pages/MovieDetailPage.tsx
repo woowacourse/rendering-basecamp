@@ -36,7 +36,7 @@ function DetailPageOpenModal({
     }
 
     // movieId가 바뀌었을 때만 모달 열기
-    if (lastMovieIdRef.current === movieId) {
+    if (lastMovieIdRef.current !== undefined && lastMovieIdRef.current === movieId) {
       return;
     }
 
