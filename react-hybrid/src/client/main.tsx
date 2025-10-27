@@ -5,4 +5,12 @@ import App from "./App";
 const initialData = window.__INITIAL_DATA__;
 console.log("initialData", initialData);
 
-hydrateRoot(document.getElementById("root"), <App />);
+hydrateRoot(
+  document.getElementById("root"),
+  <App
+    movies={initialData?.movies || []}
+    movieDetail={initialData?.detail}
+    movieId={initialData?.detail?.id}
+    initialPath={window.location.pathname}
+  />
+);

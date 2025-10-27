@@ -6,6 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import movieRouter from "./routes/index";
+import detailRouter from "./routes/detail";
 
 const app = express();
 const PORT = 3000;
@@ -20,6 +21,7 @@ app.use(
 );
 
 app.use("/", movieRouter);
+app.use("/detail", detailRouter);
 
 // Start server
 app.listen(PORT, () => {

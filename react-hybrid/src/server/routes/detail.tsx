@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { renderToString } from "react-dom/server";
-import React from "react";
 import { moviesApi } from "../../client/api/movies";
+import React from "react";
 import App from "../../client/App";
 
 const router = Router();
@@ -26,24 +26,36 @@ function generateHTML() {
     `;
 }
 
-router.get("/", async (_: Request, res: Response) => {
-  const movieResponse = await moviesApi.getPopular(1);
-  const movies = movieResponse.data.results;
+router.get("/:movieId", async (req: Request, res: Response) => {
+  const { movieId } = req.params;
 
+  const moviesData = await moviesApi.getPopular();
+  const detailData = await moviesApi.getDetail(Number(movieId));
+
+  const movies = moviesData.data.results;
   const template = generateHTML();
 
-  const renderedApp = renderToString(<App movies={movies} initialPath='/' />);
+  const renderedApp = renderToString(
+    <App
+      movies={movies}
+      movieDetail={detailData.data}
+      movieId={Number(movieId)}
+      initialPath={`/detail/${movieId}`}
+    />
+  );
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify(movies)}
+        movies: ${JSON.stringify(movies)},
+        detail: ${JSON.stringify(detailData.data)}
       }
     </script>
   `
   );
+
   const renderedHTML = renderedHTMLWithInitialData.replace(
     "<!--{BODY_AREA}-->",
     renderedApp
