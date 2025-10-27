@@ -8,6 +8,12 @@ interface RouteProps {
 }
 
 export function Route({ path, element: Element, serverData, currentPath }: RouteProps) {
+  // 클라이언트에서는 window.__INITIAL_DATA__를, 서버에서는 serverData를 사용
+  const data =
+    typeof window === "undefined"
+      ? serverData
+      : (window.__INITIAL_DATA__ ?? serverData);
+
   // 현재 URL 가져오기 (브라우저 or 서버)
   const pathname =
     typeof window !== "undefined" ? window.location.pathname : currentPath ?? "/";
@@ -18,13 +24,5 @@ export function Route({ path, element: Element, serverData, currentPath }: Route
 
   if (!match) return null;
 
-  // 정규식 캡처 그룹을 이용해 params 추출
-  const paramNames = (path.match(/:(\w+)/g) || []).map((p) => p.slice(1));
-  const params = paramNames.reduce((acc, name, i) => {
-    acc[name] = match[i + 1];
-    return acc;
-  }, {} as Record<string, string>);
-
-  // 실제 렌더링
-  return <Element {...serverData} params={params} />;
+  return <Element {...data} />;
 }

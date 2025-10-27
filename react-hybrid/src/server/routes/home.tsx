@@ -13,7 +13,7 @@ homeRouter.get("/", async (_: Request, res: Response) => {
     const movies = movieResponse.data.results;
     const topMovie = movies[0];
 
-    const appHTML = renderToString(<App serverData={movies} />);
+    const appHTML = renderToString(<App serverData={{ movies }} />);
 
     const title = 'Movielist';
     const description = '인기 있는 영화를 만나보세요!';

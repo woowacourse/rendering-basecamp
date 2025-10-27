@@ -16,14 +16,14 @@ detailRouter.get("/:movieId", async (req: Request, res: Response) => {
     ]);
 
     const movies = moviesResponse.data.results;
-    const movieDetail = detailResponse.data;
+    const detail = detailResponse.data;
 
-    const appHTML = renderToString(<App serverData={movies} />);
+    const appHTML = renderToString(<App serverData={{ movies, detail }} currentPath={`/detail/${movieId}`} />);
 
-    const title = movieDetail.title;
-    const description = movieDetail.overview || '영화 상세 정보를 확인하세요.';
-    const imageUrl = movieDetail.poster_path
-      ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`
+    const title = detail.title;
+    const description = detail.overview || '영화 상세 정보를 확인하세요.';
+    const imageUrl = detail.poster_path
+      ? `https://image.tmdb.org/t/p/w500${detail.poster_path}`
       : '/images/no_image.png';
     const pageUrl = `https://rendering-basecamp-production-46e7.up.railway.app/detail/${movieId}`;
 
@@ -32,7 +32,7 @@ detailRouter.get("/:movieId", async (req: Request, res: Response) => {
     const html = renderPage({
       appHTML,
       ogTags,
-      initialData: { movies, detail: movieDetail },
+      initialData: { movies, detail },
     });
 
     res.send(html);
