@@ -1,5 +1,11 @@
 import { Router, Request, Response } from "express";
 import axios from "axios";
+import { renderToString } from "react-dom/server";
+import React from "react";
+import { StaticRouter } from "react-router-dom";
+import App from "../../client/App";
+import { MovieItem } from "../../client/types/Movie.types";
+import { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 
 const router = Router();
 
@@ -11,7 +17,11 @@ const tmdbClient = axios.create({
   },
 });
 
-const generateHTML = (initialData: any, ogTags?: string) => `<!DOCTYPE html>
+const generateHTML = (
+  html: string,
+  initialData: any,
+  ogTags?: string
+) => `<!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
@@ -21,7 +31,7 @@ const generateHTML = (initialData: any, ogTags?: string) => `<!DOCTYPE html>
     <title>영화 리뷰</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">${html}</div>
     <script>window.__INITIAL_DATA__ = ${JSON.stringify(initialData)};</script>
     <script src="/static/bundle.js"></script>
   </body>
@@ -32,11 +42,17 @@ router.get("/", async (req: Request, res: Response) => {
     const moviesResponse = await tmdbClient.get(
       "/movie/popular?page=1&language=ko-KR"
     );
-    const movies = moviesResponse.data.results;
+    const movies: MovieItem[] = moviesResponse.data.results;
 
     const initialData = { movies };
 
-    res.send(generateHTML(initialData));
+    const html = renderToString(
+      <StaticRouter location={req.url}>
+        <App initialMovies={movies} initialDetail={undefined} />
+      </StaticRouter>
+    );
+
+    res.send(generateHTML(html, initialData));
   } catch (error) {
     console.error("Error rendering page:", error);
     res.status(500).send("Internal Server Error");
@@ -48,13 +64,13 @@ router.get("/detail/:movieId", async (req: Request, res: Response) => {
     const moviesResponse = await tmdbClient.get(
       "/movie/popular?page=1&language=ko-KR"
     );
-    const movies = moviesResponse.data.results;
+    const movies: MovieItem[] = moviesResponse.data.results;
     const movieId = req.params.movieId;
 
     const detailResponse = await tmdbClient.get(
       `/movie/${movieId}?language=ko-KR`
     );
-    const detail = detailResponse.data;
+    const detail: MovieDetailResponse = detailResponse.data;
 
     const initialData = { movies, detail };
 
@@ -65,7 +81,13 @@ router.get("/detail/:movieId", async (req: Request, res: Response) => {
     <meta property="og:type" content="website" />
     `;
 
-    res.send(generateHTML(initialData, ogTags));
+    const html = renderToString(
+      <StaticRouter location={req.url}>
+        <App initialMovies={movies} initialDetail={detail} />
+      </StaticRouter>
+    );
+
+    res.send(generateHTML(html, initialData, ogTags));
   } catch (error) {
     console.error("Error rendering page:", error);
     res.status(500).send("Internal Server Error");

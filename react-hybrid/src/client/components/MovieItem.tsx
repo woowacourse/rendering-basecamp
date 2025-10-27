@@ -14,14 +14,9 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
     ? `https://image.tmdb.org/t/p/w500${poster_path}`
     : "/images/no_image.png";
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    onClick(movie);
-  };
-
   return (
     <li ref={ref} className="movie-item" data-index={movie.id}>
-      <Link to={`/detail/${movie.id}`} onClick={handleClick}>
+      <Link to={`/detail/${movie.id}`}>
         <div className="item">
           <img
             className="thumbnail"
