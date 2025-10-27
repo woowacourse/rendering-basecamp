@@ -4,9 +4,9 @@ const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: 'development',
-  entry: './src/client/main.tsx',
+  entry: path.resolve(__dirname, './src/client/main.tsx'),
   output: {
-    path: path.resolve('dist/static'),
+    path: path.resolve(__dirname, 'dist/static'),
     filename: 'bundle.js',
     clean: true,
     publicPath: '/static/',
