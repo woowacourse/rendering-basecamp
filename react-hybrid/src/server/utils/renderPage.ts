@@ -1,4 +1,3 @@
-import { renderToString } from "react-dom/server";
 import { generateHTML } from "./generateHTML";
 
 interface RenderOptions {

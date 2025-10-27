@@ -3,6 +3,7 @@ import { moviesApi } from "../../client/api/movies";
 import MovieHomePage from "../../client/pages/MovieHomePage";
 import { renderToString } from "react-dom/server";
 import { renderPage } from "../utils/renderPage";
+import Meta from '../../client/components/common/Meta';
 
 const homeRouter = Router();
 
@@ -14,13 +15,14 @@ homeRouter.get("/", async (_: Request, res: Response) => {
 
     const appHTML = renderToString(<MovieHomePage movies={movies} />);
 
-    const ogTags = `
-      <meta property="og:title" content="인기 영화 리뷰" />
-      <meta property="og:description" content="현재 가장 인기 있는 영화를 만나보세요." />
-      <meta property="og:image" content="https://image.tmdb.org/t/p/w500${topMovie.poster_path}" />
-      <meta property="og:url" content="https://localhost:3000/" />
-      <meta name="twitter:card" content="summary_large_image" />
-    `;
+    const title = 'Movielist';
+    const description = '인기 있는 영화를 만나보세요!';
+    const imageUrl = topMovie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${topMovie.poster_path}`
+    : '/images/no_image.png';
+    const pageUrl = 'https://rendering-basecamp-production-46e7.up.railway.app/';
+
+    const ogTags = renderToString(<Meta title={title} description={description} imageUrl={imageUrl} pageUrl={pageUrl} />)
 
     const html = renderPage({
       appHTML,

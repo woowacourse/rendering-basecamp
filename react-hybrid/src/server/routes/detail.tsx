@@ -3,6 +3,7 @@ import { moviesApi } from "../../client/api/movies";
 import MovieDetailPage from "../../client/pages/MovieDetailPage";
 import { renderToString } from "react-dom/server";
 import { renderPage } from "../utils/renderPage";
+import Meta from '../../client/components/common/Meta';
 
 const detailRouter = Router();
 
@@ -21,17 +22,14 @@ detailRouter.get("/:movieId", async (req: Request, res: Response) => {
       <MovieDetailPage movies={movies} detail={movieDetail} />
     );
 
-    const ogTags = `
-      <meta property="og:title" content="${movieDetail.title}" />
-      <meta property="og:description" content="${
-        movieDetail.overview || "영화 상세 정보를 확인하세요."
-      }" />
-      <meta property="og:image" content="https://image.tmdb.org/t/p/w500${
-        movieDetail.poster_path
-      }" />
-      <meta property="og:url" content="https://localhost:3000/detail/${movieId}" />
-      <meta name="twitter:card" content="summary_large_image" />
-    `;
+    const title = movieDetail.title;
+    const description = movieDetail.overview || '영화 상세 정보를 확인하세요.';
+    const imageUrl = movieDetail.poster_path
+      ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`
+      : '/images/no_image.png';
+    const pageUrl = `https://rendering-basecamp-production-46e7.up.railway.app/detail/${movieId}`;
+
+    const ogTags = renderToString(<Meta title={title} description={description} imageUrl={imageUrl} pageUrl={pageUrl} />)
 
     const html = renderPage({
       appHTML,
