@@ -1,4 +1,4 @@
-import { OverlayProvider } from "./contexts/OverlayContext";
+import { OverlayProvider } from "overlay-kit";
 import { MovieHomePage } from "./pages/MovieHomePage";
 import { MovieDetailPage } from "./pages/MovieDetailPage";
 import { MovieItem } from "./types/Movie.types";

@@ -19,7 +19,8 @@ export const MovieDetailPage = ({
     if (selectedMovieDetail) {
       openMovieDetailModal(selectedMovieDetail);
     }
-  }, [selectedMovieDetail, openMovieDetailModal]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return <MovieHomePage initialMovies={initialMovies} />;
 };

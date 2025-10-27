@@ -10,7 +10,7 @@ interface MovieHomePageProps {
 }
 
 export const MovieHomePage = ({ initialMovies }: MovieHomePageProps) => {
-  const { data: popularMovies, isLoading } = usePopularMovies();
+  const { data: popularMovies, isLoading } = usePopularMovies(initialMovies);
 
   if (isLoading === true) {
     return <Loading />;

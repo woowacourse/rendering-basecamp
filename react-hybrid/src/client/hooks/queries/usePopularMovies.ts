@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { MovieItem } from "../types/Movie.types";
-import { moviesApi } from "../api/movies";
+import { MovieItem } from "../../types/Movie.types";
+import { moviesApi } from "../../api/movies";
 
 export const usePopularMovies = (initialMovies: MovieItem[] = []) => {
   const [data, setData] = useState<MovieItem[]>(initialMovies);
