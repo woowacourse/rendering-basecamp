@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { fetchPopularMovies, fetchMovieDetail } from "../api/tmdb";
+import { fetchPopularMovies, fetchMovieDetailPageData } from "../../services";
 import { renderPage } from "../renderPage";
 
 export const getHomePage = async (req: Request, res: Response) => {
@@ -17,8 +17,9 @@ export const getHomePage = async (req: Request, res: Response) => {
 
 export const getDetailPage = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const movies = await fetchPopularMovies();
-  const selectedMovieDetail = await fetchMovieDetail(Number(id));
+  const { movies, selectedMovieDetail } = await fetchMovieDetailPageData(
+    Number(id)
+  );
 
   const html = await renderPage(req, {
     routeType: "detail",
