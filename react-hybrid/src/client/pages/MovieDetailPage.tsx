@@ -38,12 +38,6 @@ function DetailPageOpenModal({
     if (movieId == null || onceRef.current === true) {
       return;
     }
-
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
   }, [movieId, initialMovieDetail, openMovieDetailModal]);
 
   return null;

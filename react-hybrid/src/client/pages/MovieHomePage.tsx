@@ -10,13 +10,8 @@ interface MovieHomePageProps {
 }
 
 export default function MovieHomePage({ initialMovies }: MovieHomePageProps) {
-  const { data: fetchedMovies, isLoading } = usePopularMovies();
+  const movies = initialMovies;
 
-  const movies = initialMovies ? initialMovies : fetchedMovies;
-
-  if (isLoading) {
-    return <Loading />;
-  }
   if (movies == null || movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
