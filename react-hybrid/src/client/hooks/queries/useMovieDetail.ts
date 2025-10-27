@@ -15,6 +15,9 @@ export const useMovieDetail = (
 
   useEffect(() => {
     if (!id) return;
+    if (movieServerData) {
+      return;
+    }
 
     const fetchMovieDetail = async () => {
       setIsLoading(true);
