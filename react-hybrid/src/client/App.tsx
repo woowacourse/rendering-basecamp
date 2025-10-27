@@ -3,6 +3,7 @@ import { OverlayProvider } from "overlay-kit";
 import MovieHomePage from "./pages/MovieHomePage";
 import MovieDetailPage from "./pages/MovieDetailPage";
 import { Route } from "./components/common/Route";
+import { Routes } from './components/common/Routes';
 
 interface AppProps {
   serverData?: any;
@@ -12,18 +13,10 @@ interface AppProps {
 function App({ serverData, currentPath }: AppProps) {
   return (
     <OverlayProvider>
-      <Route
-        path="/"
-        element={MovieHomePage}
-        serverData={serverData}
-        currentPath={currentPath}
-      />
-      <Route
-        path="/detail/:movieId"
-        element={MovieDetailPage}
-        serverData={serverData}
-        currentPath={currentPath}
-      />
+      <Routes serverData={serverData} currentPath={currentPath}>
+        <Route path="/" element={MovieHomePage} />
+        <Route path="/detail/:movieId" element={MovieDetailPage} />
+      </Routes>
     </OverlayProvider>
   );
 }
