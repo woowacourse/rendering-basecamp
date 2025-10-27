@@ -28,21 +28,26 @@ function DetailPageOpenModal({
 }) {
   const { movieId } = useParams();
   const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
+  const lastMovieIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
+    if (movieId == null) {
       return;
     }
 
+    // movieId가 바뀌었을 때만 모달 열기
+    if (lastMovieIdRef.current === movieId) {
+      return;
+    }
+
+    lastMovieIdRef.current = movieId;
+
     if (initialDetail) {
-      onceRef.current = true;
       openMovieDetailModal(initialDetail);
       return;
     }
 
     (async () => {
-      onceRef.current = true;
       const movieDetail = await moviesApi.getDetail(Number(movieId));
       openMovieDetailModal(movieDetail.data);
     })();
