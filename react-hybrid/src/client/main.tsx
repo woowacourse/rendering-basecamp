@@ -4,7 +4,7 @@ import App from "./App";
 
 const { movies, movieDetail, path } = window.__INITIAL_DATA__;
 
-performance.mark("beforeRender");
+performance.mark("beforeHydrate");
 
 hydrateRoot(
   document.getElementById("root"),
@@ -12,4 +12,4 @@ hydrateRoot(
 );
 
 performance.mark("afterHydrate");
-performance.measure("hydration", "beforeRender", "afterHydrate");
+performance.measure("hydration", "beforeHydrate", "afterHydrate");
