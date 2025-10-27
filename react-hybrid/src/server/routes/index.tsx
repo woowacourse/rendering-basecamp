@@ -2,7 +2,6 @@ import { Router, Request, Response } from "express";
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
-import axios from "axios";
 import { moviesApi } from "../../client/api/movies";
 
 const router = Router();
@@ -132,7 +131,9 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     const movies = popularResponse.data?.results ?? [];
     const detail = detailResponse.data ?? null;
 
-    const renderedApp = renderToString(<App initialMovies={movies} />);
+    const renderedApp = renderToString(
+      <App initialMovies={movies} initialDetail={detail} />
+    );
 
     const initialData = { movies, detail };
 
