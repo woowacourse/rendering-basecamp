@@ -50,7 +50,12 @@ router.get("/detail/:movieId", async (req: Request, res: Response) => {
     const movies = moviesResponse.data.results;
     const movieId = req.params.movieId;
 
-    const initialData = { movies, movieId };
+    const detailResponse = await tmdbClient.get(
+      `/movie/${movieId}?language=ko-KR`
+    );
+    const detail = detailResponse.data;
+
+    const initialData = { movies, detail };
 
     res.send(generateHTML(initialData));
   } catch (error) {
