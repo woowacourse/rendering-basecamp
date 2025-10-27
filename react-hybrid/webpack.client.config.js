@@ -52,9 +52,4 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
   },
-  devServer: {
-    hot: true,
-    port: 3000,
-    watchFiles: ["src/client/**/*"],
-  },
 };
