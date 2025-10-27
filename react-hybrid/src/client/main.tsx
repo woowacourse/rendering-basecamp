@@ -6,6 +6,9 @@ import App from "./App";
 const initialData = (window as any).__INITIAL_DATA__;
 console.log("initialData", initialData);
 
+performance.mark("beforeRender");
+console.log("beforeRender", performance.now());
+
 hydrateRoot(
   document.getElementById("root")!,
   <BrowserRouter>
@@ -15,3 +18,12 @@ hydrateRoot(
     />
   </BrowserRouter>
 );
+
+performance.mark("afterHydrate");
+performance.measure("hydration", "beforeRender", "afterHydrate");
+console.log("afterHydrate", performance.now());
+
+const hydrationDuration =
+  performance.getEntriesByName("afterHydrate")[0].startTime -
+  performance.getEntriesByName("beforeRender")[0].startTime;
+console.log("hydration duration:", hydrationDuration, "ms");
