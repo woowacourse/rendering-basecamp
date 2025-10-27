@@ -33,12 +33,36 @@ router.get("/:movieId", async (req: Request, res: Response) => {
   const detailData = await moviesApi.getDetail(Number(movieId));
 
   const movies = moviesData.data.results;
+  const movieDetail = detailData.data;
+
+  const ogTitle = `${movieDetail.title} - 영화 리뷰`;
+  const ogDescription =
+    movieDetail.overview || `${movieDetail.title} 영화 정보를 확인하세요`;
+  const ogImage = movieDetail.poster_path
+    ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
+    : `${req.protocol}://${req.get("host")}/images/no_image.png`;
+  const ogUrl = `${req.protocol}://${req.get("host")}/detail/${movieId}`;
+
+  const ogTags = /*html*/ `
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="영화 리뷰" />
+    <meta property="og:title" content="${ogTitle}" />
+    <meta property="og:description" content="${ogDescription}" />
+    <meta property="og:image" content="${ogImage}" />
+    <meta property="og:url" content="${ogUrl}" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${ogTitle}" />
+    <meta name="twitter:description" content="${ogDescription}" />
+    <meta name="twitter:image" content="${ogImage}" />
+  `;
+
   const template = generateHTML();
 
   const renderedApp = renderToString(
     <App
       movies={movies}
-      movieDetail={detailData.data}
+      movieDetail={movieDetail}
       movieId={Number(movieId)}
       initialPath={`/detail/${movieId}`}
     />
@@ -50,16 +74,19 @@ router.get("/:movieId", async (req: Request, res: Response) => {
     <script>
       window.__INITIAL_DATA__ = {
         movies: ${JSON.stringify(movies)},
-        detail: ${JSON.stringify(detailData.data)}
+        detail: ${JSON.stringify(movieDetail)}
       }
     </script>
   `
   );
 
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+  const renderedHTML = renderedHTMLWithInitialData
+    .replace("<!--{OG_TAGS}-->", ogTags)
+    .replace("<!--{BODY_AREA}-->", renderedApp)
+    .replace(
+      /<title>영화 리뷰<\/title>/,
+      `<title>${movieDetail.title} - 영화 리뷰</title>`
+    );
 
   res.send(renderedHTML);
 });
