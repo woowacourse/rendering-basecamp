@@ -44,6 +44,7 @@ router.get('/', async (_: Request, res: Response) => {
     description: '최신 인기 영화를 확인하고 리뷰를 남겨보세요',
     url: 'http://localhost:3000/',
     type: 'website',
+    siteName: '영화 리뷰',
   });
 
   const renderedHTMLWithInitialData = template.replace(
@@ -82,11 +83,12 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
     : undefined;
 
   const ogTags = generateOGTags({
-    title: `${movieDetail.data.title} - 영화 리뷰`,
+    title: movieDetail.data.title,
     description: movieDetail.data.overview || movieDetail.data.title,
     image: posterUrl,
     url: `http://localhost:3000/detail/${movieId}`,
     type: 'video.movie',
+    siteName: '영화 상세 정보',
   });
 
   const renderedHTMLWithInitialData = template.replace(

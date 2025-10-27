@@ -4,12 +4,17 @@ interface OGTagsOptions {
   image?: string;
   url?: string;
   type?: 'website' | 'article' | 'video.movie';
+  siteName?: string;
 }
 
 export const generateOGTags = (options: OGTagsOptions): string => {
-  const { title, description, image, url, type = 'website' } = options;
+  const { title, description, image, url, type = 'website', siteName = '영화 리뷰' } = options;
 
-  const tags = [`<meta property="og:title" content="${title}" />`, `<meta property="og:type" content="${type}" />`];
+  const tags = [
+    `<meta property="og:title" content="${title}" />`,
+    `<meta property="og:type" content="${type}" />`,
+    `<meta property="og:site_name" content="${siteName}" />`,
+  ];
 
   if (description) {
     tags.push(`<meta property="og:description" content="${description}" />`);
