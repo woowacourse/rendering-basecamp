@@ -14,7 +14,7 @@ router.get('/', async (req: Request, res: Response) => {
   const movies = popularMoviesResponse.data.results;
   const initialData = {
     movies,
-    detail: undefined,
+    movieDetail: undefined,
   };
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
 
@@ -48,7 +48,7 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
   ]);
   const initialData = {
     movies: popularResponse.data.results,
-    detail: detailResponse.data,
+    movieDetail: detailResponse.data,
   };
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   const renderedApp = renderToString(
@@ -56,9 +56,9 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
   );
 
   const metaTags = renderTags({
-    title: initialData.detail.title,
-    description: initialData.detail.overview,
-    image: `https://image.tmdb.org/t/p/original${initialData.detail.backdrop_path}`,
+    title: initialData.movieDetail.title,
+    description: initialData.movieDetail.overview,
+    image: `https://image.tmdb.org/t/p/original${initialData.movieDetail.backdrop_path}`,
     url,
   });
 
@@ -66,7 +66,7 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
     renderApp: renderedApp,
     page: 'detail',
     initialData,
-    title: initialData.detail.title,
+    title: initialData.movieDetail.title,
     metaTags,
   });
 
