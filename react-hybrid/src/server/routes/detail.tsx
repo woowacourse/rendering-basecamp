@@ -1,9 +1,9 @@
-import { Router, Request, Response } from "express";
-import { moviesApi } from "../../client/api/movies";
-import MovieDetailPage from "../../client/pages/MovieDetailPage";
+import { Request, Response, Router } from "express";
 import { renderToString } from "react-dom/server";
-import { renderPage } from "../utils/renderPage";
+import { moviesApi } from "../../client/api/movies";
+import App from '../../client/App';
 import Meta from '../../client/components/common/Meta';
+import { renderPage } from "../utils/renderPage";
 
 const detailRouter = Router();
 
@@ -18,9 +18,7 @@ detailRouter.get("/:movieId", async (req: Request, res: Response) => {
     const movies = moviesResponse.data.results;
     const movieDetail = detailResponse.data;
 
-    const appHTML = renderToString(
-      <MovieDetailPage movies={movies} detail={movieDetail} />
-    );
+    const appHTML = renderToString(<App serverData={movies} />);
 
     const title = movieDetail.title;
     const description = movieDetail.overview || '영화 상세 정보를 확인하세요.';

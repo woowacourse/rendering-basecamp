@@ -1,9 +1,9 @@
-import { Router, Request, Response } from "express";
-import { moviesApi } from "../../client/api/movies";
-import MovieHomePage from "../../client/pages/MovieHomePage";
+import { Request, Response, Router } from "express";
 import { renderToString } from "react-dom/server";
-import { renderPage } from "../utils/renderPage";
+import { moviesApi } from "../../client/api/movies";
+import App from '../../client/App';
 import Meta from '../../client/components/common/Meta';
+import { renderPage } from "../utils/renderPage";
 
 const homeRouter = Router();
 
@@ -13,7 +13,7 @@ homeRouter.get("/", async (_: Request, res: Response) => {
     const movies = movieResponse.data.results;
     const topMovie = movies[0];
 
-    const appHTML = renderToString(<MovieHomePage movies={movies} />);
+    const appHTML = renderToString(<App serverData={movies} />);
 
     const title = 'Movielist';
     const description = '인기 있는 영화를 만나보세요!';
