@@ -15,14 +15,6 @@ interface AppProps {
 }
 
 function App({ initialData }: AppProps) {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  useEffect(() => {
-    if (initialData.movieDetail) {
-      openMovieDetailModal(initialData.movieDetail);
-    }
-  }, [initialData.movieDetail, openMovieDetailModal]);
-
   return (
     <OverlayProvider>
       <Routes>
