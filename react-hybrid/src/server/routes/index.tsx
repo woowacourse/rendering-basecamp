@@ -6,6 +6,7 @@ import React from 'react';
 import { moviesApi } from '../../client/api/movies';
 import renderTags from '../views/renderTags';
 import renderHTML from '../views/renderHTML';
+import { StaticRouter } from 'react-router-dom';
 
 const router = Router();
 
@@ -19,7 +20,9 @@ router.get('/', async (req: Request, res: Response) => {
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
 
   const renderedApp = renderToString(
-    <App initialData={initialData} page="home" />
+    <StaticRouter location={req.originalUrl}>
+      <App initialData={initialData} />
+    </StaticRouter>
   );
 
   const metaTags = renderTags({
@@ -52,7 +55,9 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
   };
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   const renderedApp = renderToString(
-    <App initialData={initialData} page="detail" />
+    <StaticRouter location={req.originalUrl}>
+      <App initialData={initialData} />
+    </StaticRouter>
   );
 
   const metaTags = renderTags({

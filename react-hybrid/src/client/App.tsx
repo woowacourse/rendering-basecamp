@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { OverlayProvider } from 'overlay-kit';
 import MovieHomePage from './pages/MovieHomePage';
 import { MovieItem } from './types/Movie.types';
@@ -7,14 +8,13 @@ import MovieDetailPage from './pages/MovieDetailPage';
 import { useMovieDetailModal } from './hooks/useMovieDetailModal';
 
 interface AppProps {
-  page: 'home' | 'detail';
   initialData: {
     movies: MovieItem[];
     movieDetail?: MovieDetailResponse;
   };
 }
 
-function App({ page, initialData }: AppProps) {
+function App({ initialData }: AppProps) {
   const { openMovieDetailModal } = useMovieDetailModal();
 
   useEffect(() => {
@@ -25,13 +25,21 @@ function App({ page, initialData }: AppProps) {
 
   return (
     <OverlayProvider>
-      {page === 'home' && <MovieHomePage movies={initialData.movies} />}
-      {page === 'detail' && (
-        <MovieDetailPage
-          movies={initialData.movies}
-          movieDetail={initialData.movieDetail}
+      <Routes>
+        <Route
+          path="/"
+          element={<MovieHomePage movies={initialData.movies} />}
         />
-      )}
+        <Route
+          path="/detail/:id"
+          element={
+            <MovieDetailPage
+              movies={initialData.movies}
+              movieDetail={initialData.movieDetail}
+            />
+          }
+        />
+      </Routes>
     </OverlayProvider>
   );
 }
