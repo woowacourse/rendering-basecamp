@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { OverlayProvider } from 'overlay-kit';
 import MovieHomePage from './pages/MovieHomePage';
 import { MovieItem } from './types/Movie.types';
 import { MovieDetailResponse } from './types/MovieDetail.types';
 import MovieDetailPage from './pages/MovieDetailPage';
-import { useMovieDetailModal } from './hooks/useMovieDetailModal';
 
 interface AppProps {
   initialData: {
