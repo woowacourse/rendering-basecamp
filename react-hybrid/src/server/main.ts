@@ -7,7 +7,7 @@ import path from "path";
 import movieRouter from "./routes/index";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const __dirname = path.resolve();
 
