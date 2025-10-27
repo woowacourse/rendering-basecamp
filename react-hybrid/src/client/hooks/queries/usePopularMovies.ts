@@ -7,7 +7,8 @@ import { MovieItem } from "../../types/Movie.types";
  */
 export const usePopularMovies = (initialMovies?: MovieItem[]) => {
   // SSR 데이터가 있으면 초기값으로 사용
-  const initialData = (window as any).__INITIAL_DATA__?.movies || initialMovies;
+  const initialData =
+    (typeof window !== 'undefined' && (window as any).__INITIAL_DATA__?.movies) || initialMovies;
   const [data, setData] = useState<MovieItem[] | null>(initialData || null);
   const [isLoading, setIsLoading] = useState(!initialData);
   const [error, setError] = useState<Error | null>(null);
