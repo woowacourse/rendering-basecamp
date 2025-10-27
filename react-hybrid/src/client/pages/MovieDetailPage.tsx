@@ -6,17 +6,17 @@ import { MovieDetailResponse } from "../types/MovieDetail.types";
 
 interface MovieDetailPageProps {
   movies: MovieItem[];
-  movieItem?: MovieDetailResponse;
+  detail?: MovieDetailResponse;
 }
 
 export default function MovieDetailPage({
   movies,
-  movieItem,
+  detail,
 }: MovieDetailPageProps) {
   return (
     <>
       <MovieHomePage movies={movies} />
-      <DetailPageOpenModal movieItem={movieItem} />
+      <DetailPageOpenModal movieItem={detail} />
     </>
   );
 }

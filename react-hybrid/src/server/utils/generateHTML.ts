@@ -3,7 +3,6 @@ import { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 
 interface GenerateHTML {
   appHTML: string;
-  routeType: "home" | "detail";
   initialData: {
     movies: MovieItem[];
     movieItem?: MovieDetailResponse;
@@ -12,13 +11,7 @@ interface GenerateHTML {
   metaTags?: string;
 }
 
-function generateHTML({
-  appHTML,
-  routeType,
-  initialData,
-  title,
-  metaTags,
-}: GenerateHTML) {
+function generateHTML({ appHTML, initialData, title, metaTags }: GenerateHTML) {
   return /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -34,7 +27,6 @@ function generateHTML({
         <div id="root">${appHTML}</div>
         <script>
           window.__INITIAL_DATA__ = ${JSON.stringify({
-            routeType,
             initialData,
           })}
         </script>

@@ -7,6 +7,8 @@ import { moviesApi } from "../../client/api/movies";
 import generateHTML from "../utils/generateHTML";
 import generateMetaTag from "../utils/generateMetaTag";
 import extractURL from "../utils/extractURL";
+import MovieHomePage from "../../client/pages/MovieHomePage";
+import MovieDetailPage from "../../client/pages/MovieDetailPage";
 
 const router = Router();
 
@@ -15,8 +17,10 @@ router.get("/", async (req: Request, res: Response) => {
   const movies = data.results.slice(0, 12);
   const initialData = { movies };
 
+  const Page = MovieHomePage;
+
   const renderedApp = renderToString(
-    <App routeType='home' initialData={initialData} />
+    <App Component={Page} initialData={initialData} />
   );
 
   const metaTags = generateMetaTag({
@@ -28,7 +32,6 @@ router.get("/", async (req: Request, res: Response) => {
 
   const html = generateHTML({
     appHTML: renderedApp,
-    routeType: "home",
     initialData,
     title: "영화리뷰",
     metaTags,
@@ -50,8 +53,10 @@ router.get("/detail/:movieId", async (req: Request, res: Response) => {
     detail: detailRes.data,
   };
 
+  const Page = MovieDetailPage;
+
   const renderedApp = renderToString(
-    <App routeType='detail' initialData={initialData} />
+    <App Component={Page} initialData={initialData} />
   );
 
   const metaTags = generateMetaTag({
@@ -63,7 +68,6 @@ router.get("/detail/:movieId", async (req: Request, res: Response) => {
 
   const html = generateHTML({
     appHTML: renderedApp,
-    routeType: "detail",
     initialData,
     title: detailRes.data.original_title,
     metaTags,
