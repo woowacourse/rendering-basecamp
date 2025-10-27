@@ -1,4 +1,3 @@
-// client/components/common/Routes.tsx
 import React from "react";
 import { RoutesProvider } from '../../context/RoutesContext';
 

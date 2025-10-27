@@ -1,4 +1,3 @@
-// client/contexts/RoutesContext.tsx
 import React, { createContext, useContext } from "react";
 
 interface RoutesContextValue {
