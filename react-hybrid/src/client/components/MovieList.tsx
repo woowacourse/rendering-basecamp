@@ -8,21 +8,7 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
 
   const handleMovieClick = async (movie: MovieItemType) => {
     const movieDetail = await moviesApi.getDetail(movie.id);
-    const prevPath = window.location.pathname;
-
-    if (prevPath !== `/detail/${movie.id}`) {
-      window.history.pushState(
-        { movieId: movie.id },
-        '',
-        `/detail/${movie.id}`
-      );
-    }
-
-    try {
-      await openMovieDetailModal(movieDetail.data);
-    } finally {
-      window.history.replaceState({}, '', prevPath);
-    }
+    await openMovieDetailModal(movieDetail.data);
   };
 
   return (

@@ -4,13 +4,16 @@ import { MovieDetailModal } from '../components/MovieDetailModal';
 
 export const useMovieDetailModal = () => {
   const openMovieDetailModal = (movie: MovieDetailResponse) => {
-    return new Promise<void>(resolve => {
+    window.history.pushState(null, '', `/detail/${movie.id}`);
+
+    return new Promise<void>((resolve) => {
       overlay.open(({ unmount }) => (
         <MovieDetailModal
           movie={movie}
           onClose={() => {
             resolve();
             unmount();
+            window.history.pushState(null, '', `/`);
           }}
         />
       ));
