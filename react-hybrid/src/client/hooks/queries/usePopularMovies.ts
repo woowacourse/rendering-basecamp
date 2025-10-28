@@ -12,6 +12,8 @@ export const usePopularMovies = (moviewsServerData: MovieItem[] | null) => {
 
   useEffect(() => {
     const fetchPopularMovies = async () => {
+      if (moviewsServerData) return;
+
       setIsLoading(true);
       setError(null);
 
@@ -22,7 +24,7 @@ export const usePopularMovies = (moviewsServerData: MovieItem[] | null) => {
         setError(
           err instanceof Error
             ? err
-            : new Error('영화 정보를 불러오는데 실패했습니다.'),
+            : new Error('영화 정보를 불러오는데 실패했습니다.')
         );
       } finally {
         setIsLoading(false);

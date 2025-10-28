@@ -9,12 +9,21 @@ export const useMovieDetail = (
   id: number,
   movieServerData?: MovieDetailResponse
 ) => {
-  const [data, setData] = useState<MovieDetailResponse | null>(movieServerData);
+  const isServerDataValid = movieServerData?.id === id;
+
+  const [data, setData] = useState<MovieDetailResponse | null>(
+    isServerDataValid ? movieServerData : null
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     if (!id) return;
+
+    if (movieServerData?.id === id) {
+      setData(movieServerData);
+      return;
+    }
 
     const fetchMovieDetail = async () => {
       setIsLoading(true);
@@ -35,7 +44,7 @@ export const useMovieDetail = (
     };
 
     fetchMovieDetail();
-  }, [id]);
+  }, [id, movieServerData]);
 
   return { data, isLoading, error };
 };
