@@ -18,6 +18,7 @@ export const usePopularMovies = () => {
       window.__INITIAL_DATA__.movies
     ) {
       const initialData = window.__INITIAL_DATA__.movies;
+      window.__INITIAL_DATA__.movies = undefined;
       setData(initialData);
       return;
     }

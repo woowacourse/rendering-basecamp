@@ -16,6 +16,7 @@ export default function MovieDetailPage() {
       window.__INITIAL_DATA__.movieDetail
     ) {
       const initialData = window.__INITIAL_DATA__.movieDetail;
+      window.__INITIAL_DATA__.movieDetail = undefined;
       openMovieDetailModal(initialData);
       return;
     }
