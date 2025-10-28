@@ -3,7 +3,7 @@ import { OverlayProvider } from 'overlay-kit';
 import MovieHomePage from './pages/MovieHomePage';
 import { MovieItem } from './types/Movie.types';
 import { MovieDetailResponse } from './types/MovieDetail.types';
-import { useMovieDetailModal } from './hooks/useMovieDetailModal';
+import { MovieDetailModal } from './components/MovieDetailModal';
 
 interface AppProps {
   initialMovies?: MovieItem[];
@@ -11,17 +11,19 @@ interface AppProps {
 }
 
 function App({ initialMovies, detail }: AppProps) {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  useEffect(() => {
-    if (detail) {
-      openMovieDetailModal(detail);
-    }
-  }, [detail]);
-
   return (
     <OverlayProvider>
       <MovieHomePage initialMovies={initialMovies} />
+      {detail && (
+        <MovieDetailModal
+          movie={detail}
+          onClose={() => {
+            if (typeof window !== 'undefined') {
+              window.location.href = '/';
+            }
+          }}
+        />
+      )}
     </OverlayProvider>
   );
 }

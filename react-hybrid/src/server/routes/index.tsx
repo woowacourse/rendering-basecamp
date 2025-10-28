@@ -99,7 +99,7 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
       metaTags,
     );
 
-    const renderedApp = renderToString(<App initialMovies={movies} />);
+    const renderedApp = renderToString(<App initialMovies={movies} detail={detail} />);
     const renderedHTML = renderedHTMLWithMetaTags.replace('<!--{BODY_AREA}-->', renderedApp);
 
     res.send(renderedHTML);
