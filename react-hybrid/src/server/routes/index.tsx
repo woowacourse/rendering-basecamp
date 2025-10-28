@@ -1,6 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import { Router, type Request, type Response } from "express";
 import { renderToPipeableStream } from "react-dom/server";
 
