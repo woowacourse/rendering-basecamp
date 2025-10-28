@@ -2,12 +2,9 @@ import { Router, Request, Response } from "express";
 import { renderToString } from "react-dom/server";
 import React from "react";
 import App from "../../client/App";
-import axios from "axios";
+import { moviesApi } from "../../shared/api/movies";
 
 const router = Router();
-
-const TMDB_API_KEY = process.env.TMDB_ACCESS_TOKEN;
-const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 function generateHTML(bodyContent: string, initialData: any, ogTags: string = "") {
   return `
@@ -33,23 +30,15 @@ function generateHTML(bodyContent: string, initialData: any, ogTags: string = ""
 
 router.get("/", async (_: Request, res: Response) => {
   try {
-    const response = await axios.get(
-      `${TMDB_BASE_URL}/movie/popular?page=1&language=ko-KR`,
-      {
-        headers: {
-          Authorization: `Bearer ${TMDB_API_KEY}`,
-        },
-      }
-    );
-
+    const response = await moviesApi.getPopular(1);
     const movies = response.data.results;
-
-    const renderedApp = renderToString(<App url="/" />);
 
     const initialData = {
       movies,
       url: "/",
     };
+
+    const renderedApp = renderToString(<App url="/" />);
 
     const html = generateHTML(renderedApp, initialData);
     res.send(html);
@@ -64,28 +53,20 @@ router.get("/detail/:movieId", async (req: Request, res: Response) => {
     const { movieId } = req.params;
 
     const [moviesResponse, detailResponse] = await Promise.all([
-      axios.get(`${TMDB_BASE_URL}/movie/popular?page=1&language=ko-KR`, {
-        headers: {
-          Authorization: `Bearer ${TMDB_API_KEY}`,
-        },
-      }),
-      axios.get(`${TMDB_BASE_URL}/movie/${movieId}?language=ko-KR`, {
-        headers: {
-          Authorization: `Bearer ${TMDB_API_KEY}`,
-        },
-      }),
+      moviesApi.getPopular(1),
+      moviesApi.getDetail(Number(movieId)),
     ]);
 
     const movies = moviesResponse.data.results;
     const movieDetail = detailResponse.data;
-
-    const renderedApp = renderToString(<App url={`/detail/${movieId}`} />);
 
     const initialData = {
       movies,
       movieDetail,
       url: `/detail/${movieId}`,
     };
+
+    const renderedApp = renderToString(<App url={`/detail/${movieId}`} />);
 
     const description = movieDetail.overview || '영화 상세 정보';
     const imageUrl = movieDetail.poster_path
