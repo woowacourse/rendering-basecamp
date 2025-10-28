@@ -1,33 +1,26 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import MovieHomePage from './MovieHomePage';
-import { moviesApi } from '../api/movies';
+import { useEffect } from "react";
+import { MovieItem } from "../types/Movie.types";
+import { MovieDetailResponse } from "../types/MovieDetail.types";
+import { MovieHomePage } from "./MovieHomePage";
+import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
 
-export default function MovieDetailPage() {
-  return (
-    <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
-    </>
-  );
+interface MovieDetailPageProps {
+  initialMovies: MovieItem[];
+  selectedMovieDetail?: MovieDetailResponse;
 }
 
-function DetailPageOpenModal() {
-  const { movieId } = useParams();
+export const MovieDetailPage = ({
+  initialMovies,
+  selectedMovieDetail,
+}: MovieDetailPageProps) => {
   const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
 
   useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
-      return;
+    if (selectedMovieDetail) {
+      openMovieDetailModal(selectedMovieDetail);
     }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [movieId, openMovieDetailModal]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  return null;
-}
+  return <MovieHomePage initialMovies={initialMovies} />;
+};
