@@ -1,13 +1,14 @@
 import { Button } from './common/Button';
 import type { MovieItem } from '../types/Movie.types';
+import { navigateToMovieDetail } from '../utils/navigation';
 
 interface FeaturedMovieProps {
   movie: MovieItem;
 }
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
-  const handleDetailClick = async () => {
-    window.location.href = `/detail/${movie.id}`;
+  const handleDetailClick = () => {
+    navigateToMovieDetail(movie.id);
   };
 
   return (

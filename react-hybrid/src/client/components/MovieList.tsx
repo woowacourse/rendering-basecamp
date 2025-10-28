@@ -1,9 +1,10 @@
 import { MovieItem } from './MovieItem';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
+import { navigateToMovieDetail } from '../utils/navigation';
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
-  const handleMovieClick = async (movie: MovieItemType) => {
-    window.location.href = `/detail/${movie.id}`;
+  const handleMovieClick = (movie: MovieItemType) => {
+    navigateToMovieDetail(movie.id);
   };
 
   return (

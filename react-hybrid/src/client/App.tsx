@@ -4,6 +4,7 @@ import MovieHomePage from './pages/MovieHomePage';
 import { MovieItem } from './types/Movie.types';
 import { MovieDetailResponse } from './types/MovieDetail.types';
 import { MovieDetailModal } from './components/MovieDetailModal';
+import { navigateToHome } from './utils/navigation';
 
 interface AppProps {
   initialMovies?: MovieItem[];
@@ -14,14 +15,7 @@ function App({ initialMovies, detail }: AppProps) {
   return (
     <OverlayProvider>
       <MovieHomePage initialMovies={initialMovies} />
-      {detail && (
-        <MovieDetailModal
-          movie={detail}
-          onClose={() => {
-            window.location.href = '/';
-          }}
-        />
-      )}
+      {detail && <MovieDetailModal movie={detail} onClose={navigateToHome} />}
     </OverlayProvider>
   );
 }
