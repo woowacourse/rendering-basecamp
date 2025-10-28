@@ -5,7 +5,9 @@ import { MovieItem } from '../../types/Movie.types';
 /**
  * 인기 영화 목록을 조회하는 훅
  */
-export const usePopularMovies = (initialMoviesFromProps?: MovieItem[] | null) => {
+export const usePopularMovies = (
+  initialMoviesFromProps?: MovieItem[] | null
+) => {
   const initialMovies =
     initialMoviesFromProps ||
     (typeof window !== 'undefined' ? window.__INITIAL_DATA__?.movies : null);
@@ -38,7 +40,7 @@ export const usePopularMovies = (initialMoviesFromProps?: MovieItem[] | null) =>
     };
 
     fetchPopularMovies();
-  }, []);
+  }, [initialMovies]);
 
   return { data, isLoading, error };
 };
