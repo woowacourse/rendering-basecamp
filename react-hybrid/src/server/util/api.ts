@@ -1,16 +1,20 @@
+export type ApiResult<T> =
+  | { status: "success"; data: T }
+  | { status: "error"; error: Error };
+
 export async function fetchApi<T>(
   callback: Promise<{ data: T }>
-): Promise<{ data: T; error: null } | { data: null; error: Error }> {
+): Promise<ApiResult<T>> {
   try {
     const response = await callback;
-    return { data: response.data, error: null };
+    return { status: "success", data: response.data };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      return { data: null, error };
+      return { status: "error", error };
     } else {
       console.error(error);
       return {
-        data: null,
+        status: "error",
         error: new Error("뭔가 잘못됬는데요, 관리자한테 문의해보실래요?"),
       };
     }

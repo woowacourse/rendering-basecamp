@@ -1,4 +1,4 @@
-import { MovieDetailResponse } from "../../client/types/MovieDetail.types";
+import type { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 
 interface HydrationData {
   Component: string;

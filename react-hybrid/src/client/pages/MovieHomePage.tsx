@@ -1,30 +1,23 @@
 import { Header } from "../components/Header";
 import { MovieList } from "../components/MovieList";
 import { Footer } from "../components/Footer";
-import { MovieResponse } from "../types/Movie.types";
-import { ApiResult } from "../types/ApiResult.types";
+import type { MovieItem } from "../types/Movie.types";
 
 interface MovieHomePageProps {
-  popularMoviesResult: ApiResult<MovieResponse>;
+  popularMoviesResult: MovieItem[];
 }
 
 export default function MovieHomePage({
   popularMoviesResult,
 }: MovieHomePageProps) {
-  const { data: movies, error } = popularMoviesResult;
-
-  if (error) {
-    return <div> 꺄악! 고장났슈! {error.message}</div>;
-  }
-
-  if (!movies.results || movies.results.length === 0) {
+  if (popularMoviesResult.length === 0) {
     return <div>영화 데이터가 없습니다.</div>;
   }
-
+  const featuredMovie = popularMoviesResult[0];
   return (
     <div id="wrap">
-      <Header featuredMovie={movies.results[0]} />
-      <MovieList movies={movies.results} />
+      <Header featuredMovie={featuredMovie} />
+      <MovieList movies={popularMoviesResult} />
       <Footer />
     </div>
   );
