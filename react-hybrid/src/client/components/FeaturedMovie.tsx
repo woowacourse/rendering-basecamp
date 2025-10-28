@@ -7,9 +7,7 @@ interface FeaturedMovieProps {
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
   const handleDetailClick = async () => {
-    if (typeof window !== 'undefined') {
-      window.location.href = `/detail/${movie.id}`;
-    }
+    window.location.href = `/detail/${movie.id}`;
   };
 
   return (

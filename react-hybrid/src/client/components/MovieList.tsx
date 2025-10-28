@@ -3,9 +3,7 @@ import type { MovieItem as MovieItemType } from '../types/Movie.types';
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
   const handleMovieClick = async (movie: MovieItemType) => {
-    if (typeof window !== 'undefined') {
-      window.location.href = `/detail/${movie.id}`;
-    }
+    window.location.href = `/detail/${movie.id}`;
   };
 
   return (

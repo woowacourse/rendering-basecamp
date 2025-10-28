@@ -18,9 +18,7 @@ function App({ initialMovies, detail }: AppProps) {
         <MovieDetailModal
           movie={detail}
           onClose={() => {
-            if (typeof window !== 'undefined') {
-              window.location.href = '/';
-            }
+            window.location.href = '/';
           }}
         />
       )}
