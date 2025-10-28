@@ -1,20 +1,16 @@
-import { Header } from '../components/Header';
-import { MovieList } from '../components/MovieList';
-import { Footer } from '../components/Footer';
-import { usePopularMovies } from '../hooks/queries/usePopularMovies';
-import { Loading } from '../components/common/Loading';
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
+import { MovieList } from "../components/MovieList";
+import { MovieItem } from "../types/Movie.types";
 
-export default function MovieHomePage() {
-  const { data: movies, isLoading } = usePopularMovies();
+type Props = {
+  movies?: MovieItem[];
+};
 
-  if (isLoading === true) {
-    return <Loading />;
+export default function MovieHomePage({ movies }: Props) {
+  if (!movies) {
+    return <div>영화 정보를 불러오는 중입니다...</div>;
   }
-
-  if (movies == null || movies.length === 0) {
-    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
-  }
-
   return (
     <div id="wrap">
       <Header featuredMovie={movies[0]} />

@@ -8,7 +8,7 @@
     "build:server": "webpack --config webpack.server.config.js",
     "build": "rm -rf dist && npm run build:client && npm run build:server",
     "start": "npm run build && node dist/server/server.js",
-    "dev": "concurrently \"npm run build:client -- --watch\" \"npm run build:server -- --watch\" \"node dist/server/server.js\"",
+    "dev": "concurrently \"npm run build:client -- --watch\" \"npm run build:server -- --watch\" \"node --require dotenv/config dist/server/server.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,8 +18,8 @@
     "axios": "^1.11.0",
     "express": "^5.1.0",
     "overlay-kit": "^1.8.5",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.3",
@@ -28,7 +28,7 @@
     "@types/express": "^5.0.3",
     "@types/node": "^24.3.0",
     "@types/react": "^19.1.12",
-    "@types/react-dom": "^19.1.9",
+    "@types/react-dom": "^19.2.0",
     "babel-loader": "^10.0.0",
     "concurrently": "^9.2.1",
     "copy-webpack-plugin": "^13.0.1",

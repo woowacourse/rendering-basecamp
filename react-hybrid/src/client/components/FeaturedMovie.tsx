@@ -1,24 +1,19 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { Button } from './common/Button';
-import type { MovieItem } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
+import type { MovieItem } from "../types/Movie.types";
+import { Button } from "./common/Button";
 
 interface FeaturedMovieProps {
   movie: MovieItem;
 }
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  const handleDetailClick = async () => {
-    const movieDetail = await moviesApi.getDetail(movie.id);
-    await openMovieDetailModal(movieDetail.data);
+  const handleDetailClick = () => {
+    window.location.href = `/detail/${movie.id}`;
   };
 
   return (
     <div className="top-rated-movie">
       <div className="rate">
-        <img src="/images/star_empty.png" width="32" height="32" />
+        <img src="/static/images/star_empty.png" width="32" height="32" />
         <span className="text-2xl font-semibold text-yellow">
           {movie.vote_average}
         </span>
