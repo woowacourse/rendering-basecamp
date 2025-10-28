@@ -21,7 +21,7 @@ export function HTMLBuilder<
   let metaTags = "";
   let initData = {} as TInitData;
 
-  const builder: any = {
+  const builder = {
     generateBody(content: string) {
       body += content;
       return builder;
