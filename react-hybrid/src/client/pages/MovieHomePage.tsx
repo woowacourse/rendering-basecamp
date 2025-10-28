@@ -8,6 +8,7 @@ import { MovieItem } from '../types/Movie.types';
 interface MovieHomePageProps {
   initialMovies?: MovieItem[];
 }
+
 export default function MovieHomePage({ initialMovies }: MovieHomePageProps) {
   const { data: movies, isLoading } = usePopularMovies(initialMovies);
 
