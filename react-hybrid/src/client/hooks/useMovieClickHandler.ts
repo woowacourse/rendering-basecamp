@@ -9,6 +9,7 @@ export const useMovieClickHandler = () => {
     window.history.pushState(null, "", `/detail/${movie.id}`);
 
     const movieDetail = await moviesApi.getDetail(movie.id);
+
     await openMovieDetailModal(movieDetail.data);
   };
 
