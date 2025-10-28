@@ -6,12 +6,21 @@ import { MovieDetailResponse } from '../../types/MovieDetail.types';
  * 영화 상세 정보를 조회하는 훅
  */
 export const useMovieDetail = (id: number) => {
-  const [data, setData] = useState<MovieDetailResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const initialMovieDetail =
+    typeof window !== 'undefined' ? window.__INITIAL_DATA__?.movieDetail : null;
+
+  const [data, setData] = useState<MovieDetailResponse | null>(
+    initialMovieDetail || null
+  );
+  const [isLoading, setIsLoading] = useState(!initialMovieDetail);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     if (!id) return;
+
+    if (initialMovieDetail) {
+      return;
+    }
 
     const fetchMovieDetail = async () => {
       setIsLoading(true);

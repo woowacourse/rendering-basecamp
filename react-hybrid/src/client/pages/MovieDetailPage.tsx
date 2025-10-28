@@ -3,11 +3,16 @@ import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import MovieHomePage from './MovieHomePage';
 import { moviesApi } from '../api/movies';
+import { MovieItem } from '../types/Movie.types';
 
-export default function MovieDetailPage() {
+interface MovieDetailPageProps {
+  initialMovies?: MovieItem[];
+}
+
+export default function MovieDetailPage({ initialMovies }: MovieDetailPageProps) {
   return (
     <>
-      <MovieHomePage />
+      <MovieHomePage initialMovies={initialMovies} />
       <DetailPageOpenModal />
     </>
   );
