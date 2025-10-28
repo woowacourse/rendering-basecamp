@@ -100,7 +100,7 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
       /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movie: ${JSON.stringify(popularMovies)},
+        movies: ${JSON.stringify(popularMovies)},
         detail: ${JSON.stringify(movieDetail)}
       } 
     </script>
