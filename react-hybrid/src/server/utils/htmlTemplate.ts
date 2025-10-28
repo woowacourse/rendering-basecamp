@@ -19,7 +19,7 @@ interface HTMLTemplateOptions {
   scripts?: string[];
 }
 
-const JOINNER = '\n        ';
+const JOINNER = '';
 
 export function generateHTMLTemplate({
   title,
