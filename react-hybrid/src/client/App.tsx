@@ -15,15 +15,21 @@ function App({ url, initialMovies }: AppProps) {
 
   const routes = (
     <Routes>
-      <Route path="/" element={<MovieHomePage initialMovies={initialMovies} />} />
-      <Route path="/detail/:movieId" element={<MovieDetailPage initialMovies={initialMovies} />} />
+      <Route
+        path="/"
+        element={<MovieHomePage initialMovies={initialMovies} />}
+      />
+      <Route
+        path="/detail/:movieId"
+        element={<MovieDetailPage initialMovies={initialMovies} />}
+      />
     </Routes>
   );
 
   return (
     <OverlayProvider>
       {isServer ? (
-        <StaticRouter location={url!}>{routes}</StaticRouter>
+        <StaticRouter location={url}>{routes}</StaticRouter>
       ) : (
         <BrowserRouter>{routes}</BrowserRouter>
       )}
