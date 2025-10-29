@@ -7,6 +7,26 @@ import { moviesApi } from '../../client/api/movies';
 
 const router = Router();
 
+function escapeHtml(str: string): string {
+  if (!str) return '';
+
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function serializeForScript(data: unknown): string {
+  return JSON.stringify(data)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
 function generateHTML() {
   return /*html*/ `
     <!DOCTYPE html>
@@ -38,12 +58,10 @@ const renderHome = async (_: Request, res: Response) => {
     const renderedHTMLWithInitialData = template.replace(
       '<!--{INIT_DATA_AREA}-->',
       /*html*/ `
-      <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify(movies)}
-        }
+        <script>
+          window.__INITIAL_DATA__ = ${serializeForScript({ movies })};
         </script>
-        `
+      `
     );
     const renderedHTML = renderedHTMLWithInitialData.replace(
       '<!--{BODY_AREA}-->',
@@ -75,19 +93,22 @@ const renderDetail = async (req: Request, res: Response) => {
     const detailMovie = detailResponse.data;
     const requestPath = req.originalUrl || `/detail/${movieId}`;
 
+    const baseUrl = process.env.BASE_URL || '';
+    const fallbackBaseUrl = baseUrl || 'https://blissful-liberation-production.up.railway.app';
     const imageUrl = detailMovie.poster_path
       ? `https://image.tmdb.org/t/p/w500${detailMovie.poster_path}`
-      : `${
-          process.env.BASE_URL || 'https://yourdomain.com'
-        }/images/no_image.png`;
+      : `${fallbackBaseUrl}/images/no_image.png`;
+
+    const ogTitle = escapeHtml(detailMovie.title ?? '');
+    const ogDescription = escapeHtml(detailMovie.overview || '영화 상세 정보');
+    const ogImage = escapeHtml(imageUrl);
+    const ogUrl = escapeHtml(`${baseUrl}${requestPath}`);
 
     const ogTags = `
-      <meta property="og:title" content="${detailMovie.title}" />
-      <meta property="og:description" content="${
-        detailMovie.overview || '영화 상세 정보'
-      }" />
-      <meta property="og:image" content="${imageUrl}" />
-      <meta property="og:url" content="${process.env.BASE_URL}${requestPath}" />
+      <meta property="og:title" content="${ogTitle}" />
+      <meta property="og:description" content="${ogDescription}" />
+      <meta property="og:image" content="${ogImage}" />
+      <meta property="og:url" content="${ogUrl}" />
     `;
 
     const renderedApp = renderToString(
@@ -106,7 +127,10 @@ const renderDetail = async (req: Request, res: Response) => {
       '<!--{INIT_DATA_AREA}-->',
       /*html*/ `
         <script>
-          window.__INITIAL_DATA__ = ${JSON.stringify({ movies, detailMovie })}
+          window.__INITIAL_DATA__ = ${serializeForScript({
+            movies,
+            detailMovie,
+          })};
         </script>
       `
     );
