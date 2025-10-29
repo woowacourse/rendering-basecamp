@@ -33,5 +33,3 @@ app.listen(PORT, (): void => {
 });
 
 export default app;
-
-// PR 확인용 주석 (기존 레벨 1때 이 커밋들이 다 merge가 되버려서... 전체 파일로 보시면 됩니다!)

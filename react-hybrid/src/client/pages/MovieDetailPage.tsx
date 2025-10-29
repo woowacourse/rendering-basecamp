@@ -1,33 +1,44 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import MovieHomePage from './MovieHomePage';
-import { moviesApi } from '../api/movies';
+import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
+import { useEffect, useRef } from "react";
+import MovieHomePage from "./MovieHomePage";
+import { MovieItem, MovieResponse } from "../types/Movie.types";
+import { MovieDetailResponse } from "../types/MovieDetail.types";
 
-export default function MovieDetailPage() {
+interface MovieDetailPageProps {
+  popularMoviesResult: MovieItem[];
+  movieDetailResult: MovieDetailResponse;
+}
+export default function MovieDetailPage({
+  popularMoviesResult,
+  movieDetailResult,
+}: MovieDetailPageProps) {
+  if (popularMoviesResult.length === 0 || !movieDetailResult) {
+    return <div>영화 데이터가 없습니다.</div>;
+  }
+
   return (
     <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
+      <MovieHomePage popularMoviesResult={popularMoviesResult} />
+      <DetailPageOpenModal movieDetail={movieDetailResult} />
     </>
   );
 }
 
-function DetailPageOpenModal() {
-  const { movieId } = useParams();
+function DetailPageOpenModal({
+  movieDetail,
+}: {
+  movieDetail: MovieDetailResponse;
+}) {
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
   useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
+    if (!movieDetail || onceRef.current) {
       return;
     }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [movieId, openMovieDetailModal]);
+    onceRef.current = true;
+    openMovieDetailModal(movieDetail);
+  }, [movieDetail, openMovieDetailModal]);
 
   return null;
 }

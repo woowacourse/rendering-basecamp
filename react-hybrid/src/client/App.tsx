@@ -1,8 +1,17 @@
-import React from "react";
+import React, { ComponentType } from "react";
 import { OverlayProvider } from "overlay-kit";
 
-function App() {
-  return <OverlayProvider>App</OverlayProvider>;
+interface AppProps {
+  Component: ComponentType<any>;
+  props: any;
+}
+
+function App({ Component, props }: AppProps) {
+  return (
+    <OverlayProvider>
+      <Component {...props} />
+    </OverlayProvider>
+  );
 }
 
 export default App;
