@@ -1,22 +1,25 @@
-import { useMovieDetail } from '../hooks/queries/useMovieDetail';
-import { MovieDetailModal } from './MovieDetailModal';
-import { Loading } from './common/Loading';
-
+import { useMovieDetail } from "../hooks/queries/useMovieDetail";
+import { MovieDetailResponse } from "../types/MovieDetail.types";
+import { MovieDetailModal } from "./MovieDetailModal";
+import { Loading } from "./common/Loading";
 interface MovieDetailModalLoaderProps {
+  movieServerData: MovieDetailResponse;
   movieId: number;
   close: () => void;
 }
-
 export const MovieDetailModalLoader = ({
+  movieServerData,
   movieId,
   close,
 }: MovieDetailModalLoaderProps) => {
-  const { data: movie, isLoading, error } = useMovieDetail(movieId);
-
+  const {
+    data: movie,
+    isLoading,
+    error,
+  } = useMovieDetail(movieId, movieServerData);
   if (isLoading) {
     return <Loading />;
   }
-
   if (error) {
     return (
       <div className="modal-background active">
@@ -30,7 +33,6 @@ export const MovieDetailModalLoader = ({
       </div>
     );
   }
-
   if (!movie) {
     return (
       <div className="modal-background active">
@@ -43,6 +45,5 @@ export const MovieDetailModalLoader = ({
       </div>
     );
   }
-
   return <MovieDetailModal movie={movie} onClose={close} />;
 };
