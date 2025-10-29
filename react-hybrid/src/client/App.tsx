@@ -4,7 +4,10 @@ import { MovieItem } from "./types/Movie.types";
 import { MovieDetailResponse } from "./types/MovieDetail.types";
 
 interface AppProps {
-  Component: React.ComponentType<any>;
+  Component: React.ComponentType<{
+    movies: MovieItem[];
+    detail?: MovieDetailResponse;
+  }>;
   initialData: {
     movies: MovieItem[];
     detail?: MovieDetailResponse;
