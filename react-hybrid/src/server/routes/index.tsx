@@ -78,6 +78,11 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
 
   const posterOriginal = `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`;
 
+  function getFullUrl(request: Request) {
+    const protocol = request.headers["x-forwarded-proto"] || "https";
+    const host = request.headers.host;
+    return `${protocol}://${host}${request.originalUrl}`;
+  }
   const ogTags = `
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -89,7 +94,7 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
   )}..." />
   <meta property="og:image" content="${posterOriginal}" />
   <meta property="og:type" content="website" />
-
+  <meta property="og:url" content="${getFullUrl(req)}" />
   
   `;
 
