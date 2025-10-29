@@ -1,6 +1,6 @@
-import { MovieItem } from '../types/Movie.types';
-import { IconButton } from './common/IconButton';
-import { FeaturedMovie } from './FeaturedMovie';
+import { MovieItem } from "../types/Movie.types";
+import { IconButton } from "./common/IconButton";
+import { FeaturedMovie } from "./FeaturedMovie";
 
 export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
   const handleLogoClick = () => {
@@ -22,7 +22,7 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
         <div className="top-rated-container">
           {/* 헤더 섹션 (로고 + 검색바) */}
           <IconButton
-            src="/static/images/logo.png"
+            src="/images/logo.png"
             width="117"
             height="20"
             onClick={handleLogoClick}

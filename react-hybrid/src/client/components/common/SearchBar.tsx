@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import type { FormEvent } from 'react';
-import { IconButton } from './IconButton';
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { IconButton } from "./IconButton";
 
 interface SearchBarProps {
   onSubmit: (value: string) => void;
@@ -10,10 +10,10 @@ interface SearchBarProps {
 
 export const SearchBar = ({
   onSubmit,
-  placeholder = '검색어를 입력해주세요.',
-  className = '',
+  placeholder = "검색어를 입력해주세요.",
+  className = "",
 }: SearchBarProps) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ export const SearchBar = ({
         className="search-input"
       />
       <IconButton
-        src="/static/images/search.png"
+        src="/images/search.png"
         width="16"
         height="16"
         onClick={handleIconClick}
