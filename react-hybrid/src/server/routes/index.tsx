@@ -3,50 +3,77 @@ import { Router, Request, Response } from "express";
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
+import { moviesApi } from "../../client/api/movies";
+import generateHTML from "../utils/generateHTML";
+import generateMetaTag from "../utils/generateMetaTag";
+import extractURL from "../utils/extractURL";
+import MovieHomePage from "../../client/pages/MovieHomePage";
+import MovieDetailPage from "../../client/pages/MovieDetailPage";
 
 const router = Router();
 
-function generateHTML() {
-  return /*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
-      </head>
-      <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
-}
+router.get("/", async (req: Request, res: Response) => {
+  const { data } = await moviesApi.getPopular();
+  const movies = data.results.slice(0, 12);
+  const initialData = { movies };
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
+  const Page = MovieHomePage;
 
-  const renderedApp = renderToString(<App />);
-
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
+  const renderedApp = renderToString(
+    <App Component={Page} initialData={initialData} />
   );
 
-  res.send(renderedHTML);
+  const metaTags = generateMetaTag({
+    title: "영화리뷰",
+    description: "여긴 영화 메인페이지입니다.",
+    image: `https://image.tmdb.org/t/p/original${movies[0].backdrop_path}`,
+    url: extractURL(req),
+  });
+
+  const html = generateHTML({
+    appHTML: renderedApp,
+    initialData,
+    title: "영화리뷰",
+    metaTags,
+  });
+
+  res.send(html);
+});
+
+router.get("/detail/:movieId", async (req: Request, res: Response) => {
+  const id = Number(req.params.movieId);
+
+  const [popularRes, detailRes] = await Promise.all([
+    moviesApi.getPopular(),
+    moviesApi.getDetail(id),
+  ]);
+
+  const initialData = {
+    movies: popularRes.data.results.slice(0, 12),
+    detail: detailRes.data,
+  };
+
+  const Page = MovieDetailPage;
+
+  const renderedApp = renderToString(
+    <App Component={Page} initialData={initialData} />
+  );
+
+  const metaTags = generateMetaTag({
+    title: detailRes.data.original_title,
+    description: detailRes.data.overview,
+    image: `https://image.tmdb.org/t/p/original${detailRes.data.backdrop_path}`,
+    url: extractURL(req),
+  });
+
+  const html = generateHTML({
+    appHTML: renderedApp,
+    initialData,
+    title: detailRes.data.original_title,
+    metaTags,
+  });
+
+  res.send(html);
 });
 
 export default router;
