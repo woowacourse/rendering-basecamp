@@ -4,8 +4,11 @@ import { MovieItem } from '../../types/Movie.types';
 
 export const usePopularMovies = () => {
   const [movies, setMovies] = useState<MovieItem[]>(() => {
-    if (typeof window !== 'undefined' && window.__INITIAL_DATA__?.movies) {
-      return window.__INITIAL_DATA__?.movies;
+    // 서버면 global, 클라이언트면 window 확인
+    const initialData = typeof window !== 'undefined' ? window.__INITIAL_DATA__ : (global as any).__INITIAL_DATA__;
+
+    if (initialData?.movies) {
+      return initialData.movies;
     }
     return [];
   });

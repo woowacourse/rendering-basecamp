@@ -1,10 +1,9 @@
 import { Router, Request, Response } from 'express';
 import { renderToString } from 'react-dom/server';
 import React from 'react';
-import { OverlayProvider } from 'overlay-kit';
-import MovieHomePage from '../../client/pages/MovieHomePage';
-import MovieDetailPage from '../../client/pages/MovieDetailPage';
 import { moviesApi } from '../api/movie';
+import { StaticRouter } from 'react-router-dom';
+import App from '../../client/App';
 
 const router = Router();
 
@@ -90,11 +89,15 @@ router.get('/', async (req: Request, res: Response) => {
     const baseUrl = getBaseUrl(req);
     const featuredMovie = moviesData.results[0];
 
+    (global as any).__INITIAL_DATA__ = { movies: moviesData.results, url: '/' };
+
     const renderedApp = renderToString(
-      <OverlayProvider>
-        <MovieHomePage />
-      </OverlayProvider>
+      <StaticRouter location={req.url}>
+        <App />
+      </StaticRouter>
     );
+
+    delete (global as any).__INITIAL_DATA__;
 
     const html = generateHTML(
       renderedApp,
@@ -130,9 +133,9 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
     ]);
 
     const renderedApp = renderToString(
-      <OverlayProvider>
-        <MovieDetailPage />
-      </OverlayProvider>
+      <StaticRouter location={req.url}>
+        <App />
+      </StaticRouter>
     );
 
     const html = `
