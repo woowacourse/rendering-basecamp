@@ -1,6 +1,7 @@
-const path = require("path");
+const path = require("node:path");
 const CopyPlugin = require("copy-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
+const webpack = require("webpack");
 
 module.exports = {
   mode: "development",
@@ -20,9 +21,12 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: [
-              "@babel/preset-env", 
-              ["@babel/preset-react", { "runtime": "automatic" }],
-              ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
+              "@babel/preset-env",
+              ["@babel/preset-react", { runtime: "automatic" }],
+              [
+                "@babel/preset-typescript",
+                { isTSX: true, allExtensions: true },
+              ],
             ],
           },
         },
@@ -48,6 +52,14 @@ module.exports = {
       ],
     }),
     new Dotenv(),
+    new webpack.DefinePlugin({
+      "process.env.TMDB_ACCESS_TOKEN": JSON.stringify(
+        process.env.TMDB_ACCESS_TOKEN,
+      ),
+      "process.env.VITE_TMDB_ACCESS_TOKEN": JSON.stringify(
+        process.env.VITE_TMDB_ACCESS_TOKEN,
+      ),
+    }),
   ],
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],

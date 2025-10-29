@@ -1,5 +1,4 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
-
 import { moviesApi } from "@/api/movies";
 import MovieHomePage from "@/pages/movies";
 import type { MovieDetailResponse } from "@/types/MovieDetail.types";
