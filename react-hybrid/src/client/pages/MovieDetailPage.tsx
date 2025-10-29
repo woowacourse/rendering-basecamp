@@ -15,7 +15,11 @@ export default function MovieDetailPage({ movies, detail }: MovieDetailPageProps
       <MovieDetailModal
         movie={detail}
         onClose={() => {
-          window.history.back();
+          if (window.history.length > 1) {
+            window.history.back();
+          } else {
+            window.location.href = '/';
+          }
         }}
       />
     </>
