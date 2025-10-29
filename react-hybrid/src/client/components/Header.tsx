@@ -1,6 +1,6 @@
-import { MovieItem } from '../types/Movie.types';
-import { IconButton } from './common/IconButton';
-import { FeaturedMovie } from './FeaturedMovie';
+import { MovieItem } from "../types/Movie.types";
+import { IconButton } from "./common/IconButton";
+import { FeaturedMovie } from "./FeaturedMovie";
 
 export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
   const handleLogoClick = () => {

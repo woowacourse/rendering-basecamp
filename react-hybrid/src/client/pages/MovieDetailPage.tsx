@@ -1,33 +1,57 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import MovieHomePage from './MovieHomePage';
-import { moviesApi } from '../api/movies';
+import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
+import { useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import MovieHomePage from "./MovieHomePage";
+import { moviesApi } from "../api/movies";
+import { MovieItem } from "../types/Movie.types";
+import { MovieDetailResponse } from "../types/MovieDetail.types";
 
-export default function MovieDetailPage() {
+export default function MovieDetailPage({
+  movies,
+  initialDetail,
+}: {
+  movies: MovieItem[];
+  initialDetail?: MovieDetailResponse;
+}) {
   return (
     <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
+      <MovieHomePage movies={movies} />
+      <DetailPageOpenModal initialDetail={initialDetail} />
     </>
   );
 }
 
-function DetailPageOpenModal() {
+function DetailPageOpenModal({
+  initialDetail,
+}: {
+  initialDetail?: MovieDetailResponse;
+}) {
   const { movieId } = useParams();
   const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
+  const lastMovieIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
+    if (movieId == null) {
       return;
     }
+
+    // movieId가 바뀌었을 때만 모달 열기
+    if (lastMovieIdRef.current !== undefined && lastMovieIdRef.current === movieId) {
+      return;
+    }
+
+    lastMovieIdRef.current = movieId;
+
+    if (initialDetail) {
+      openMovieDetailModal(initialDetail);
+      return;
+    }
+
     (async () => {
-      onceRef.current = true;
       const movieDetail = await moviesApi.getDetail(Number(movieId));
       openMovieDetailModal(movieDetail.data);
     })();
-  }, [movieId, openMovieDetailModal]);
+  }, [movieId, openMovieDetailModal, initialDetail]);
 
   return null;
 }
