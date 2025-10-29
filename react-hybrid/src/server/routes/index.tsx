@@ -1,8 +1,12 @@
 import { Router, Request, Response } from "express";
 
 import { renderToString } from "react-dom/server";
-import App from "../../client/App";
 import React from "react";
+import { moviesApi } from "../../client/api/movies";
+import { MovieItem } from "../../client/types/Movie.types";
+import App from "../../client/App";
+import { StaticRouter } from "react-router-dom";
+import { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 
 const router = Router();
 
@@ -26,17 +30,116 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   const template = generateHTML();
+  let moviesData = [] as MovieItem[];
 
-  const renderedApp = renderToString(<App />);
+  try {
+    const res = await moviesApi.getPopular();
+    if (res.data) {
+      moviesData = res.data.results;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  const renderedApp = renderToString(
+    <StaticRouter location={req.url}>
+      <App initialData={{ movies: moviesData }} />
+    </StaticRouter>
+  );
 
-  const renderedHTMLWithInitialData = template.replace(
+  const imageUrl = moviesData[0].poster_path
+    ? `https://image.tmdb.org/t/p/original${moviesData[0].poster_path}`
+    : "/images/no_image.png";
+
+  const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+
+  const renderedHTMLWithOgTag = template.replace(
+    "<!--{OG_TAGS}-->",
+    `
+      <meta property="og:site_name" content="Movie App" />
+      <meta property="og:url" content="${fullUrl}" />
+      <meta property="og:image" content="${imageUrl}" />
+      <meta property="og:description" content="무비앱에서 다양한 영화들을 만나 보세요" />
+      <meta property="og:type" content="website" />
+      <meta property="og:title" content="Movie App" />
+  `
+  );
+
+  const renderedHTMLWithInitialData = renderedHTMLWithOgTag.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify(moviesData)}
+      }
+    </script>
+  `
+  );
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    "<!--{BODY_AREA}-->",
+    renderedApp
+  );
+
+  res.send(renderedHTML);
+});
+
+router.get("/detail/:movieId", async (req: Request, res: Response) => {
+  const template = generateHTML();
+  let moviesData = [] as MovieItem[];
+  let movieDetail = {} as MovieDetailResponse;
+
+  const { movieId } = req.params;
+
+  try {
+    const res = await moviesApi.getPopular();
+    if (res.data) {
+      moviesData = res.data.results;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  try {
+    const res = await moviesApi.getDetail(Number(movieId));
+    if (res.data) {
+      movieDetail = res.data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  const renderedApp = renderToString(
+    <StaticRouter location={req.url}>
+      <App initialData={{ movie: movieDetail, movies: moviesData }} />
+    </StaticRouter>
+  );
+
+  const imageUrl = movieDetail.poster_path
+    ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
+    : "/images/no_image.png";
+
+  const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+
+  const renderedHTMLWithOgTag = template.replace(
+    "<!--{OG_TAGS}-->",
+    `
+      <meta property="og:title" content="${movieDetail.title}" />
+      <meta property="og:description" content="${movieDetail.overview}" />
+      <meta property="og:image" content="${imageUrl}" />
+      <meta property="og:url" content="${fullUrl}" />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="Movie App" />
+  `
+  );
+
+  const renderedHTMLWithInitialData = renderedHTMLWithOgTag.replace(
+    "<!--{INIT_DATA_AREA}-->",
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = {
+        movies: ${JSON.stringify(moviesData)},
+        movie:${JSON.stringify(movieDetail)}
       }
     </script>
   `

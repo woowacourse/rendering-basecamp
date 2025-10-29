@@ -1,6 +1,7 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
-
+const webpack = require("webpack");
+require("dotenv").config();
 module.exports = {
   mode: "development",
   target: "node",
@@ -22,9 +23,12 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: [
-              "@babel/preset-env", 
-              ["@babel/preset-react", { "runtime": "automatic" }],
-              ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
+              "@babel/preset-env",
+              ["@babel/preset-react", { runtime: "automatic" }],
+              [
+                "@babel/preset-typescript",
+                { isTSX: true, allExtensions: true },
+              ],
             ],
           },
         },
@@ -35,4 +39,11 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env.TMDB_ACCESS_TOKEN": JSON.stringify(
+        process.env.TMDB_ACCESS_TOKEN
+      ),
+    }),
+  ],
 };

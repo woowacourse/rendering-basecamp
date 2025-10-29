@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 import movieRouter from "./routes/index";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +16,7 @@ const __dirname = path.dirname(__filename);
 app.use("/static", express.static(path.join(__dirname, "../../dist/static")));
 
 app.use("/", movieRouter);
+app.use(express.static(path.join(__dirname, "../../public")));
 
 // Start server
 app.listen(PORT, () => {
