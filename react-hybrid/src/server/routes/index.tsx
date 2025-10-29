@@ -1,50 +1,79 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response } from 'express';
 
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
+import { renderToString } from 'react-dom/server';
+import App from '../../client/App';
+import React from 'react';
+import { moviesApi } from '../../client/api/movies';
+import renderTags from '../views/renderTags';
+import renderHTML from '../views/renderHTML';
+import { StaticRouter } from 'react-router-dom';
 
 const router = Router();
 
-function generateHTML() {
-  return /*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
-      </head>
-      <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
-}
+router.get('/', async (req: Request, res: Response) => {
+  const popularMoviesResponse = await moviesApi.getPopular();
+  const movies = popularMoviesResponse.data.results;
+  const initialData = {
+    movies,
+    movieDetail: undefined,
+  };
+  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
-
-  const renderedApp = renderToString(<App />);
-
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
-    </script>
-  `
+  const renderedApp = renderToString(
+    <StaticRouter location={req.originalUrl}>
+      <App initialData={initialData} />
+    </StaticRouter>
   );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
+
+  const metaTags = renderTags({
+    title: '영화 리뷰',
+    description: '인기 영화 정보를 확인할 수 있습니다.',
+    image: `https://image.tmdb.org/t/p/original${movies[0].backdrop_path}`,
+    url,
+  });
+
+  const renderedHTML = renderHTML({
+    renderApp: renderedApp,
+    page: 'home',
+    initialData,
+    title: '영화 리뷰',
+    metaTags,
+  });
+
+  res.send(renderedHTML);
+});
+
+router.get('/detail/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const [popularResponse, detailResponse] = await Promise.all([
+    moviesApi.getPopular(),
+    moviesApi.getDetail(Number(id)),
+  ]);
+  const initialData = {
+    movies: popularResponse.data.results,
+    movieDetail: detailResponse.data,
+  };
+  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+  const renderedApp = renderToString(
+    <StaticRouter location={req.originalUrl}>
+      <App initialData={initialData} />
+    </StaticRouter>
   );
+
+  const metaTags = renderTags({
+    title: initialData.movieDetail.title,
+    description: initialData.movieDetail.overview,
+    image: `https://image.tmdb.org/t/p/original${initialData.movieDetail.backdrop_path}`,
+    url,
+  });
+
+  const renderedHTML = renderHTML({
+    renderApp: renderedApp,
+    page: 'detail',
+    initialData,
+    title: initialData.movieDetail.title,
+    metaTags,
+  });
 
   res.send(renderedHTML);
 });
