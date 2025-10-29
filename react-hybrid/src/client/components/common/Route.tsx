@@ -1,8 +1,9 @@
 import React, { ComponentType } from "react";
 import { useRoutesContext } from '../../context/RoutesContext';
+import { PathType } from '../../App';
 
 interface RouteProps {
-  path: string;
+  path: PathType;
   element: ComponentType<any>;
 }
 
