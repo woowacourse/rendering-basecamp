@@ -1,14 +1,14 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { MovieItem } from './MovieItem';
-import type { MovieItem as MovieItemType } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
+import type { MovieItem as MovieItemType } from "../types/Movie.types";
+import { MovieItem } from "./MovieItem";
 
-export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
-  const { openMovieDetailModal } = useMovieDetailModal();
+type MovieListProps = {
+  movies: MovieItemType[];
+  onSelectMovie: (movieId: number) => void;
+};
 
-  const handleMovieClick = async (movie: MovieItemType) => {
-    const movieDetail = await moviesApi.getDetail(movie.id);
-    await openMovieDetailModal(movieDetail.data);
+export const MovieList = ({ movies, onSelectMovie }: MovieListProps) => {
+  const handleItemClick = (movie: MovieItemType) => {
+    onSelectMovie(movie.id);
   };
 
   return (
@@ -16,12 +16,8 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
       <section className="container">
         <h2 className="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
         <ul className="thumbnail-list">
-          {movies.map(movie => (
-            <MovieItem
-              key={movie.id}
-              movie={movie}
-              onClick={handleMovieClick}
-            />
+          {movies.map((movie) => (
+            <MovieItem key={movie.id} movie={movie} onClick={handleItemClick} />
           ))}
         </ul>
       </section>
