@@ -32,7 +32,7 @@ router.get("/", async (_: Request, res: Response) => {
 
   const template = generateHTML();
   const renderedApp = renderToString(
-    <App movieData={popularMovies} path="/" />
+    <App movieData={popularMovies} currentView="home" />
   );
 
   const renderedHTMLWithInitialData = template.replace(
@@ -75,7 +75,11 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
   `;
 
   const renderedApp = renderToString(
-    <App movieData={popularMovies} movieDetail={movieDetail} path="/detail" />
+    <App
+      movieData={popularMovies}
+      movieDetail={movieDetail}
+      currentView="detail"
+    />
   );
 
   const withOG = template.replace("<!--{OG_TAGS}-->", ogTags);

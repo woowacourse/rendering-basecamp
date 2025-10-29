@@ -8,14 +8,14 @@ import { MovieDetailResponse } from "./types/MovieDetail.types";
 type Props = {
   movieData: MovieResponse;
   movieDetail?: MovieDetailResponse;
-  path?: string;
+  currentView?: string;
 };
 
-function App({ movieData, movieDetail, path }: Props) {
+function App({ movieData, movieDetail, currentView }: Props) {
   return (
     <OverlayProvider>
-      {path === "/" && <MovieHomePage movieData={movieData} />}
-      {path.startsWith("/detail") && (
+      {currentView === "home" && <MovieHomePage movieData={movieData} />}
+      {currentView.startsWith("detail") && (
         <MovieDetailPage popularMovie={movieData} movieDetail={movieDetail} />
       )}
     </OverlayProvider>

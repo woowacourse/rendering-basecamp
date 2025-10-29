@@ -9,11 +9,13 @@ const initialData = window.__INITIAL_DATA__ as unknown as {
   movieDetail: MovieDetailResponse;
 };
 
+const currentView = window.location.pathname === "/" ? "home" : "detail";
+
 hydrateRoot(
   document.getElementById("root"),
   <App
     movieData={initialData.movies}
     movieDetail={initialData.movieDetail}
-    path={window.location.pathname}
+    currentView={currentView}
   />
 );
