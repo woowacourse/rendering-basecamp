@@ -48,9 +48,13 @@ function DetailPageOpenModal({
 
     // 2. 없으면 서버에서 조회
     (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
+      try {
+        onceRef.current = true;
+        const movieDetail = await moviesApi.getDetail(Number(movieId));
+        openMovieDetailModal(movieDetail.data);
+      } catch (error) {
+        console.error('영화 상세 정보 로딩 실패', error);
+      }
     })();
   }, [movieId, initialMovieDetail, openMovieDetailModal]);
 
