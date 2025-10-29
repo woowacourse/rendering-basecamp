@@ -27,7 +27,7 @@ const generateHTML = (
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     ${ogTags || ""}
-    <link rel="stylesheet" href="/static/styles/index.css" />
+    <link rel="stylesheet" href="/styles/index.css" />
     <title>영화 리뷰</title>
   </head>
   <body>

@@ -13,8 +13,8 @@ const __dirname = path.resolve("dist/server");
 
 // 정적 파일 제공
 app.use("/static", express.static(path.resolve("dist/static")));
-app.use("/images", express.static(path.resolve("public/images")));
-app.use("/styles", express.static(path.resolve("public/styles")));
+app.use("/images", express.static(path.resolve("dist/static/images")));
+app.use("/styles", express.static(path.resolve("dist/static/styles")));
 
 app.use("/", movieRouter);
 
