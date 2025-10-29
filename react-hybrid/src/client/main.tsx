@@ -6,7 +6,6 @@ import App from './App';
 declare global {
   interface Window {
     __INITIAL_DATA__: any;
-    __INITIAL_URL__: string;
   }
 }
 

@@ -77,7 +77,6 @@ function generateHTML(
         <div id="root">${body}</div>
         <script>
           window.__INITIAL_DATA__ = ${JSON.stringify(initialData)};
-          window.__INITIAL_URL__ = "${url}";
         </script>
         <script src="/bundle.js"></script>
       </body>
@@ -157,9 +156,7 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
             window.__INITIAL_DATA__ = ${JSON.stringify({
               movies: moviesData.results,
               movieDetail: movieDetail,
-              url: `/detail/${movieId}`,
             })};
-            window.__INITIAL_URL__ = "/detail/${movieId}";
           </script>
           <script src="/bundle.js"></script>
         </body>
