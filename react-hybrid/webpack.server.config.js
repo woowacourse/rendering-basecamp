@@ -1,6 +1,5 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
-const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: 'development',
@@ -14,13 +13,6 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
-  plugins: [
-    new Dotenv({
-      path: path.resolve(__dirname, '.env'),
-      safe: false,
-      systemvars: true,
-    }),
-  ],
   module: {
     rules: [
       {
