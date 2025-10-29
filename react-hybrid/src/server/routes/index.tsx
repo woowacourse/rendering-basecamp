@@ -4,6 +4,7 @@ import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
 import { moviesApi } from "../../client/api/movies";
+import OgTags from "../../client/components/common/OgTags";
 
 const router = Router();
 
@@ -64,15 +65,9 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     movieDetail.overview?.slice(0, 100) || "영화 상세 정보를 확인해보세요!";
   const image = `https://image.tmdb.org/t/p/w780${movieDetail.poster_path}`;
 
-  const ogTags = `
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="${title}" />
-    <meta property="og:description" content="${description}" />
-    <meta property="og:image" content="${image}" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-
-  `;
+  const ogTags = renderToString(
+    <OgTags title={title} description={description} image={image} />
+  );
 
   const renderedApp = renderToString(
     <App
