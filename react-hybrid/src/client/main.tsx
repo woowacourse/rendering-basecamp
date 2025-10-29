@@ -9,8 +9,6 @@ const initialData = window.__INITIAL_DATA__ as unknown as {
   movieDetail: MovieDetailResponse;
 };
 
-console.log("initialData", initialData.movies);
-
 hydrateRoot(
   document.getElementById("root"),
   <App

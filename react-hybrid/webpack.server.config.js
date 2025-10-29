@@ -38,11 +38,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new Dotenv({
-      path: "./.env",
-      safe: false,
-      systemvars: true,
-    }),
-  ],
+  plugins: [new Dotenv({})],
 };
