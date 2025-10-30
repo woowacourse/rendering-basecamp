@@ -1,8 +1,19 @@
-import React from "react";
 import { hydrateRoot } from "react-dom/client";
 import App from "./App";
 
-const initialData = window.__INITIAL_DATA__;
-console.log("initialData", initialData);
+const initialMovies = window.__INITIAL_DATA__
+  ? {
+      movies: window.__INITIAL_DATA__.movies,
+      details: window.__INITIAL_DATA__.detail ?? null,
+    }
+  : undefined;
 
-hydrateRoot(document.getElementById("root"), <App />);
+performance.mark("hydration-start");
+
+hydrateRoot(
+  document.getElementById("root"),
+  <App initialMovies={initialMovies} />
+);
+
+performance.mark("hydration-end");
+performance.measure("hydration", "hydration-start", "hydration-end");

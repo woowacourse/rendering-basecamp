@@ -9,24 +9,33 @@ import generateHTML from "../utils/generateHTML";
 
 const router = Router();
 
-router.get("/", async (_: Request, res: Response) => {
+router.get("/:id", async (req: Request, res: Response) => {
   try {
-    const movieList = await moviesApi.getPopular();
-    console.log(movieList);
-
-    const renderedApp = renderToString(
-      <App initialMovies={{ movies: movieList.data.results }} />
-    );
+    const { id } = req.params;
 
     const template = generateHTML();
+
+    const [movieList, movieDetail] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(Number(id)),
+    ]);
+
+    const renderedApp = renderToString(
+      <App
+        initialMovies={{
+          movies: movieList.data.results,
+          details: movieDetail.data,
+        }}
+      />
+    );
 
     const renderedHTMLWithSeo = template.replace(
       "<!--{OG_TAGS}-->",
       SeoHead({
-        title: "인기 영화 추천",
-        description: "지금 인기 있는 영화들을 만나보세요.",
-        image: `https://image.tmdb.org/t/p/w1280${movieList.data.results[0].backdrop_path}`,
-        url: "https://rendering-basecamp-production-8f18.up.railway.app/",
+        title: movieDetail.data.title,
+        description: movieDetail.data.overview,
+        image: `https://image.tmdb.org/t/p/w1280${movieDetail.data.backdrop_path}`,
+        url: `https://rendering-basecamp-production-8f18.up.railway.app/detail/${movieDetail.data.id}`,
       })
     );
 
@@ -35,7 +44,8 @@ router.get("/", async (_: Request, res: Response) => {
       `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify(movieList.data.results)}
+        movies: ${JSON.stringify(movieList.data.results)},
+        detail: ${JSON.stringify(movieDetail.data)}
       }
     </script>
   `
