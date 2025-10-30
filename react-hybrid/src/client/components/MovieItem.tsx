@@ -14,6 +14,7 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
     : '/images/no_image.png';
 
   const handleClick = () => {
+    window.history.pushState(null, '', `/detail/${movie.id}`);
     onClick(movie);
   };
 
