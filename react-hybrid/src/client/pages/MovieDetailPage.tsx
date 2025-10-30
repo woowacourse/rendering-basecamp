@@ -1,20 +1,47 @@
 import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
 import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
 import MovieHomePage from './MovieHomePage';
-import { moviesApi } from '../api/movies';
+import type { MovieItem } from '../types/Movie.types';
+import type { MovieDetailResponse } from '../types/MovieDetail.types';
 
-export default function MovieDetailPage() {
+interface MovieDetailPageProps {
+  movies?: MovieItem[];
+  movieId?: number;
+  movieDetail?: MovieDetailResponse;
+}
+
+export default function MovieDetailPage({
+  movies,
+  movieId,
+  movieDetail,
+}: MovieDetailPageProps) {
+  // 서버사이드 렌더링에서는 props를 사용, 클라이언트에서는 window.__INITIAL_DATA__ 사용
+  const initialData =
+    typeof window !== 'undefined' ? window.__INITIAL_DATA__ : null;
+  const finalMovies = movies || initialData?.movies || [];
+  const finalMovieId = movieId || initialData?.movieId;
+  const finalMovieDetail = movieDetail || initialData?.movieDetail;
+
   return (
     <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
+      <MovieHomePage movies={finalMovies} />
+      <DetailPageOpenModal
+        movieId={finalMovieId}
+        movieDetail={finalMovieDetail}
+      />
     </>
   );
 }
 
-function DetailPageOpenModal() {
-  const { movieId } = useParams();
+interface DetailPageOpenModalProps {
+  movieId?: number;
+  movieDetail?: MovieDetailResponse;
+}
+
+function DetailPageOpenModal({
+  movieId,
+  movieDetail,
+}: DetailPageOpenModalProps) {
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
@@ -22,12 +49,14 @@ function DetailPageOpenModal() {
     if (movieId == null || onceRef.current === true) {
       return;
     }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [movieId, openMovieDetailModal]);
+
+    onceRef.current = true;
+
+    // 서버에서 이미 가져온 데이터가 있으면 바로 모달 열기
+    if (movieDetail) {
+      openMovieDetailModal(movieDetail);
+    }
+  }, [movieId, movieDetail, openMovieDetailModal]);
 
   return null;
 }
