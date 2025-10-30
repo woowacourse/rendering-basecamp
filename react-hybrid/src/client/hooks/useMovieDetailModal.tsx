@@ -3,31 +3,25 @@ import { MovieDetailResponse } from "../types/MovieDetail.types";
 import { MovieDetailModal } from "../components/MovieDetailModal";
 
 export const useMovieDetailModal = () => {
-  const handleClose = () => {
-    window.history.pushState(null, "", "/");
-  };
-
   const openMovieDetailModal = (movie: MovieDetailResponse) => {
     window.history.pushState(null, "", `/detail/${movie.id}`);
 
-    const unlistenPopState = () => {
-      window.addEventListener("popstate", handleClose);
-    };
-
-    unlistenPopState();
-
     return new Promise<void>((resolve) => {
-      overlay.open(({ unmount }) => (
-        <MovieDetailModal
-          movie={movie}
-          onClose={() => {
-            resolve();
-            handleClose();
-            unmount();
-            window.removeEventListener("popstate", handleClose);
-          }}
-        />
-      ));
+      const unmount = overlay.open(({ unmount }) => {
+        const handleClose = () => {
+          resolve();
+          unmount();
+          window.removeEventListener("popstate", handlePopState);
+        };
+
+        const handlePopState = () => {
+          handleClose();
+        };
+
+        window.addEventListener("popstate", handlePopState);
+
+        return <MovieDetailModal movie={movie} onClose={handleClose} />;
+      });
     });
   };
 
