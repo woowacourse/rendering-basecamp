@@ -15,11 +15,6 @@
     "jsx": "preserve",
     "module": "ESNext"
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src/**/*", "global.d.ts"],
+  "exclude": ["node_modules", "dist"]
 }
