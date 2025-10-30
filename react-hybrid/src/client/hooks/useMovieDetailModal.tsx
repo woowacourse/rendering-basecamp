@@ -1,6 +1,6 @@
-import { overlay } from 'overlay-kit';
-import { MovieDetailResponse } from '../types/MovieDetail.types';
-import { MovieDetailModal } from '../components/MovieDetailModal';
+import { overlay } from "overlay-kit";
+import { MovieDetailResponse } from "../types/MovieDetail.types";
+import { MovieDetailModal } from "../components/MovieDetailModal";
 
 export const useMovieDetailModal = () => {
   const openMovieDetailModal = (movie: MovieDetailResponse) => {
@@ -9,8 +9,9 @@ export const useMovieDetailModal = () => {
         <MovieDetailModal
           movie={movie}
           onClose={() => {
-            resolve();
             unmount();
+            window.history.back();
+            resolve();
           }}
         />
       ));
