@@ -1,8 +1,10 @@
 import { Router, Request, Response } from "express";
 import { renderToString } from "react-dom/server";
-import App from "../../client/App";
 import React from "react";
+import App from "../../client/App";
 import axios from "axios";
+import MovieHomePage from "../../client/pages/MovieHomePage";
+import MovieDetailPage from "../../client/pages/MovieDetailPage";
 import { MovieItem } from "../../client/types/Movie.types";
 
 const router = Router();
@@ -68,7 +70,7 @@ router.get("/", async (req: Request, res: Response) => {
 
   const movieData = await tmdbClient.get("/movie/popular?page=1&language=ko-KR");
   const movies = movieData.data.results;
-  const renderedApp = renderToString(<App url={req.url} movies={movies}/>);
+  const renderedApp = renderToString(<App Component={MovieHomePage} pageProps={{movies}}/>);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
@@ -101,7 +103,7 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
   const ogTags = generateMovieOGTags(movieDetail);
   const template = generateHTML(ogTags);
 
-  const renderedApp = renderToString(<App url={req.url} movies={movies} movieId={Number(id)}/>);
+  const renderedApp = renderToString(<App Component={MovieDetailPage} pageProps={{movies, movieId: Number(id), movieDetail}}/>);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",

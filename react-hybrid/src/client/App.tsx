@@ -1,27 +1,15 @@
 import React from "react";
-import {OverlayProvider} from "overlay-kit";
-import MovieHomePage from "./pages/MovieHomePage";
-import MovieDetailPage from "./pages/MovieDetailPage";
-import {MovieItem} from "./types/Movie.types";
-import {MovieDetailResponse} from "./types/MovieDetail.types";
+import { OverlayProvider } from "overlay-kit";
 
 interface AppProps {
-  url?: string;
-  movies: MovieItem[];
-  movieId?: number;
-  movieDetail?: MovieDetailResponse;
+  Component: React.ComponentType<any>;
+  pageProps: any;
 }
 
-function App({url = "/", movies, movieId, movieDetail}: AppProps) {
-  const isDetailPage = url.startsWith("/detail/");
-
+function App({ Component, pageProps }: AppProps) {
   return (
     <OverlayProvider>
-      {isDetailPage && movieId ?
-        <MovieDetailPage movies={movies} movieId={movieId} movieDetail={movieDetail}/>
-        :
-        <MovieHomePage movies={movies}/>
-      }
+      <Component { ...pageProps } />
     </OverlayProvider>
   );
 }
