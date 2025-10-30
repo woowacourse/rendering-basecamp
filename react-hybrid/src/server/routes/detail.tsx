@@ -7,30 +7,38 @@ import MovieHomePage from '../../client/pages/MovieHomePage';
 
 const router = Router();
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+
   const movies = await moviesApi.getPopular();
+  const movie = await moviesApi.getDetail(Number(id));
 
   const renderedApp = renderToString(
     <App
       Component={MovieHomePage}
-      initialData={{ movies: movies.data.results }}
+      initialData={{ movie: movie.data, movies: movies.data.results }}
     />,
   );
 
+  const movieData = movie.data;
+  const imageUrl = `https://image.tmdb.org/t/p/w500${movieData.poster_path}`;
+
   const html = generateHTMLTemplate({
-    title: '영화 리뷰',
+    title: `${movieData.title} - 영화 리뷰`,
     metadata: {
-      type: 'website',
-      title: '영화 리뷰 - 인기 영화 목록',
-      description: '최신 인기 영화를 확인하고 리뷰를 작성해보세요.',
+      type: 'video.movie',
+      title: `${movieData.title} - 영화 리뷰`,
+      description: movieData.overview,
       url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
       siteName: '영화 리뷰',
-      keywords: '영화, 영화리뷰, 인기영화, 최신영화',
-      image:
-        'https://i.namu.wiki/i/iSfHeleDYTu3WatYclmsDG80uvF1346xhhouw5EnYaNK6VNn-Xt8iFW5zE6pQjCMjKT3WfsH1iK3iUgSq15vcA.webp',
+      image: imageUrl,
+      imageWidth: '500',
+      imageHeight: imageUrl,
+      keywords: `영화, 영화리뷰, ${movieData.title}`,
     },
     bodyContent: renderedApp,
     initialData: {
+      movie: movie.data,
       movies: movies.data.results,
     },
   });

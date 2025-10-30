@@ -20,10 +20,10 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
 
   const { title, genres, overview, vote_average, poster_path } = movie;
 
-  const genreNames = genres.map(genre => genre.name).join(', ');
+  const genreNames = genres.map((genre) => genre.name).join(', ');
   const imageUrl = poster_path
     ? `https://image.tmdb.org/t/p/original${poster_path}`
-    : '/images/no_image.png';
+    : '/static/images/no_image.png';
 
   const handleStarClick = (score: number) => {
     setRating(score);
@@ -36,7 +36,7 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
         <div className="modal-header">
           <h1 className="modal-title">{title}</h1>
           <IconButton
-            src="/images/modal_button_close.png"
+            src="/static/images/modal_button_close.png"
             width="24"
             height="24"
             onClick={onClose}
@@ -51,7 +51,11 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
             <div className="movie-info-line">
               <span className="movie-meta">{genreNames}</span>
               <div className="movie-rating">
-                <img src="/images/star_filled.png" width="16" height="16" />
+                <img
+                  src="/static/images/star_filled.png"
+                  width="16"
+                  height="16"
+                />
                 <span className="rating-value">{vote_average.toFixed(1)}</span>
               </div>
             </div>
@@ -77,8 +81,8 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
                         key={index}
                         src={
                           isFilled
-                            ? '/images/star_filled.png'
-                            : '/images/star_empty.png'
+                            ? '/static/images/star_filled.png'
+                            : '/static/images/star_empty.png'
                         }
                         width="24"
                         height="24"

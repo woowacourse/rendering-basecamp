@@ -1,8 +1,13 @@
-import React from "react";
-import { hydrateRoot } from "react-dom/client";
-import App from "./App";
+import { hydrateRoot } from 'react-dom/client';
+import App from './App';
+import { routes } from './routes';
 
 const initialData = window.__INITIAL_DATA__;
-console.log("initialData", initialData);
+const initialPath = window.__INITIAL_PATH__;
 
-hydrateRoot(document.getElementById("root"), <App />);
+const Component = routes.find((route) => route.path === initialPath).component;
+
+hydrateRoot(
+  document.getElementById('root'),
+  <App Component={Component} initialData={initialData} />,
+);

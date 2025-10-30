@@ -1,17 +1,26 @@
 import { useMovieDetail } from '../hooks/queries/useMovieDetail';
+import { MovieDetailResponse } from '../types/MovieDetail.types';
 import { MovieDetailModal } from './MovieDetailModal';
 import { Loading } from './common/Loading';
 
 interface MovieDetailModalLoaderProps {
+  movieServerData: MovieDetailResponse;
   movieId: number;
   close: () => void;
 }
 
 export const MovieDetailModalLoader = ({
+  movieServerData,
   movieId,
   close,
 }: MovieDetailModalLoaderProps) => {
-  const { data: movie, isLoading, error } = useMovieDetail(movieId);
+  const {
+    data: movie,
+    isLoading,
+    error,
+  } = useMovieDetail(movieId, movieServerData);
+
+  console.log({ movie });
 
   if (isLoading) {
     return <Loading />;
