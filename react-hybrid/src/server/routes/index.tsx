@@ -53,70 +53,117 @@ function generateHTML() {
 }
 
 router.get('/', async (req: Request, res: Response) => {
-  const response = await moviesApi.getPopular();
-  const movies = response.data.results;
-  const template = generateHTML();
+  try {
+    const response = await moviesApi.getPopular();
+    const movies = response.data.results;
 
-  // 메인 페이지 OG 태그 생성
-  const ogTags = generateOGTags({
-    title: '인기 영화 - 영화 리뷰',
-    description: '지금 인기 있는 영화를 확인하세요',
-    image: movies[0]?.poster_path,
-    url: '/',
-  });
+    if (!movies || movies.length === 0) {
+      throw new Error('영화 데이터를 불러올 수 없습니다.');
+    }
 
-  const renderedApp = renderToString(<App movies={movies} />);
+    const template = generateHTML();
 
-  const renderedHTMLWithOG = template.replace('<!--{OG_TAGS}-->', ogTags);
+    // 메인 페이지 OG 태그 생성
+    const ogTags = generateOGTags({
+      title: '인기 영화 - 영화 리뷰',
+      description: '지금 인기 있는 영화를 확인하세요',
+      image: movies[0]?.poster_path,
+      url: '/',
+    });
 
-  const renderedHTMLWithInitialData = renderedHTMLWithOG.replace(
-    '<!--{INIT_DATA_AREA}-->',
-    /*html*/ `
+    const renderedApp = renderToString(<App movies={movies} />);
+
+    const renderedHTMLWithOG = template.replace('<!--{OG_TAGS}-->', ogTags);
+
+    const renderedHTMLWithInitialData = renderedHTMLWithOG.replace(
+      '<!--{INIT_DATA_AREA}-->',
+      /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
         movies: ${JSON.stringify(movies)}
       }
     </script>
   `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    '<!--{BODY_AREA}-->',
-    renderedApp
-  );
+    );
+    const renderedHTML = renderedHTMLWithInitialData.replace(
+      '<!--{BODY_AREA}-->',
+      renderedApp
+    );
 
-  res.send(renderedHTML);
+    res.send(renderedHTML);
+  } catch (error) {
+    console.error('메인 페이지 렌더링 에러:', error);
+    res.status(500).send(/*html*/ `
+      <!DOCTYPE html>
+      <html lang="ko">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>오류 발생</title>
+        </head>
+        <body>
+          <h1>페이지를 불러오는 중 오류가 발생했습니다.</h1>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </body>
+      </html>
+    `);
+  }
 });
 
 router.get('/detail/:id', async (req, res) => {
-  const movieId = req.params.id;
+  try {
+    const movieId = req.params.id;
 
-  const [moviesResponse, movieDetailResponse] = await Promise.all([
-    moviesApi.getPopular(),
-    moviesApi.getDetail(Number(movieId)),
-  ]);
+    if (!movieId || isNaN(Number(movieId))) {
+      res.status(400).send(/*html*/ `
+        <!DOCTYPE html>
+        <html lang="ko">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>잘못된 요청</title>
+          </head>
+          <body>
+            <h1>잘못된 영화 ID입니다.</h1>
+            <p><a href="/">메인 페이지로 돌아가기</a></p>
+          </body>
+        </html>
+      `);
+      return;
+    }
 
-  const movies = moviesResponse.data.results;
-  const movieDetail = movieDetailResponse.data;
-  const template = generateHTML();
+    const [moviesResponse, movieDetailResponse] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(Number(movieId)),
+    ]);
 
-  // 상세 페이지 OG 태그 생성
-  const ogTags = generateOGTags({
-    title: `${movieDetail.title} - 영화 리뷰`,
-    description:
-      movieDetail.overview || '영화 상세 정보를 확인하세요',
-    image: movieDetail.poster_path,
-    url: `/detail/${movieId}`,
-  });
+    const movies = moviesResponse.data.results;
+    const movieDetail = movieDetailResponse.data;
 
-  const renderedApp = renderToString(
-    <App movies={movies} movieDetail={movieDetail} />
-  );
+    if (!movieDetail) {
+      throw new Error('영화 상세 정보를 불러올 수 없습니다.');
+    }
 
-  const renderedHTMLWithOG = template.replace('<!--{OG_TAGS}-->', ogTags);
+    const template = generateHTML();
 
-  const renderedHTMLWithInitialData = renderedHTMLWithOG.replace(
-    '<!--{INIT_DATA_AREA}-->',
-    /*html*/ `
+    // 상세 페이지 OG 태그 생성
+    const ogTags = generateOGTags({
+      title: `${movieDetail.title} - 영화 리뷰`,
+      description:
+        movieDetail.overview || '영화 상세 정보를 확인하세요',
+      image: movieDetail.poster_path,
+      url: `/detail/${movieId}`,
+    });
+
+    const renderedApp = renderToString(
+      <App movies={movies} movieDetail={movieDetail} />
+    );
+
+    const renderedHTMLWithOG = template.replace('<!--{OG_TAGS}-->', ogTags);
+
+    const renderedHTMLWithInitialData = renderedHTMLWithOG.replace(
+      '<!--{INIT_DATA_AREA}-->',
+      /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
         movies: ${JSON.stringify(movies)},
@@ -124,13 +171,30 @@ router.get('/detail/:id', async (req, res) => {
       }
     </script>
   `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    '<!--{BODY_AREA}-->',
-    renderedApp
-  );
+    );
+    const renderedHTML = renderedHTMLWithInitialData.replace(
+      '<!--{BODY_AREA}-->',
+      renderedApp
+    );
 
-  res.send(renderedHTML);
+    res.send(renderedHTML);
+  } catch (error) {
+    console.error('상세 페이지 렌더링 에러:', error);
+    res.status(500).send(/*html*/ `
+      <!DOCTYPE html>
+      <html lang="ko">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>오류 발생</title>
+        </head>
+        <body>
+          <h1>페이지를 불러오는 중 오류가 발생했습니다.</h1>
+          <p><a href="/">메인 페이지로 돌아가기</a></p>
+        </body>
+      </html>
+    `);
+  }
 });
 
 export default router;
