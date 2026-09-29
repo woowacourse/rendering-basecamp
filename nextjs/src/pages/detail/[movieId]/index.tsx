@@ -1,5 +1,7 @@
 import { moviesApi } from "@/api/movies";
+import { Metadata } from "@/components/common/Metadata";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
+import { toMovieMetadata } from "@/lib/movieDetail/metadata";
 import { MovieDetailResponse } from "@/types/MovieDetail.types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useEffect } from "react";
@@ -19,6 +21,7 @@ export default function DetailPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
+      <Metadata data={toMovieMetadata(movieDetail)} />
       <HomePage />
       <DetailPageOpenModal movieDetail={movieDetail} />
     </>
