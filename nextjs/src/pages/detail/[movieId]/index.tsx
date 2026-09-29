@@ -1,34 +1,40 @@
 import { moviesApi } from "@/api/movies";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
-import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { MovieDetailResponse } from "@/types/MovieDetail.types";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { useEffect } from "react";
 import HomePage from "../../index";
 
-export default function DetailPage() {
+export const getServerSideProps: GetServerSideProps<{
+  movieDetail: MovieDetailResponse;
+}> = async ({ params }) => {
+  const movieId = Number(params?.movieId);
+  const movieDetail = await moviesApi.getDetail(movieId);
+
+  return { props: { movieDetail: movieDetail.data } };
+};
+
+export default function DetailPage({
+  movieDetail,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <HomePage />
-      <DetailPageOpenModal />
+      <DetailPageOpenModal movieDetail={movieDetail} />
     </>
   );
 }
 
-function DetailPageOpenModal() {
-  const { query, isReady } = useRouter();
+function DetailPageOpenModal({
+  movieDetail,
+}: {
+  movieDetail: MovieDetailResponse;
+}) {
   const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
 
   useEffect(() => {
-    if (!isReady || onceRef.current === true) {
-      return;
-    }
-
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(query.movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [query, openMovieDetailModal]);
+    openMovieDetailModal(movieDetail);
+  }, [openMovieDetailModal]);
 
   return null;
 }
