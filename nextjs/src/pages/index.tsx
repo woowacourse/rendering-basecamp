@@ -1,6 +1,31 @@
+import { moviesApi } from "@/api/movies";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { MovieList } from "@/components/MovieList";
+import { InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 
-export default function Home() {
+export const getServerSideProps = async () => {
+  // 렌더링 전에 Next.js가 호출하는 일반 서버 함수이다... 당연히 useState는 사용할 수 없다.
+  const { data } = await moviesApi.getPopular();
+  const movies = data.results;
+
+  return {
+    props: { movies },
+  };
+};
+
+export default function MovieHomePage({
+  movies,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (movies == null) {
+    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
+  }
+
+  if (movies.length === 0) {
+    return <div>영화 정보가 존재하지 않습니다.</div>;
+  }
+
   return (
     <>
       <Head>
@@ -9,7 +34,12 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div></div>
+
+      <div id="wrap">
+        <Header featuredMovie={movies[0]} />
+        <MovieList movies={movies} />
+        <Footer />
+      </div>
     </>
   );
 }
