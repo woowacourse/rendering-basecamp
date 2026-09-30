@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
 
 interface MovieItemProps {
@@ -18,8 +19,8 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
   };
 
   return (
-    <li
-      ref={ref}
+    <Link
+      href={`/detail/${movie.id}`}
       className="movie-item"
       onClick={handleClick}
       data-index={movie.id}
@@ -34,7 +35,7 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
           <strong>{title}</strong>
         </div>
       </div>
-    </li>
+    </Link>
   );
 };
 
