@@ -1,33 +1,39 @@
 import { moviesApi } from '@/api/movies';
-import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
-import MovieHomePage from '@/pages copy/MovieHomePage';
-import { useParams } from 'next/navigation';
-import { useEffect, useRef } from 'react';
 
-export default function MovieDetailPage() {
-  return (
-    <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
-    </>
-  );
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import { useRouter } from 'next/router';
+import { MovieDetailModal } from '@/components/MovieDetailModal';
+
+import Home from '@/pages/index';
+
+// 상세 페이지의 getServerSideProps
+export async function getServerSideProps({
+  params,
+}: GetServerSidePropsContext<{ movieId: string }>) {
+  const movieId = params?.movieId;
+
+  if (!movieId || !/^\d+$/.test(movieId)) {
+    return { notFound: true };
+  }
+
+  const { data: movieData } = await moviesApi.getPopular();
+  const { data: movieDetailData } = await moviesApi.getDetail(Number(movieId));
+
+  return { props: { movies: movieData.results, movieDetail: movieDetailData } };
 }
 
-function DetailPageOpenModal() {
-  const { movieId } = useParams();
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
-
-  useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
-      return;
-    }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [movieId, openMovieDetailModal]);
-
-  return null;
+export default function MovieDetailPage({
+  movies,
+  movieDetail,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
+  return (
+    <>
+      <Home movies={movies} />
+      <MovieDetailModal
+        movie={movieDetail}
+        onClose={() => void router.push('/')}
+      />
+    </>
+  );
 }
