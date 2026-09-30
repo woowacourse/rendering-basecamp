@@ -28,7 +28,14 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
   };
 
   return (
-    <div className="modal-background active">
+    <div
+      className="modal-background active"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) {
+          onClose();
+        }
+      }}
+    >
       <div className="modal">
         {/* 모달 헤더 */}
         <div className="modal-header">
