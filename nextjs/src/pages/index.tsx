@@ -1,6 +1,24 @@
-import Head from "next/head";
+import { moviesApi } from '@/api/movies';
+import { Footer } from '@/components/Footer';
+import { Header } from '@/components/Header';
+import { MovieList } from '@/components/MovieList';
+import { InferGetServerSidePropsType } from 'next';
+import Head from 'next/head';
 
-export default function Home() {
+// 홈 페이지의 getServerSideProps
+export async function getServerSideProps() {
+  const { data } = await moviesApi.getPopular();
+
+  return { props: { movies: data.results } };
+}
+
+export default function Home({
+  movies,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (movies == null || movies.length === 0) {
+    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
+  }
+
   return (
     <>
       <Head>
@@ -9,7 +27,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div></div>
+      <div>
+        <div id="wrap">
+          <Header featuredMovie={movies[0]} />
+          <MovieList movies={movies} />
+          <Footer />
+        </div>
+      </div>
     </>
   );
 }
