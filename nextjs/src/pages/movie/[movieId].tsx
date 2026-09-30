@@ -3,12 +3,22 @@ import { useEffect, useRef } from 'react';
 import { moviesApi } from '../../api/movies';
 import MovieHomeView from '@/views/MovieHomeView';
 import { useRouter } from 'next/router';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import type { MovieItem } from '@/types/Movie.types';
 
-export default function MovieDetailPage() {
+export const getServerSideProps = (async () => {
+  const { data } = await moviesApi.getPopular();
+
+  return { props: { movies: data.results } };
+}) satisfies GetServerSideProps<{ movies: MovieItem[] }>;
+
+export default function MovieDetailPage({
+  movies,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <div id="wrap">
-        <MovieHomeView />
+        <MovieHomeView movies={movies} />
       </div>
       <DetailPageOpenModal />
     </>
