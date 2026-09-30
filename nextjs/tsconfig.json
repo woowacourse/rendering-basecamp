@@ -17,6 +17,12 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "../react-csr/src/pages/MovieHomePage.tsx",
+    "../react-csr/src/pages/MovieDetailPage.tsx"
+  ],
   "exclude": ["node_modules"]
 }
