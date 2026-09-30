@@ -1,7 +1,20 @@
 import Head from "next/head";
 import MovieHomePage from "../views/MovieHomePage";
+import { moviesApi } from "@/api/movies";
+import { GetServerSideProps } from "next";
+import { MovieItem } from "@/types/Movie.types";
 
-export default function Home() {
+interface Props {
+  movies: MovieItem[];
+}
+
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  const { data } = await moviesApi.getPopular();
+
+  return { props: { movies: data.results } };
+};
+
+export default function Home({ movies }: Props) {
   return (
     <>
       <Head>
@@ -11,7 +24,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <MovieHomePage />
+        <MovieHomePage movies={movies} />
       </div>
     </>
   );

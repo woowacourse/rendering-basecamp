@@ -2,12 +2,15 @@ import { useRouter } from "next/router";
 
 import { moviesApi } from "@/api/movies";
 import { MovieDetailModal } from "@/components/MovieDetailModal";
-import { MovieDetailResponse } from "@/types/MovieDetail.types";
 import MovieHomePage from "@/views/MovieHomePage";
-import { GetServerSideProps } from "next";
+
+import type { GetServerSideProps } from "next";
+import type { MovieDetailResponse } from "@/types/MovieDetail.types";
+import type { MovieItem } from "@/types/Movie.types";
 
 interface Props {
   movie: MovieDetailResponse;
+  movies: MovieItem[];
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) => {
@@ -17,16 +20,24 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) 
     return { notFound: true };
   }
 
-  const { data: movie } = await moviesApi.getDetail(movieId);
+  const [{ data: movie }, { data: popularMovies }] = await Promise.all([
+    moviesApi.getDetail(movieId),
+    moviesApi.getPopular(),
+  ]);
 
-  return { props: { movie } };
+  return {
+    props: {
+      movie,
+      movies: popularMovies.results,
+    },
+  };
 };
 
-export default function MovieDetailPage({ movie }: Props) {
+export default function MovieDetailPage({ movie, movies }: Props) {
   const router = useRouter();
   return (
     <>
-      <MovieHomePage />
+      <MovieHomePage movies={movies} />
       <MovieDetailModal movie={movie} onClose={() => void router.push("/")} />
     </>
   );
