@@ -2,9 +2,9 @@ import { useMovieDetailModal } from '../../hooks/useMovieDetailModal';
 import { useEffect, useRef } from 'react';
 import { moviesApi } from '../../api/movies';
 import MovieHomeView from '@/views/MovieHomeView';
-import { useRouter } from 'next/router';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import type { MovieItem } from '@/types/Movie.types';
+import { useParams } from 'next/navigation';
 
 export const getServerSideProps = (async () => {
   const { data } = await moviesApi.getPopular();
@@ -17,20 +17,14 @@ export default function MovieDetailPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
-      <div id="wrap">
-        <MovieHomeView movies={movies} />
-      </div>
+      <MovieHomeView movies={movies} />
       <DetailPageOpenModal />
     </>
   );
 }
 
 function DetailPageOpenModal() {
-  const router = useRouter();
-
-  if (!router.isReady) return null;
-
-  const movieId = router.query.movieId;
+  const { movieId } = useParams();
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
