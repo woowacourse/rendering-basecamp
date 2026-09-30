@@ -3,7 +3,11 @@ import { MovieList } from '../components/MovieList';
 import { Footer } from '../components/Footer';
 import { MovieItem } from '@/types/Movie.types';
 
-export default function MovieHomeView(movies: MovieItem[]) {
+interface Props {
+  movies: MovieItem[];
+}
+
+export default function MovieHomeView({ movies }: Props) {
   return (
     <div id="wrap">
       <Header featuredMovie={movies[0]} />
