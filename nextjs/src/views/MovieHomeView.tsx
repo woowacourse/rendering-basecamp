@@ -1,20 +1,9 @@
 import { Header } from '../components/Header';
 import { MovieList } from '../components/MovieList';
 import { Footer } from '../components/Footer';
-import { usePopularMovies } from '../hooks/queries/usePopularMovies';
-import { Loading } from '../components/common/Loading';
+import { MovieItem } from '@/types/Movie.types';
 
-export default function MovieHomeView() {
-  const { data: movies, isLoading } = usePopularMovies();
-
-  if (isLoading === true) {
-    return <Loading />;
-  }
-
-  if (movies == null || movies.length === 0) {
-    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
-  }
-
+export default function MovieHomeView(movies: MovieItem[]) {
   return (
     <div id="wrap">
       <Header featuredMovie={movies[0]} />

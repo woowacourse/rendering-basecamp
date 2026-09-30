@@ -1,7 +1,18 @@
 import Head from 'next/head';
 import MovieHomeView from '@/views/MovieHomeView';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import type { MovieItem } from '@/types/Movie.types';
+import { moviesApi } from '@/api/movies';
 
-export default function Home() {
+export const getServerSideProps = (async () => {
+  const { data } = await moviesApi.getPopular();
+
+  return { props: { movies: data.results } };
+}) satisfies GetServerSideProps<{ movies: MovieItem[] }>;
+
+export default function Home({
+  movies,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <Head>
@@ -10,7 +21,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MovieHomeView />
+      <MovieHomeView movies={movies} />
     </>
   );
 }
