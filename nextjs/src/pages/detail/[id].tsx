@@ -1,4 +1,5 @@
 import type { GetServerSideProps } from "next";
+import Head from "next/head";
 import { useEffect, useRef } from "react";
 import MovieHomePage from "../index";
 import { moviesApi } from "../../api/movies";
@@ -30,8 +31,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 };
 
 export default function MovieDetailPage({ movies, movieDetail }: Props) {
+  const title = `${movieDetail.title} | Movielist`;
+  const description =
+    movieDetail.overview || `${movieDetail.title}의 상세 정보를 확인해 보세요.`;
+
   return (
     <>
+      <Head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+      </Head>
       <MovieHomePage movies={movies} />
       <DetailPageOpenModal movieDetail={movieDetail} />
     </>
