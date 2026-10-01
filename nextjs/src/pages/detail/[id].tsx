@@ -1,34 +1,56 @@
-import { useMovieDetailModal } from '../../hooks/useMovieDetailModal';
-import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
-import MovieHomePage from '../index';
-import { moviesApi } from '../../api/movies';
+import type { GetServerSideProps } from "next";
+import { useEffect, useRef } from "react";
+import MovieHomePage from "../index";
+import { moviesApi } from "../../api/movies";
+import { useMovieDetailModal } from "../../hooks/useMovieDetailModal";
+import type { MovieItem } from "../../types/Movie.types";
+import type { MovieDetailResponse } from "../../types/MovieDetail.types";
 
-export default function MovieDetailPage() {
+interface Props {
+  movies: MovieItem[];
+  movieDetail: MovieDetailResponse;
+}
+
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  params,
+}) => {
+  const id = Number(params?.id);
+
+  const [popular, detail] = await Promise.all([
+    moviesApi.getPopular(),
+    moviesApi.getDetail(id),
+  ]);
+
+  return {
+    props: {
+      movies: popular.data.results,
+      movieDetail: detail.data,
+    },
+  };
+};
+
+export default function MovieDetailPage({ movies, movieDetail }: Props) {
   return (
     <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
+      <MovieHomePage movies={movies} />
+      <DetailPageOpenModal movieDetail={movieDetail} />
     </>
   );
 }
 
-function DetailPageOpenModal() {
-  const router = useRouter();
-  const movieId = router.query.id;
+function DetailPageOpenModal({
+  movieDetail,
+}: {
+  movieDetail: MovieDetailResponse;
+}) {
   const { openMovieDetailModal } = useMovieDetailModal();
   const onceRef = useRef(false);
 
   useEffect(() => {
-    if (!router.isReady || movieId == null || onceRef.current === true) {
-      return;
-    }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [router.isReady, movieId, openMovieDetailModal]);
+    if (onceRef.current) return;
+    onceRef.current = true;
+    openMovieDetailModal(movieDetail);
+  }, [movieDetail, openMovieDetailModal]);
 
   return null;
 }
