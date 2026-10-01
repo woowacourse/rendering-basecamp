@@ -29,7 +29,10 @@ export default function MovieDetailPage({
       <Head>
         <title>{movieDetail.title}</title>
         <meta property="og:title" content={movieDetail.title} />
-        <meta property="og:image" content={movieDetail.poster_path ?? ""} />
+        <meta
+          property="og:image"
+          content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
+        />
         <meta property="og:description" content={movieDetail.overview} />
       </Head>
       <DetailPageOpenModal />;
