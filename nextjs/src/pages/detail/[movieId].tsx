@@ -4,8 +4,8 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { MovieDetailModal } from '@/components/MovieDetailModal';
 
-import Home from '@/pages/index';
 import Head from 'next/head';
+import { MovieHome } from '@/components/MovieHome';
 
 // 상세 페이지의 getServerSideProps
 export async function getServerSideProps({
@@ -56,7 +56,7 @@ export default function MovieDetailPage({
         <meta property="og:image" content={imageUrl} key="og:image" />
         <meta property="og:url" content={detailUrl} key="og:url" />
       </Head>
-      <Home movies={movies} />
+      <MovieHome movies={movies} />
       <MovieDetailModal
         movie={movieDetail}
         onClose={() => void router.push('/')}
