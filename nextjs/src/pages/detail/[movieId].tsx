@@ -7,10 +7,10 @@ import Head from "next/head";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { MovieDetailResponse } from "@/types/MovieDetail.types";
 
-export const getServerSideProps = (async () => {
+export const getServerSideProps = (async ({ params }) => {
   // 환경변수사용법
   // https://nextjs.org/docs/pages/guides/environment-variables
-  const res = await fetch("https://api.themoviedb.org/3/movie/${id}?language=ko-KR", {
+  const res = await fetch(`https://api.themoviedb.org/3/movie/${params?.movieId}?language=ko-KR`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN}`,
