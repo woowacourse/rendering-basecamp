@@ -1,11 +1,11 @@
 import { moviesApi } from "@/api/movies";
 import MovieHomeContent from "@/components/common/MovieHomeContent";
-import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import { MovieDetailResponse } from "@/types/MovieDetail.types";
 import { MovieItem } from "@/types/Movie.types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import { useEffect, useRef } from "react";
+import { useState } from "react";
+import { MovieDetailModal } from "@/components/MovieDetailModal";
 
 export const getServerSideProps = (async ({ params }) => {
   const movieId = Number(params?.movieId); // url에서 영화id 빼옴
@@ -29,6 +29,7 @@ export default function MovieDetailPage({
   movies,
   movieDetail,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const [isModalOpen, setIsModalOpen] = useState(true);
   return (
     <>
       <Head>
@@ -37,6 +38,7 @@ export default function MovieDetailPage({
         <meta property="og:type" content="article" />
         <meta property="og:title" content={movieDetail.title} />
         <meta property="og:description" content={movieDetail.overview} />
+        <meta name="description" content={movieDetail.overview} />
         {movieDetail.poster_path && (
           <meta
             property="og:image"
@@ -45,24 +47,12 @@ export default function MovieDetailPage({
         )}
       </Head>
       <MovieHomeContent movies={movies} />
-      <DetailPageOpenModal movieDetail={movieDetail} />
+      {isModalOpen && (
+        <MovieDetailModal
+          movie={movieDetail}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </>
   );
-}
-
-function DetailPageOpenModal({
-  movieDetail,
-}: {
-  movieDetail: MovieDetailResponse;
-}) {
-  const opened = useRef(false);
-  const { openMovieDetailModal } = useMovieDetailModal();
-  useEffect(() => {
-    if (opened.current) return;
-    opened.current = true;
-
-    void openMovieDetailModal(movieDetail);
-  }, [movieDetail, openMovieDetailModal]);
-
-  return null;
 }

@@ -1,4 +1,5 @@
-import type { MovieItem as MovieItemType } from '../types/Movie.types';
+import Link from "next/link";
+import type { MovieItem as MovieItemType } from "../types/Movie.types";
 
 interface MovieItemProps {
   movie: MovieItemType;
@@ -11,7 +12,7 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
 
   const imageUrl = poster_path
     ? `https://image.tmdb.org/t/p/w500${poster_path}`
-    : '/images/no_image.png';
+    : "/images/no_image.png";
 
   const handleClick = () => {
     onClick(movie);
@@ -32,10 +33,16 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
             <span>{vote_average.toFixed(1)}</span>
           </p>
           <strong>{title}</strong>
+          <Link
+            href={`/detail/${movie.id}`}
+            onClick={(event) => event.stopPropagation()}
+          >
+            상세 페이지 보기
+          </Link>
         </div>
       </div>
     </li>
   );
 };
 
-MovieItem.displayName = 'MovieItem';
+MovieItem.displayName = "MovieItem";
