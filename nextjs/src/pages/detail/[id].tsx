@@ -1,7 +1,7 @@
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useEffect, useRef } from "react";
-import MovieHomePage from "../index";
+import { MovieHome } from "../../components/MovieHome";
 import { moviesApi } from "../../api/movies";
 import { useMovieDetailModal } from "../../hooks/useMovieDetailModal";
 import type { MovieItem } from "../../types/Movie.types";
@@ -66,7 +66,7 @@ export default function MovieDetailPage({
         {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <MovieHomePage movies={movies} />
+      <MovieHome movies={movies} />
       <DetailPageOpenModal movieDetail={movieDetail} />
     </>
   );
