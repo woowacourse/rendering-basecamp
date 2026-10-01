@@ -1,4 +1,3 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
 import { Button } from './common/Button';
 import type { MovieItem } from '../types/Movie.types';
 import { useRouter } from 'next/router';
@@ -8,11 +7,10 @@ interface FeaturedMovieProps {
 }
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
-  const { openMovieDetailModal } = useMovieDetailModal();
   const router = useRouter();
 
   const handleDetailClick = () => {
-    router.push(`/movie/${movie.id}`);
+    router.push(`/detail/${movie.id}`);
   };
 
   return (
