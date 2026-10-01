@@ -42,11 +42,7 @@ export default function MovieHomePage({
       </Head>
       <div id="wrap">
         <Header featuredMovie={movies[0]} />
-        {movies.map((movie) => (
-          <div key={movie.id}>
-            <MovieList movies={movies} />
-          </div>
-        ))}
+        <MovieList movies={movies} />
         <Footer />
       </div>
     </>
