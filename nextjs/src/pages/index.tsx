@@ -1,7 +1,5 @@
 import { moviesApi } from '@/api/movies';
-import { Footer } from '@/components/Footer';
-import { Header } from '@/components/Header';
-import { MovieList } from '@/components/MovieList';
+import MovieHomePage from '@/components/MovieHomePage';
 import { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 
@@ -20,11 +18,7 @@ export default function Home({ movies }: InferGetServerSidePropsType<typeof getS
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div id="wrap">
-                <Header featuredMovie={movies[0]} />
-                <MovieList movies={movies} />
-                <Footer />
-            </div>
+            <MovieHomePage movies={movies} />
         </>
     );
 }
