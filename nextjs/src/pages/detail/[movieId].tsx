@@ -1,6 +1,8 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
+import { overlay } from 'overlay-kit';
+import { useEffect } from 'react';
 
 import { moviesApi } from '../../api/movies';
 import { useMovieDetailModal } from '../../hooks/useMovieDetailModal';
@@ -59,15 +61,16 @@ export default function MovieDetailPage({ movies, movie }: DetailProps) {
 }
 
 function DetailPageOpenModal({ movie }: { movie: MovieDetailResponse }) {
+  const router = useRouter();
   const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
 
   useEffect(() => {
-    if (onceRef.current) return;
+    const overlayId = openMovieDetailModal(movie, () => {
+      void router.replace('/');
+    });
 
-    onceRef.current = true;
-    void openMovieDetailModal(movie);
-  }, [movie, openMovieDetailModal]);
+    return () => overlay.unmount(overlayId);
+  }, [movie, openMovieDetailModal, router]);
 
   return null;
 }
