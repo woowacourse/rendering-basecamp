@@ -27,7 +27,12 @@ button {
   background: none;
 }
 
-button.primary {
+a.primary {
+  display: inline-block;
+}
+
+button.primary,
+a.primary {
   padding: 8px 16px;
   color: var(--color-white);
   font-weight: bold;
