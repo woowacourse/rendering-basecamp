@@ -1,8 +1,5 @@
 import { moviesApi } from '@/api/movies';
-import { Footer } from '@/components/Footer';
-import { Header } from '@/components/Header';
 import { MovieHome } from '@/components/MovieHome';
-import { MovieList } from '@/components/MovieList';
 import { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 
