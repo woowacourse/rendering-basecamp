@@ -30,7 +30,7 @@ export default function MovieDetailPage({
   const router = useRouter();
 
   // 메타데이터 구성
-  const siteUrl = 'https://rendering-basecamp-jet.vercel.app/';
+  const siteUrl = 'https://rendering-basecamp-jet.vercel.app';
   const title = `${movieDetail.title} | Movielist`;
   const description =
     movieDetail.overview.trim() ||
