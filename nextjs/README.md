@@ -6,6 +6,6 @@
 - [ ] Next.js로 마이그레이션
   - [x] 필요한 파일 옮기기
   - [x] Home 페이지 ssr 구현하기
-  - [ ] Detail 페이지 ssr 구현하기
+  - [x] Detail 페이지 ssr 구현하기
 - [ ] 성능 시나리오 완수
 - [ ] open graph (og) tag 시나리오 완후
