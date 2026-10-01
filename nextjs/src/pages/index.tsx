@@ -1,7 +1,9 @@
 import { moviesApi } from '@/api/movies';
 import MovieHomePage from '@/components/MovieHomePage';
+import { SeoHead } from '@/components/SeoHead';
+import { SITE } from '@/constants/site';
+import { getMovieOgImage } from '@/utils/ogImage';
 import { InferGetServerSidePropsType } from 'next';
-import Head from 'next/head';
 
 export const getServerSideProps = async () => {
     const { results: movies } = await moviesApi.getPopular();
@@ -10,14 +12,16 @@ export const getServerSideProps = async () => {
 };
 
 export default function Home({ movies }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+    const featuredMovie = movies[0] ?? { title: SITE.NAME, backdrop_path: null, poster_path: null };
+
     return (
         <>
-            <Head>
-                <title>라바의 TMDB</title>
-                <meta name="description" content="껄껄 안녕하세요." />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+            <SeoHead
+                title={SITE.NAME}
+                description={SITE.DESCRIPTION}
+                url={`${SITE.URL}/`}
+                image={getMovieOgImage(featuredMovie)}
+            />
             <MovieHomePage movies={movies} />
         </>
     );

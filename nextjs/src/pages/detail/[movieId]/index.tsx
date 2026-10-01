@@ -1,8 +1,10 @@
 import { moviesApi } from '@/api/movies';
 import { MovieDetailModal } from '@/components/MovieDetailModal';
 import MovieHomePage from '@/components/MovieHomePage';
+import { SeoHead } from '@/components/SeoHead';
+import { SITE } from '@/constants/site';
+import { getMovieOgImage } from '@/utils/ogImage';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 export const getServerSideProps = async (context: GetServerSidePropsContext<{ movieId: string }>) => {
@@ -19,11 +21,13 @@ export default function MovieDetail({ movies, movieDetail }: InferGetServerSideP
     const router = useRouter();
     return (
         <>
-            <Head>
-                <title>{movieDetail.title}</title>
-                <meta property="og:title" content={movieDetail.title} />
-                <meta property="og:description" content={movieDetail.overview} />
-            </Head>
+            <SeoHead
+                type="video.movie"
+                title={`${movieDetail.title} | ${SITE.NAME}`}
+                description={movieDetail.overview || SITE.DESCRIPTION}
+                url={`${SITE.URL}/detail/${movieDetail.id}`}
+                image={getMovieOgImage(movieDetail)}
+            />
             <MovieHomePage movies={movies} />
             <MovieDetailModal movie={movieDetail} onClose={() => router.push('/', undefined, { scroll: false })} />
         </>
