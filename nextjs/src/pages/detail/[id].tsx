@@ -1,9 +1,9 @@
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
-import { useEffect, useRef } from "react";
+import { useRouter } from "next/router";
 import { MovieHome } from "../../components/MovieHome";
 import { moviesApi } from "../../api/movies";
-import { useMovieDetailModal } from "../../hooks/useMovieDetailModal";
+import { MovieDetailModal } from "../../components/MovieDetailModal";
 import type { MovieItem } from "../../types/Movie.types";
 import type { MovieDetailResponse } from "../../types/MovieDetail.types";
 
@@ -52,6 +52,11 @@ export default function MovieDetailPage({
   const description =
     movieDetail.overview || `${movieDetail.title}의 상세 정보를 확인해 보세요.`;
   const ogImageUrl = getOgImageUrl(movieDetail);
+  const router = useRouter();
+
+  const handleModalClose = () => {
+    router.push("/", undefined, { scroll: false });
+  };
 
   return (
     <>
@@ -67,24 +72,7 @@ export default function MovieDetailPage({
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <MovieHome movies={movies} />
-      <DetailPageOpenModal movieDetail={movieDetail} />
+      <MovieDetailModal movie={movieDetail} onClose={handleModalClose} />
     </>
   );
-}
-
-function DetailPageOpenModal({
-  movieDetail,
-}: {
-  movieDetail: MovieDetailResponse;
-}) {
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
-
-  useEffect(() => {
-    if (onceRef.current) return;
-    onceRef.current = true;
-    openMovieDetailModal(movieDetail);
-  }, [movieDetail, openMovieDetailModal]);
-
-  return null;
 }
