@@ -23,9 +23,9 @@ export default function MovieDetailPage({
   movies,
   movie,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const imageUrl =
-    movie.backdrop_path ??
-    'https://rendering-basecamp-hazel.vercel.app/images/no_image.png';
+  const imageUrl = movie.backdrop_path
+    ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
+    : 'https://rendering-basecamp-hazel.vercel.app/images/no_image.png';
 
   return (
     <>
