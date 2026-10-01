@@ -1,1 +1,11 @@
 # 🚀 1단계 Next.js 로 Hybrid Rendering 구현하기
+
+## 구현 사항
+
+- [ ] prettier 설정하기
+- [ ] Next.js로 마이그레이션
+  - [ ] 필요한 파일 옮기기
+  - [ ] Home 페이지 ssr 구현하기
+  - [ ] Detail 페이지 ssr 구현하기
+- [ ] 성능 시나리오 완수
+- [ ] open graph (og) tag 시나리오 완후
