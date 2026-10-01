@@ -25,7 +25,7 @@ export default function MovieDetailPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const imageUrl =
     movie.backdrop_path ??
-    'https://rendering-basecamp-ikbmnqvdt-kimdongeuns-projects.vercel.app/images/no_image.png';
+    'https://rendering-basecamp-hazel.vercel.app/images/no_image.png';
 
   return (
     <>
