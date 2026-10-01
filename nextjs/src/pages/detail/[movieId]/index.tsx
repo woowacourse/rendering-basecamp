@@ -25,7 +25,7 @@ export default function MovieDetail({ movies, movieDetail }: InferGetServerSideP
                 <meta property="og:description" content={movieDetail.overview} />
             </Head>
             <MovieHomePage movies={movies} />
-            <MovieDetailModal movie={movieDetail} onClose={() => router.push('/')} />
+            <MovieDetailModal movie={movieDetail} onClose={() => router.push('/', undefined, { scroll: false })} />
         </>
     );
 }
