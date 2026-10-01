@@ -1,13 +1,13 @@
 import Head from "next/head";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 
-import { Header } from "./components/Header";
-import { MovieList } from "./components/MovieList";
-import { Footer } from "./components/Footer";
+import { Header } from "../components/Header";
+import { MovieList } from "../components/MovieList";
+import { Footer } from "../components/Footer";
 // 서버에서 API 받기 떄문에 로딩 필요없다
 // import { Loading } from "./components/common/Loading";
 
-import type { MovieItem, MovieResponse } from "./types/Movie.types";
+import type { MovieItem, MovieResponse } from "../types/Movie.types";
 
 export const getServerSideProps = (async () => {
   // 환경변수사용법
@@ -40,14 +40,14 @@ export default function MovieHomePage({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>
-        {movieResponse.results.map((movie) => (
-          <div id="wrap">
-            {/* <Header featuredMovie={movies[0]} /> */}
-            {/* <MovieList movies={movies} /> */}
-            <Footer />
+      <div id="wrap">
+        <Header featuredMovie={movies[0]} />
+        {movies.map((movie) => (
+          <div key={movie.id}>
+            <MovieList movies={movies} />
           </div>
         ))}
+        <Footer />
       </div>
     </>
   );
