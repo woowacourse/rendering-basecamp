@@ -3,9 +3,35 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { moviesApi } from "../../api/movies";
 
-export default function MovieDetailPage() {
+import Head from "next/head";
+import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+import { MovieDetailResponse } from "@/types/MovieDetail.types";
+
+export const getServerSideProps = (async () => {
+  // 환경변수사용법
+  // https://nextjs.org/docs/pages/guides/environment-variables
+  const res = await fetch("https://api.themoviedb.org/3/movie/${id}?language=ko-KR", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN}`,
+    },
+  });
+  const movieDetail: MovieDetailResponse = await res.json();
+  // Pass data to the page via props
+  return { props: { movieDetail } };
+}) satisfies GetServerSideProps<{ movieDetail: MovieDetailResponse }>;
+
+export default function MovieDetailPage({
+  movieDetail,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
+      <Head>
+        <title>{movieDetail.title}</title>
+        <meta property="og:title" content={movieDetail.title} />
+        <meta property="og:image" content={movieDetail.poster_path ?? ""} />
+        <meta property="og:description" content={movieDetail.overview} />
+      </Head>
       <DetailPageOpenModal />;
     </>
   );
