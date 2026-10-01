@@ -5,6 +5,7 @@ import type { GetServerSideProps } from 'next';
 import { MovieItem } from '@/types/Movie.types';
 import { MovieDetailModal } from '@/components/MovieDetailModal';
 import { MovieDetailResponse } from '@/types/MovieDetail.types';
+import Head from 'next/head';
 
 interface MovieDetailPageProps {
   movies: MovieItem[];
@@ -37,6 +38,15 @@ export default function MovieDetailPage({ movies, movieDetail }: MovieDetailPage
 
   return (
     <>
+      <Head>
+        <title>{movieDetail.title}</title>
+        <meta property="og:title" content={movieDetail.title} />
+        <meta property="og:description" content={movieDetail.overview} />
+        <meta
+          property="og:image"
+          content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
+        />
+      </Head>
       <MovieHomePage movies={movies} />
       <MovieDetailModal movie={movieDetail} onClose={() => router.push('/')} />
     </>
