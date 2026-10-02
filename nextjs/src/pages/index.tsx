@@ -11,11 +11,14 @@ interface Props {
   movies: MovieItem[];
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  res,
+}) => {
   try {
     const { data } = await moviesApi.getPopular();
     return { props: { movies: data.results } };
   } catch {
+    res.statusCode = 503;
     return { props: { movies: [] } };
   }
 };

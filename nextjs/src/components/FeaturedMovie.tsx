@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { Button } from './common/Button';
+import { ROUTES } from '../constants/routes';
 import type { MovieItem } from '../types/Movie.types';
 
 interface FeaturedMovieProps {
@@ -10,7 +11,7 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
   const router = useRouter();
 
   const handleDetailClick = () => {
-    router.push(`/detail/${movie.id}`);
+    router.push(ROUTES.MOVIE_DETAIL(movie.id));
   };
 
   return (
