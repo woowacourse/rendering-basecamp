@@ -1,0 +1,3 @@
+# Vercel CLI local project and credentials
+.vercel/
+.env*

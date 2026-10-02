@@ -1,0 +1,13 @@
+# Upload only the Next.js project from this monorepo.
+.git
+.vercel
+.env*
+react-csr
+react-hybrid
+node-ssr
+nextjs/node_modules
+nextjs/.next
+nextjs/.vercel
+nextjs/.env*
+!nextjs/.env.example
+nextjs/*.tsbuildinfo
