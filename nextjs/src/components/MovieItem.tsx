@@ -1,29 +1,19 @@
-import type { MovieItem as MovieItemType } from '../types/Movie.types';
+import type { MovieItem as MovieItemType } from "../types/Movie.types";
 
 interface MovieItemProps {
   movie: MovieItemType;
-  onClick: (movie: MovieItemType) => void;
   ref?: React.Ref<HTMLLIElement>;
 }
 
-export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
+export const MovieItem = ({ movie, ref }: MovieItemProps) => {
   const { title, poster_path, vote_average } = movie;
 
   const imageUrl = poster_path
     ? `https://image.tmdb.org/t/p/w500${poster_path}`
-    : '/images/no_image.png';
-
-  const handleClick = () => {
-    onClick(movie);
-  };
+    : "/images/no_image.png";
 
   return (
-    <li
-      ref={ref}
-      className="movie-item"
-      onClick={handleClick}
-      data-index={movie.id}
-    >
+    <li ref={ref} className="movie-item" data-index={movie.id}>
       <div className="item">
         <img className="thumbnail" src={imageUrl} alt={title} loading="lazy" />
         <div className="item-desc">
@@ -38,4 +28,4 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
   );
 };
 
-MovieItem.displayName = 'MovieItem';
+MovieItem.displayName = "MovieItem";
