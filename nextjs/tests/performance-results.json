@@ -1,0 +1,306 @@
+{
+  "measuredDate": "2026-10-02",
+  "chromeVersion": "154.0.8037.93",
+  "nextVersion": "15.5.27",
+  "productionUrl": "https://rendering-basecamp-nextjs-eosin.vercel.app/",
+  "network": {
+    "downloadBytesPerSecond": 1012500,
+    "uploadBytesPerSecond": 168750,
+    "latencyMs": 165
+  },
+  "cpuSlowdown": 4,
+  "deviceScaleFactor": 1,
+  "browserCache": "disabled; a new browser context for every run",
+  "method": "Chrome CDP emulation and PerformanceObserver largest-contentful-paint; 3 reloads per viewport and condition",
+  "limitations": "Real TMDB API and CDN; Vercel function instances and upstream CDN caches may be warm. This is a lab test, not field Core Web Vitals or a bounce-rate measurement.",
+  "samples": [
+    {
+      "condition": "react-csr-local",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 1,
+      "lcpMs": 2644,
+      "lcpElement": "background-container",
+      "htmlCache": null,
+      "ttfbMs": 6.399999991059303
+    },
+    {
+      "condition": "react-csr-local",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 2,
+      "lcpMs": 2632,
+      "lcpElement": "background-container",
+      "htmlCache": null,
+      "ttfbMs": 2.0999999940395355
+    },
+    {
+      "condition": "react-csr-local",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 3,
+      "lcpMs": 2452,
+      "lcpElement": "background-container",
+      "htmlCache": null,
+      "ttfbMs": 1
+    },
+    {
+      "condition": "react-csr-local",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 1,
+      "lcpMs": 2416,
+      "lcpElement": "background-container",
+      "htmlCache": null,
+      "ttfbMs": 1.800000011920929
+    },
+    {
+      "condition": "react-csr-local",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 2,
+      "lcpMs": 2360,
+      "lcpElement": "background-container",
+      "htmlCache": null,
+      "ttfbMs": 1
+    },
+    {
+      "condition": "react-csr-local",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 3,
+      "lcpMs": 2544,
+      "lcpElement": "background-container",
+      "htmlCache": null,
+      "ttfbMs": 1.0999999940395355
+    },
+    {
+      "condition": "nextjs-local",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 1,
+      "lcpMs": 1880,
+      "lcpElement": "featured-background",
+      "htmlCache": null,
+      "ttfbMs": 168.1000000089407
+    },
+    {
+      "condition": "nextjs-local",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 2,
+      "lcpMs": 1356,
+      "lcpElement": "featured-background",
+      "htmlCache": null,
+      "ttfbMs": 221.09999999403954
+    },
+    {
+      "condition": "nextjs-local",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 3,
+      "lcpMs": 1312,
+      "lcpElement": "featured-background",
+      "htmlCache": null,
+      "ttfbMs": 195.79999999701977
+    },
+    {
+      "condition": "nextjs-local",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 1,
+      "lcpMs": 1220,
+      "lcpElement": "featured-background",
+      "htmlCache": null,
+      "ttfbMs": 157.90000000596046
+    },
+    {
+      "condition": "nextjs-local",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 2,
+      "lcpMs": 1264,
+      "lcpElement": "featured-background",
+      "htmlCache": null,
+      "ttfbMs": 201.8999999910593
+    },
+    {
+      "condition": "nextjs-local",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 3,
+      "lcpMs": 1248,
+      "lcpElement": "featured-background",
+      "htmlCache": null,
+      "ttfbMs": 155.90000000596046
+    },
+    {
+      "condition": "nextjs-vercel-cdn-hit",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 1,
+      "lcpMs": 1380,
+      "lcpElement": "featured-background",
+      "htmlCache": "HIT",
+      "ttfbMs": 72
+    },
+    {
+      "condition": "nextjs-vercel-cdn-hit",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 2,
+      "lcpMs": 1296,
+      "lcpElement": "featured-background",
+      "htmlCache": "HIT",
+      "ttfbMs": 74.09999999403954
+    },
+    {
+      "condition": "nextjs-vercel-cdn-hit",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 3,
+      "lcpMs": 1316,
+      "lcpElement": "featured-background",
+      "htmlCache": "HIT",
+      "ttfbMs": 75.8999999910593
+    },
+    {
+      "condition": "nextjs-vercel-cdn-hit",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 1,
+      "lcpMs": 1316,
+      "lcpElement": "featured-background",
+      "htmlCache": "HIT",
+      "ttfbMs": 75.1000000089407
+    },
+    {
+      "condition": "nextjs-vercel-cdn-hit",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 2,
+      "lcpMs": 1312,
+      "lcpElement": "featured-background",
+      "htmlCache": "HIT",
+      "ttfbMs": 79.8999999910593
+    },
+    {
+      "condition": "nextjs-vercel-cdn-hit",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 3,
+      "lcpMs": 1332,
+      "lcpElement": "featured-background",
+      "htmlCache": "HIT",
+      "ttfbMs": 153.5
+    },
+    {
+      "condition": "nextjs-vercel-cdn-miss",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 1,
+      "lcpMs": 1628,
+      "lcpElement": "featured-background",
+      "htmlCache": "MISS",
+      "ttfbMs": 76.29999999701977
+    },
+    {
+      "condition": "nextjs-vercel-cdn-miss",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 2,
+      "lcpMs": 1396,
+      "lcpElement": "featured-background",
+      "htmlCache": "MISS",
+      "ttfbMs": 74.5
+    },
+    {
+      "condition": "nextjs-vercel-cdn-miss",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "run": 3,
+      "lcpMs": 1448,
+      "lcpElement": "featured-background",
+      "htmlCache": "MISS",
+      "ttfbMs": 139.1000000089407
+    },
+    {
+      "condition": "nextjs-vercel-cdn-miss",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 1,
+      "lcpMs": 1316,
+      "lcpElement": "featured-background",
+      "htmlCache": "MISS",
+      "ttfbMs": 76.59999999403954
+    },
+    {
+      "condition": "nextjs-vercel-cdn-miss",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 2,
+      "lcpMs": 1604,
+      "lcpElement": "featured-background",
+      "htmlCache": "MISS",
+      "ttfbMs": 85.09999999403954
+    },
+    {
+      "condition": "nextjs-vercel-cdn-miss",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "run": 3,
+      "lcpMs": 1584,
+      "lcpElement": "featured-background",
+      "htmlCache": "MISS",
+      "ttfbMs": 76.8999999910593
+    }
+  ]
+}
