@@ -45,9 +45,25 @@ export const getServerSideProps = (async ({ params }) => {
 
 export default function Home({ popularMovies, selectedMovie }: HomeProps) {
   const router = useRouter();
+  const title = selectedMovie ? `${selectedMovie.title} | 영화 리뷰` : '영화 리뷰';
+  const description = selectedMovie?.overview || (selectedMovie
+    ? `${selectedMovie.title}의 영화 정보와 별점을 확인하세요.`
+    : '인기 영화를 살펴보고 나만의 별점을 남겨보세요.');
+  const imageUrl = selectedMovie?.backdrop_path
+    ? `https://image.tmdb.org/t/p/w1280${selectedMovie.backdrop_path}`
+    : selectedMovie?.poster_path
+      ? `https://image.tmdb.org/t/p/original${selectedMovie.poster_path}`
+      : null;
 
   return (
     <>
+      <Head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={selectedMovie?.title ?? '영화 리뷰'} />
+        <meta property="og:description" content={description} />
+        {imageUrl && <meta property="og:image" content={imageUrl} />}
+      </Head>
       <div id="wrap">
         <Header featuredMovie={popularMovies.results[0]} />
         <MovieList movies={popularMovies.results} />
