@@ -2,12 +2,18 @@ import { moviesApi } from '@/api/movies';
 import MovieHomePage from '@/components/MovieHomePage';
 import { SeoHead } from '@/components/SeoHead';
 import { SITE } from '@/constants/site';
+import { createServerTiming } from '@/lib/serverTiming';
 import { getMovieOgImage } from '@/utils/ogImage';
-import { InferGetServerSidePropsType } from 'next';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 
-export const getServerSideProps = async () => {
-    const { results: movies } = await moviesApi.getPopular();
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+    const timing = createServerTiming();
 
+    const { results: movies } = await timing.measure('tmdb-popular', 'TMDB popular movies', () =>
+        moviesApi.getPopular()
+    );
+
+    timing.apply(context.res);
     return { props: { movies } };
 };
 

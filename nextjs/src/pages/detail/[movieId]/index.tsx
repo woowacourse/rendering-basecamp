@@ -3,17 +3,21 @@ import { MovieDetailModal } from '@/components/MovieDetailModal';
 import MovieHomePage from '@/components/MovieHomePage';
 import { SeoHead } from '@/components/SeoHead';
 import { SITE } from '@/constants/site';
+import { createServerTiming } from '@/lib/serverTiming';
 import { getMovieOgImage } from '@/utils/ogImage';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 
 export const getServerSideProps = async (context: GetServerSidePropsContext<{ movieId: string }>) => {
+    const timing = createServerTiming();
     const movieId = Number(context.params?.movieId);
 
     const [{ results: movies }, movieDetail] = await Promise.all([
-        moviesApi.getPopular(),
-        moviesApi.getDetail(movieId),
+        timing.measure('tmdb-popular', 'TMDB popular movies', () => moviesApi.getPopular()),
+        timing.measure('tmdb-detail', 'TMDB movie detail', () => moviesApi.getDetail(movieId)),
     ]);
+
+    timing.apply(context.res);
     return { props: { movies, movieDetail } };
 };
 
