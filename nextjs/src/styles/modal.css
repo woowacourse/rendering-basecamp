@@ -38,12 +38,22 @@
 
 /* 모달 헤더 */
 .modal-header {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  position: relative;
+  gap: 16px;
   padding: 20px 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-share-btn {
+  background: none;
+  border: none;
+  color: var(--color-yellow);
+  cursor: pointer;
+  font: inherit;
+  white-space: nowrap;
+  padding: 4px;
 }
 
 .modal-title {
@@ -52,13 +62,10 @@
   color: white;
   margin: 0;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .modal-close-btn {
-  position: absolute;
-  top: 50%;
-  right: 24px;
-  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
