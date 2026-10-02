@@ -43,9 +43,6 @@ export default function MovieDetailPage({
   movieDetail,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
-  const imageUrl = movieDetail.poster_path
-    ? `https://image.tmdb.org/t/p/original${movieDetail.poster_path}`
-    : null;
 
   return (
     <>
@@ -55,18 +52,17 @@ export default function MovieDetailPage({
         <meta
           name="description"
           content={movieDetail.overview || `${movieDetail.title} 상세 정보`}
-          key="description"
         />
-        <meta property="og:type" content="website" key="og:type" />
-        <meta property="og:title" content={movieDetail.title} key="og:title" />
+        <meta property="og:title" content={movieDetail.title} />
         <meta
           property="og:description"
           content={movieDetail.overview || `${movieDetail.title} 상세 정보`}
-          key="og:description"
         />
-        {imageUrl && (
-          <meta property="og:image" content={imageUrl} key="og:image" />
-        )}
+        <meta
+          property="og:image"
+          content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
+        />
+        <meta property="og:type" content="website" />
       </Head>
       <MovieDetailModal
         movie={movieDetail}
