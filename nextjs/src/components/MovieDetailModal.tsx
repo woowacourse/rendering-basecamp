@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { MovieDetailResponse } from '../types/MovieDetail.types';
 import { useMovieRating } from '../hooks/useMovieRating';
 import { IconButton } from './common/IconButton';
@@ -17,6 +18,7 @@ const SCORE_TEXT: Record<number, string> = {
 
 export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
   const { rating, setRating } = useMovieRating(movie.id, movie.title);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const { title, genres, overview, vote_average, poster_path } = movie;
 
@@ -29,11 +31,34 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
     setRating(score);
   };
 
+  const handleShareClick = async () => {
+    const url = new URL(`/detail/${movie.id}`, window.location.origin).href;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: movie.title, url });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      setLinkCopied(true);
+    } catch {
+      window.prompt('영화 링크를 복사해 주세요.', url);
+    }
+  };
+
   return (
     <div className="modal-background active">
       <div className="modal">
         {/* 모달 헤더 */}
         <div className="modal-header">
+          <button type="button" className="modal-share-btn" onClick={handleShareClick}>
+            {linkCopied ? '링크 복사됨' : '공유하기'}
+          </button>
           <h1 className="modal-title">{title}</h1>
           <IconButton
             src="/images/modal_button_close.png"
@@ -41,6 +66,7 @@ export const MovieDetailModal = ({ movie, onClose }: MovieDetailModalProps) => {
             height="24"
             onClick={onClose}
             className="modal-close-btn"
+            aria-label="모달 닫기"
           />
         </div>
 

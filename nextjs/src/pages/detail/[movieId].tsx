@@ -1,11 +1,9 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { overlay } from 'overlay-kit';
-import { useEffect } from 'react';
 
 import { moviesApi } from '../../api/movies';
-import { useMovieDetailModal } from '../../hooks/useMovieDetailModal';
+import { MovieDetailModal } from '../../components/MovieDetailModal';
 import type { MovieItem } from '../../types/Movie.types';
 import type { MovieDetailResponse } from '../../types/MovieDetail.types';
 import MovieHomePage from '../index';
@@ -36,6 +34,8 @@ export const getServerSideProps: GetServerSideProps<DetailProps> = async ({ para
 };
 
 export default function MovieDetailPage({ movies, movie }: DetailProps) {
+  const router = useRouter();
+
   return (
     <>
       <MovieHomePage movies={movies} />
@@ -55,22 +55,7 @@ export default function MovieDetailPage({ movies, movie }: DetailProps) {
           />
         )}
       </Head>
-      <DetailPageOpenModal movie={movie} />
+      <MovieDetailModal movie={movie} onClose={() => void router.replace('/')} />
     </>
   );
-}
-
-function DetailPageOpenModal({ movie }: { movie: MovieDetailResponse }) {
-  const router = useRouter();
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  useEffect(() => {
-    const overlayId = openMovieDetailModal(movie, () => {
-      void router.replace('/');
-    });
-
-    return () => overlay.unmount(overlayId);
-  }, [movie, openMovieDetailModal, router]);
-
-  return null;
 }
