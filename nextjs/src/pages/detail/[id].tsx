@@ -1,13 +1,26 @@
 import { moviesApi } from "@/api/movies";
 import MovieHomePage from "@/components/MovieHomePage";
 import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
+import { MovieItem } from "@/types/Movie.types";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 
-export default function MovieDetailPage() {
+export const getServerSideProps = (async () => {
+  try {
+    const response = await moviesApi.getPopular();
+    return { props: { movies: response.data.results } };
+  } catch {
+    return { props: { movies: [] } };
+  }
+}) satisfies GetServerSideProps<{ movies: MovieItem[] }>;
+
+export default function MovieDetailPage({
+  movies,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
-      <MovieHomePage />
+      <MovieHomePage movies={movies} />
       <DetailPageOpenModal />
     </>
   );
