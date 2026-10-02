@@ -4,23 +4,70 @@ dotenv.config();
 import express, { Request, Response } from "express";
 import path from "path";
 
+import fs from "fs";
+import { moviesApi } from "./service/tmdbApi";
+import { Movie } from "./service/types";
+
 const app = express();
 const PORT = 8080;
 
 app.use(express.json());
 
+const templatePath = path.join(__dirname, "../public/index.html");
+const templateHtml = fs.readFileSync(templatePath, "utf-8");
+
 app.get("/", async (_req: Request, res: Response) => {
-  res.send(/*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <title>영화 리뷰</title>
-      </head>
-      <body>
-        테스트
-      </body>
-    </html>
-        `);
+  try {
+    const popularMoviesData = await moviesApi.getPopular();
+    const movies = popularMoviesData.results;
+    
+    const featuredMovie = movies[0];
+    const headerHtml = `
+        <div class="background-container" style="background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${featuredMovie.backdrop_path});">
+          <div class="overlay"></div>
+          <div class="top-rated-container">
+            <img src="/images/logo.png" width="117" height="20" class="logo" alt="MovieLogo" />
+            <div class="top-rated-movie">
+              <div class="rate">
+                <img src="/images/star_empty.png" width="32" height="32" />
+                <span class="text-2xl font-semibold text-yellow">${featuredMovie.vote_average.toFixed(1)}</span>
+              </div>
+              <h1 class="text-3xl font-semibold">${featuredMovie.title}</h1>
+              <!-- 앵커 태그로 이동 처리는 생략 (순수 SSR 렌더링 관점) -->
+              <button class="primary detail">자세히 보기</button>
+            </div>
+          </div>
+        </div>
+    `;
+
+    const movieListHtml = movies.map((movie: Movie) => `
+            <li class="movie-item">
+              <a href="/detail/${movie.id}">
+                <div class="item">
+                  <img class="thumbnail" src="https://media.themoviedb.org/t/p/w440_and_h660_face${movie.poster_path}" alt="${movie.title}" loading="lazy" />
+                  <div class="item-desc">
+                    <p class="rate">
+                      <img src="/images/star_empty.png" class="star" />
+                      <span>${movie.vote_average.toFixed(1)}</span>
+                    </p>
+                    <strong>${movie.title}</strong>
+                  </div>
+                </div>
+              </a>
+            </li>
+    `).join("");
+
+    const finalHtml = templateHtml
+      .replace("<!--${HEADER_PLACEHOLDER}-->", headerHtml)
+      .replace("<!--${MOVIE_LIST_PLACEHOLDER}-->", movieListHtml)
+      .replace("<!--${OG_TAGS_PLACEHOLDER}-->", "") // 홈 화면은 OG 생략
+      .replace("<!--${MODAL_AREA_PLACEHOLDER}-->", ""); // 홈 화면은 모달 생략
+
+    res.send(finalHtml);
+  } catch (error) {
+    console.error("Failed to render home page:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
