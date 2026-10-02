@@ -9,7 +9,7 @@ export const usePopularMovies = ({
 }: {
   initialMovies: MovieItem[];
 }) => {
-  const [data] = useState<MovieItem[] | null>(initialMovies);
+  const [data] = useState<MovieItem[]>(initialMovies);
 
   return { data };
 };

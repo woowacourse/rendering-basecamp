@@ -18,8 +18,7 @@ export const getServerSideProps = (async ({ params }) => {
   const moviesData = await moviesApi.getPopular();
   const movies: MovieItem[] = moviesData.data.results;
 
-  if (!params) return { props: { movies } };
-
+  if (!params) return { notFound: true };
   const movieId = params.id;
 
   const movieDetail = await moviesApi.getDetail(Number(movieId));
@@ -32,7 +31,7 @@ export const getServerSideProps = (async ({ params }) => {
   };
 }) satisfies GetServerSideProps<{
   movies: MovieItem[];
-  movie?: MovieDetailResponse;
+  movie: MovieDetailResponse;
 }>;
 
 export default function MovieDetail({
@@ -52,15 +51,13 @@ export default function MovieDetail({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {movies && <HomeView movies={movies} />}
-      {movie && (
-        <MovieDetailModal
-          movie={movie}
-          onClose={() => {
-            router.push("/");
-          }}
-        />
-      )}
+      <HomeView movies={movies} />
+      <MovieDetailModal
+        movie={movie}
+        onClose={() => {
+          router.push("/");
+        }}
+      />
     </>
   );
 }
