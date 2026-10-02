@@ -1,22 +1,18 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
+type ButtonVariant = 'default' | 'primary' | 'secondary';
+
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'primary' | 'secondary';
+  variant?: ButtonVariant;
   children: ReactNode;
 }
 
-export const Button = ({
-  variant = 'default',
-  className = '',
-  children,
-  ...props
-}: ButtonProps) => {
-  const variantClass = variant === 'primary' ? 'primary' : '';
+export const getButtonClassName = (variant: ButtonVariant = 'default') =>
+  [variant === 'primary' && 'primary'].filter(Boolean).join(' ');
 
-  const buttonClass = [variantClass, className].filter(Boolean).join(' ');
-
+export const Button = ({ variant = 'default', className = '', children, ...props }: ButtonProps) => {
   return (
-    <button className={buttonClass} {...props}>
+    <button className={[getButtonClassName(variant), className].join(' ')} {...props}>
       {children}
     </button>
   );
