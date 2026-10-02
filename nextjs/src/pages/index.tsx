@@ -1,6 +1,25 @@
 import Head from "next/head";
 
-export default function Home() {
+import { moviesApi } from "../api/movies";
+import { MovieItem } from "../types/Movie.types";
+
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { usePopularMovies } from "@/hooks/queries/usePopularMovies";
+
+import HomeView from "../components/HomeView";
+
+export const getServerSideProps = (async () => {
+  const movieDetail = await moviesApi.getPopular();
+  const movies: MovieItem[] = movieDetail.data.results;
+  return { props: { movies } };
+}) satisfies GetServerSideProps<{ movies: MovieItem[] }>;
+
+export default function Home({
+  movies: initialMovies,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { data: movies } = usePopularMovies({ initialMovies });
+  if (!movies) return;
+
   return (
     <>
       <Head>
@@ -9,7 +28,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div></div>
+      <div id="wrap">
+        <HomeView movies={movies} />
+      </div>
     </>
   );
 }
