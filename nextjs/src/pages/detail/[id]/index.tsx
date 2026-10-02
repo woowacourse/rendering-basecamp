@@ -77,12 +77,14 @@ export default function MovieDetail({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <HomeView movies={movies} />
-      <MovieDetailModal
-        movie={movie}
-        onClose={() => {
-          router.push("/");
-        }}
-      />
+      {movie && (
+        <MovieDetailModal
+          movie={movie}
+          onClose={() => {
+            router.push("/");
+          }}
+        />
+      )}
     </>
   );
 }

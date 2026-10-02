@@ -8,10 +8,13 @@ interface MovieDetailModalLoaderProps {
 }
 
 export const MovieDetailModalLoader = ({
-  movieId,
   close,
 }: MovieDetailModalLoaderProps) => {
-  const { data: movie, isLoading, error } = useMovieDetail(movieId);
+  const {
+    data: movie,
+    isLoading,
+    error,
+  } = useMovieDetail({ initialMovie: null });
 
   if (isLoading) {
     return <Loading />;

@@ -8,9 +8,11 @@ import { MovieDetailResponse } from "../../types/MovieDetail.types";
 export const useMovieDetail = ({
   initialMovie,
 }: {
-  initialMovie: MovieDetailResponse;
+  initialMovie: MovieDetailResponse | null;
 }) => {
-  const [data] = useState<MovieDetailResponse>(initialMovie);
+  const [data] = useState<MovieDetailResponse | null>(initialMovie);
+  const [isLoading] = useState(false);
+  const [error] = useState<Error | null>(null);
 
-  return { data };
+  return { data, isLoading, error };
 };
