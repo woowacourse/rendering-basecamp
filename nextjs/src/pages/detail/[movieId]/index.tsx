@@ -1,11 +1,11 @@
 import { moviesApi } from "@/api/movies";
 import { Metadata } from "@/components/common/Metadata";
-import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
+import { MovieDetailModal } from "@/components/MovieDetailModal";
 import { toMovieMetadata } from "@/lib/movieDetail/metadata";
 import { MovieItem } from "@/types/Movie.types";
 import { MovieDetailResponse } from "@/types/MovieDetail.types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useEffect } from "react";
+import { useRouter } from "next/router";
 import HomePage from "../../index";
 
 export const getServerSideProps: GetServerSideProps<{
@@ -30,25 +30,18 @@ export default function DetailPage({
   movieDetail,
   movies,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
+
   return (
     <>
       <Metadata data={toMovieMetadata(movieDetail)} />
       <HomePage movies={movies} />
-      <DetailPageOpenModal movieDetail={movieDetail} />
+      <MovieDetailModal
+        movie={movieDetail}
+        onClose={() => {
+          router.replace("/");
+        }}
+      />
     </>
   );
-}
-
-function DetailPageOpenModal({
-  movieDetail,
-}: {
-  movieDetail: MovieDetailResponse;
-}) {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  useEffect(() => {
-    openMovieDetailModal(movieDetail);
-  }, [openMovieDetailModal]);
-
-  return null;
 }
