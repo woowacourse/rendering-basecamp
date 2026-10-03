@@ -5,6 +5,7 @@ import { isAxiosError } from "axios";
 import { MovieHome } from "../../components/MovieHome";
 import { MovieDetailModal } from "../../components/MovieDetailModal";
 import { moviesApi } from "../../api/movies";
+import { SITE_URL } from "../../constants/site";
 import type { MovieItem } from "../../types/Movie.types";
 import type { MovieDetailResponse } from "../../types/MovieDetail.types";
 
@@ -35,7 +36,7 @@ export const getServerSideProps: GetServerSideProps<DetailPageProps, { id: strin
 export default function DetailPage({ movies, movieDetail }: DetailPageProps) {
   const [isModalOpen, setIsModalOpen] = useState(true);
 
-  const pageUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/detail/${movieDetail.id}`;
+  const pageUrl = `${SITE_URL}/detail/${movieDetail.id}`;
   const title = `${movieDetail.title} | 영화 리뷰`;
   const description = movieDetail.overview || `${movieDetail.title} 상세 정보`;
   const imageUrl = movieDetail.poster_path ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}` : null;
