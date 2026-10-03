@@ -1,33 +1,17 @@
 import Head from "next/head";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
-
-import { Header } from "../components/Header";
-import { MovieList } from "../components/MovieList";
-import { Footer } from "../components/Footer";
-// 서버에서 API 받기 떄문에 로딩 필요없다
-// import { Loading } from "./components/common/Loading";
-
-import type { MovieItem, MovieResponse } from "../types/Movie.types";
+import type { MovieResponse } from "../types/Movie.types";
+import { MovieHome } from "@/components/MovieHome";
+import { moviesApi } from "@/api/movies";
 
 export const getServerSideProps = (async () => {
-  // 환경변수사용법
-  // https://nextjs.org/docs/pages/guides/environment-variables
-  const res = await fetch("https://api.themoviedb.org/3/movie/popular?language=ko-KR", {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN}`,
-    },
-  });
-  const movieResponse: MovieResponse = await res.json();
-  // Pass data to the page via props
+  const { data: movieResponse } = await moviesApi.getPopular();
   return { props: { movieResponse } };
 }) satisfies GetServerSideProps<{ movieResponse: MovieResponse }>;
 
 export default function MovieHomePage({
   movieResponse,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { results: movies } = movieResponse;
-
   if (movieResponse == null || movieResponse.results.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
@@ -41,9 +25,7 @@ export default function MovieHomePage({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div id="wrap">
-        <Header featuredMovie={movies[0]} />
-        <MovieList movies={movies} />
-        <Footer />
+        <MovieHome movieResponse={movieResponse} />
       </div>
     </>
   );
