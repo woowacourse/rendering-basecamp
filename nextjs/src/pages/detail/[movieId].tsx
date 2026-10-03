@@ -1,4 +1,5 @@
 import type { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { MovieDetailModal } from '../../components/MovieDetailModal';
 import { MovieHome } from '../../components/MovieHome';
@@ -16,6 +17,10 @@ export default function MovieDetailPage({
   movie,
 }: MovieDetailPageProps) {
   const router = useRouter();
+  const imagePath = movie.poster_path ?? movie.backdrop_path;
+  const openGraphImage = imagePath
+    ? `https://image.tmdb.org/t/p/w500${imagePath}`
+    : null;
 
   const handleClose = () => {
     void router.push('/');
@@ -23,6 +28,14 @@ export default function MovieDetailPage({
 
   return (
     <>
+      <Head>
+        <title>{`${movie.title} | MovieList`}</title>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={movie.title} />
+        {openGraphImage && (
+          <meta property="og:image" content={openGraphImage} />
+        )}
+      </Head>
       <MovieHome movies={movies} />
       <MovieDetailModal movie={movie} onClose={handleClose} />
     </>
