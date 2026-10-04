@@ -6,6 +6,7 @@ import { MovieItem } from '@/types/Movie.types';
 import { MovieDetailModal } from '@/components/MovieDetailModal';
 import { MovieDetailResponse } from '@/types/MovieDetail.types';
 import Head from 'next/head';
+import axios from 'axios';
 
 interface MovieDetailPageProps {
   movies: MovieItem[];
@@ -32,8 +33,11 @@ export const getServerSideProps = (async (context) => {
       },
     };
   } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return { notFound: true };
+    }
     console.error('영화 불러오기에 실패하였습니다.', error);
-    return { notFound: true };
+    throw error;
   }
 }) satisfies GetServerSideProps<MovieDetailPageProps>;
 

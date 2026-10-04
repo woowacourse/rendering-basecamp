@@ -8,8 +8,8 @@ export const getServerSideProps = (async () => {
     const response = await moviesApi.getPopular();
     return { props: { movies: response.data.results } };
   } catch (error) {
-    console.error('영화 불러오기에 실패하였습니다.');
-    return { props: { movies: [] } };
+    console.error('영화 불러오기에 실패하였습니다.', error);
+    throw error;
   }
 }) satisfies GetServerSideProps<{ movies: MovieItem[] }>;
 
