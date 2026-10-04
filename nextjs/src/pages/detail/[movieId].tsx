@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import MovieHome from '../../components/MoiveHome';
+import MovieHome from '../../components/MovieHome';
 import { moviesApi } from '../../api/movies';
 import type { GetServerSideProps } from 'next';
 import { MovieItem } from '@/types/Movie.types';

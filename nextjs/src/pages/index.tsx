@@ -1,5 +1,5 @@
 import { moviesApi } from '@/api/movies';
-import MovieHome from '../components/MoiveHome';
+import MovieHome from '../components/MovieHome';
 import type { MovieItem } from '@/types/Movie.types';
 import type { GetServerSideProps } from 'next';
 
