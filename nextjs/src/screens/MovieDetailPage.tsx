@@ -3,14 +3,34 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import MovieHomePage from "./MovieHomePage";
 import { moviesApi } from "../api/movies";
+import { usePopularMovies } from "../hooks/queries/usePopularMovies";
+import { Loading } from "../components/common/Loading";
 
 export default function MovieDetailPage() {
   return (
     <>
-      <MovieHomePage />
+      <MovieHomeBackground />
       <DetailPageOpenModal />
     </>
   );
+}
+
+function MovieHomeBackground() {
+  const { data: movies, isLoading, error } = usePopularMovies();
+
+  if (error !== null) {
+    return <p>영화 정보를 불러오는데 실패했습니다.</p>;
+  }
+
+  if (isLoading || movies === null) {
+    return <Loading />;
+  }
+
+  if (movies.length === 0) {
+    return <p>영화 정보가 없습니다.</p>;
+  }
+
+  return <MovieHomePage movies={movies} />;
 }
 
 function DetailPageOpenModal() {
