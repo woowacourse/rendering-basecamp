@@ -1,5 +1,5 @@
 import { moviesApi } from '@/api/movies';
-import MovieHomePage from '../components/MovieHomePage';
+import MovieHome from '../components/MoiveHome';
 import type { MovieItem } from '@/types/Movie.types';
 import type { GetServerSideProps } from 'next';
 
@@ -14,7 +14,7 @@ export const getServerSideProps = (async () => {
 }) satisfies GetServerSideProps<{ movies: MovieItem[] }>;
 
 function Home({ movies }: { movies: MovieItem[] }) {
-  return <MovieHomePage movies={movies} />;
+  return <MovieHome movies={movies} />;
 }
 
 export default Home;

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import MovieHomePage from '../../components/MovieHomePage';
+import MovieHome from '../../components/MoiveHome';
 import { moviesApi } from '../../api/movies';
 import type { GetServerSideProps } from 'next';
 import { MovieItem } from '@/types/Movie.types';
@@ -47,7 +47,7 @@ export default function MovieDetailPage({ movies, movieDetail }: MovieDetailPage
           content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
         />
       </Head>
-      <MovieHomePage movies={movies} />
+      <MovieHome movies={movies} />
       <MovieDetailModal movie={movieDetail} onClose={() => router.push('/')} />
     </>
   );
