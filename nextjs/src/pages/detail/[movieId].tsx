@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import { useState } from "react";
+import { useRouter } from "next/router";
 import { moviesApi } from "../../api/movies";
 import { MovieDetailResponse } from "@/types/MovieDetail.types";
 import { MovieDetailModal } from "@/components/MovieDetailModal";
@@ -72,9 +72,14 @@ export default function MovieDetailPage({
 }
 
 function InitialDetailModal({ movie }: { movie: MovieDetailResponse }) {
-  const [isOpen, setIsOpen] = useState(true);
+  const router = useRouter();
 
-  if (!isOpen) return null;
-
-  return <MovieDetailModal movie={movie} onClose={() => setIsOpen(false)} />;
+  return (
+    <MovieDetailModal
+      movie={movie}
+      onClose={() => {
+        router.replace("/", undefined, { scroll: false });
+      }}
+    />
+  );
 }
