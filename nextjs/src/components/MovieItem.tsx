@@ -1,30 +1,25 @@
+import Link from 'next/link';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
 
 interface MovieItemProps {
   movie: MovieItemType;
-  onClick: (movie: MovieItemType) => void;
   ref?: React.Ref<HTMLLIElement>;
 }
 
-export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
+export const MovieItem = ({ movie, ref }: MovieItemProps) => {
   const { title, poster_path, vote_average } = movie;
 
   const imageUrl = poster_path
     ? `https://image.tmdb.org/t/p/w500${poster_path}`
     : '/images/no_image.png';
 
-  const handleClick = () => {
-    onClick(movie);
-  };
-
   return (
     <li
       ref={ref}
       className="movie-item"
-      onClick={handleClick}
       data-index={movie.id}
     >
-      <div className="item">
+      <Link href={`/detail/${movie.id}`} className="item">
         <img className="thumbnail" src={imageUrl} alt={title} loading="lazy" />
         <div className="item-desc">
           <p className="rate">
@@ -33,7 +28,7 @@ export const MovieItem = ({ movie, onClick, ref }: MovieItemProps) => {
           </p>
           <strong>{title}</strong>
         </div>
-      </div>
+      </Link>
     </li>
   );
 };

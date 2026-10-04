@@ -1,19 +1,13 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
+import { useRouter } from 'next/router';
 import { Button } from './common/Button';
 import type { MovieItem } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
 
 interface FeaturedMovieProps {
   movie: MovieItem;
 }
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  const handleDetailClick = async () => {
-    const movieDetail = await moviesApi.getDetail(movie.id);
-    await openMovieDetailModal(movieDetail.data);
-  };
+  const router = useRouter();
 
   return (
     <div className="top-rated-movie">
@@ -24,7 +18,11 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
         </span>
       </div>
       <h1 className="text-3xl font-semibold">{movie.title}</h1>
-      <Button variant="primary" onClick={handleDetailClick} className="detail">
+      <Button
+        variant="primary"
+        className="detail"
+        onClick={() => void router.push(`/detail/${movie.id}`)}
+      >
         자세히 보기
       </Button>
     </div>
