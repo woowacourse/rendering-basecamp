@@ -1,9 +1,11 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { MovieHome } from '../components/MovieHome';
+import { MovieDetailModalLoader } from '../components/MovieDetailModalLoader';
 import { getFeaturedBackgroundUrl } from '../components/Header';
 import { moviesApi } from '../api/movies';
 import { getOrigin } from '../utils/url';
+import { useMovieDetailRoute } from '../hooks/useMovieDetailRoute';
 import type { MovieItem } from '../types/Movie.types';
 
 interface MovieHomePageProps {
@@ -32,6 +34,7 @@ export const getServerSideProps: GetServerSideProps<
 };
 
 export default function MovieHomePage({ movies, origin }: MovieHomePageProps) {
+  const { movieId, closeMovieDetail } = useMovieDetailRoute();
   const featuredMovie = movies[0];
 
   if (!featuredMovie) {
@@ -72,6 +75,10 @@ export default function MovieHomePage({ movies, origin }: MovieHomePageProps) {
         />
       </Head>
       <MovieHome movies={movies} />
+      {/* 홈에서 영화를 열면 주소만 /detail/:id로 바뀌고(shallow), 모달은 URL의 movieId를 기준으로 렌더링한다. */}
+      {movieId !== null && (
+        <MovieDetailModalLoader movieId={movieId} close={closeMovieDetail} />
+      )}
     </>
   );
 }

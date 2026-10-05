@@ -1,11 +1,11 @@
 import { isAxiosError } from 'axios';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
 import { MovieHome } from '../../components/MovieHome';
 import { MovieDetailModal } from '../../components/MovieDetailModal';
 import { moviesApi } from '../../api/movies';
 import { getOrigin } from '../../utils/url';
+import { useMovieDetailRoute } from '../../hooks/useMovieDetailRoute';
 import type { MovieItem } from '../../types/Movie.types';
 import type { MovieDetailResponse } from '../../types/MovieDetail.types';
 
@@ -76,8 +76,7 @@ export default function MovieDetailPage({
   pageUrl,
   origin,
 }: MovieDetailPageProps) {
-  // 모달을 서버에서부터 렌더링해 영화 정보가 초기 HTML에 포함되도록 한다.
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const { closeMovieDetail } = useMovieDetailRoute();
 
   return (
     <>
@@ -87,12 +86,9 @@ export default function MovieDetailPage({
         origin={origin}
       />
       <MovieHome movies={movies} />
-      {isModalOpen && (
-        <MovieDetailModal
-          movie={movieDetail}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
+      {/* 모달을 서버에서부터 렌더링해 영화 정보가 초기 HTML에 포함되도록 한다.
+          닫으면 주소를 홈으로 바꿔, 모달이 열려 있는지를 URL 하나로만 판단한다. */}
+      <MovieDetailModal movie={movieDetail} onClose={closeMovieDetail} />
     </>
   );
 }
