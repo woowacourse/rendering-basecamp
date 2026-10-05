@@ -3,7 +3,15 @@ import { MovieItem } from "../types/Movie.types";
 import { IconButton } from "./common/IconButton";
 import { FeaturedMovie } from "./FeaturedMovie";
 
-export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
+interface HeaderProps {
+  featuredMovie: MovieItem;
+  preloadBackground?: boolean;
+}
+
+export const Header = ({
+  featuredMovie,
+  preloadBackground = false,
+}: HeaderProps) => {
   const backgroundImageUrl = featuredMovie
     ? `https://image.tmdb.org/t/p/w1000_and_h450_multi_faces${featuredMovie.poster_path}`
     : null;
@@ -15,7 +23,7 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
   return (
     <header>
       {/* background-image는 HTML 단계에서 미리 요청 */}
-      {backgroundImageUrl && (
+      {preloadBackground && backgroundImageUrl && (
         <Head>
           <link
             rel="preload"

@@ -47,7 +47,7 @@ export default function MovieHomePage({ movies, pageUrl }: Props) {
         {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <MovieHome movies={movies} />
+      <MovieHome movies={movies} preloadBackground />
     </>
   );
 }
