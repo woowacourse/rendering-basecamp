@@ -9,6 +9,7 @@ import type { MovieDetailResponse } from "@/types/MovieDetail.types";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { MovieItem } from "@/types/Movie.types";
+import axios from "axios";
 
 interface Props {
   movie: MovieDetailResponse;
@@ -21,13 +22,21 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) 
     return { notFound: true };
   }
 
-  const { data: movie } = await moviesApi.getDetail(movieId);
+  try {
+    const { data: movie } = await moviesApi.getDetail(movieId);
 
-  return {
-    props: {
-      movie,
-    },
-  };
+    return {
+      props: {
+        movie,
+      },
+    };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return { notFound: true };
+    }
+
+    throw error;
+  }
 };
 
 export default function MovieDetailPage({ movie }: Props) {
