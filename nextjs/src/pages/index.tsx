@@ -1,6 +1,7 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { MovieHome } from '../components/MovieHome';
+import { getFeaturedBackgroundUrl } from '../components/Header';
 import { moviesApi } from '../api/movies';
 import { getOrigin } from '../utils/url';
 import type { MovieItem } from '../types/Movie.types';
@@ -45,6 +46,16 @@ export default function MovieHomePage({ movies, origin }: MovieHomePageProps) {
         <meta property="og:url" content={`${origin}/`} />
         {imageUrl && <meta property="og:image" content={imageUrl} />}
         <meta name="twitter:card" content="summary_large_image" />
+        {/* LCP 이미지인 CSS 배경은 preload scanner가 발견하지 못하므로 head에서 미리 요청한다.
+            배경이 모달에 가려지는 상세 페이지에서는 모달 이미지와 경쟁하지 않도록 홈에서만 preload한다. */}
+        {featuredMovie && (
+          <link
+            rel="preload"
+            as="image"
+            href={getFeaturedBackgroundUrl(featuredMovie)}
+            fetchPriority="high"
+          />
+        )}
       </Head>
       <MovieHome movies={movies} />
     </>
