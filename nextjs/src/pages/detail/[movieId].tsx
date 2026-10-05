@@ -1,7 +1,7 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
-import { MovieHome } from '../index';
+import { MovieHome } from '../../components/MovieHome';
 import { MovieDetailModal } from '../../components/MovieDetailModal';
 import { moviesApi } from '../../api/movies';
 import { getOrigin } from '../../utils/url';
