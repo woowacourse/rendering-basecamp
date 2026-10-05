@@ -1,20 +1,36 @@
-import { MovieItem } from '../types/Movie.types';
-import { IconButton } from './common/IconButton';
-import { FeaturedMovie } from './FeaturedMovie';
+import Head from "next/head";
+import { MovieItem } from "../types/Movie.types";
+import { IconButton } from "./common/IconButton";
+import { FeaturedMovie } from "./FeaturedMovie";
 
 export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
+  const backgroundImageUrl = featuredMovie
+    ? `https://image.tmdb.org/t/p/w1000_and_h450_multi_faces${featuredMovie.poster_path}`
+    : null;
+
   const handleLogoClick = () => {
     window.location.reload();
   };
 
   return (
     <header>
+      {/* background-image는 HTML 단계에서 미리 요청 */}
+      {backgroundImageUrl && (
+        <Head>
+          <link
+            rel="preload"
+            as="image"
+            href={backgroundImageUrl}
+            fetchPriority="high"
+          />
+        </Head>
+      )}
       <div
         className={`background-container`}
         style={
-          featuredMovie && {
-            backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path})`,
-          }
+          backgroundImageUrl
+            ? { backgroundImage: `url(${backgroundImageUrl})` }
+            : undefined
         }
       >
         <div className="overlay" />
