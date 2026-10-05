@@ -1,13 +1,16 @@
 import { useMovieDetailModal } from '../../hooks/useMovieDetailModal';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
-import MovieHomePage from '../index';
+import MovieHomePage, { getServerSideProps } from '../index';
 import { moviesApi } from '../../api/movies';
+import type { MovieItem } from '../../types/Movie.types';
 
-export default function MovieDetailPage() {
+export { getServerSideProps };
+
+export default function MovieDetailPage({ movies }: { movies: MovieItem[] }) {
   return (
     <>
-      <MovieHomePage />
+      <MovieHomePage movies={movies} />
       <DetailPageOpenModal />
     </>
   );
