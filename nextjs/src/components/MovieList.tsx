@@ -1,25 +1,23 @@
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { MovieItem } from './MovieItem';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
 
 export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
-  const router = useRouter();
-
-  const handleMovieClick = (movie: MovieItemType) => {
-    void router.push(`/detail/${movie.id}`);
-  };
-
   return (
     <main>
       <section className="container">
         <h2 className="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
         <ul className="thumbnail-list">
           {movies.map(movie => (
-            <MovieItem
-              key={movie.id}
-              movie={movie}
-              onClick={handleMovieClick}
-            />
+            <li key={movie.id} className="movie-item" data-index={movie.id}>
+              <Link
+                href={`/detail/${movie.id}`}
+                scroll={false}
+                prefetch={false}
+              >
+                <MovieItem movie={movie} />
+              </Link>
+            </li>
           ))}
         </ul>
       </section>
