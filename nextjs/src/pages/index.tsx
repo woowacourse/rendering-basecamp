@@ -15,10 +15,14 @@ const DESCRIPTION = "지금 인기 있는 영화를 확인해 보세요.";
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   req,
 }) => {
-  const response = await moviesApi.getPopular();
+  const movies = await moviesApi
+    .getPopular()
+    .then((response) => response.data.results)
+    .catch(() => []);
+
   return {
     props: {
-      movies: response.data.results,
+      movies,
       pageUrl: `https://${req.headers.host}/`,
     },
   };
