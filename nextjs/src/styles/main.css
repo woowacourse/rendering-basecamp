@@ -1,4 +1,4 @@
-@import './colors.css';
+@import "./colors.css";
 
 * {
   box-sizing: border-box;
@@ -209,6 +209,11 @@ footer.footer p:not(:last-child) {
   justify-content: flex-start;
   gap: 10px;
   cursor: pointer;
+}
+
+.movie-link {
+  display: block;
+  height: 100%;
 }
 
 input:-webkit-autofill {
