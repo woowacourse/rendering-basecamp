@@ -34,24 +34,27 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     return { notFound: true };
   }
 
-  const [popular, detail] = await Promise.all([
+  const [popular, detail] = await Promise.allSettled([
     moviesApi.getPopular(),
     moviesApi.getDetail(id),
-  ]).catch((error) => {
+  ]);
+
+  if (detail.status === "rejected") {
+    const error = detail.reason;
     if (isAxiosError(error) && error.response?.status === 404) {
-      return [null, null] as const;
+      return { notFound: true };
     }
     throw error;
-  });
-
-  if (!popular || !detail) {
-    return { notFound: true };
   }
+
+  // 인기 목록 조회에 실패해도 상세 정보는 보여준다
+  const movies =
+    popular.status === "fulfilled" ? popular.value.data.results : [];
 
   return {
     props: {
-      movies: popular.data.results,
-      movieDetail: detail.data,
+      movies,
+      movieDetail: detail.value.data,
       pageUrl: `https://${req.headers.host}${resolvedUrl}`,
     },
   };
