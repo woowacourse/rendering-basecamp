@@ -23,7 +23,7 @@ export default function MovieDetailPage({
     : null;
 
   const handleClose = () => {
-    void router.push('/');
+    void router.replace('/');
   };
 
   return (
