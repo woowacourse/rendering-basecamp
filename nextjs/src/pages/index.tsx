@@ -2,6 +2,7 @@ import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import { MovieHome } from "../components/MovieHome";
 import { moviesApi } from "../api/movies";
+import { CDN_CACHE_CONTROL } from "../constants/cache";
 import type { MovieItem } from "../types/Movie.types";
 
 interface Props {
@@ -14,11 +15,17 @@ const DESCRIPTION = "지금 인기 있는 영화를 확인해 보세요.";
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   req,
+  res,
 }) => {
   const movies = await moviesApi
     .getPopular()
     .then((response) => response.data.results)
     .catch(() => []);
+
+  // 조회 실패로 빈 목록일 때는 캐싱하지 않는다
+  if (movies.length > 0) {
+    res.setHeader("Cache-Control", CDN_CACHE_CONTROL);
+  }
 
   return {
     props: {

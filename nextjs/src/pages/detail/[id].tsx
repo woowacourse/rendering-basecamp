@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { MovieHome } from "../../components/MovieHome";
 import { moviesApi } from "../../api/movies";
+import { CDN_CACHE_CONTROL } from "../../constants/cache";
 import { MovieDetailModal } from "../../components/MovieDetailModal";
 import type { MovieItem } from "../../types/Movie.types";
 import type { MovieDetailResponse } from "../../types/MovieDetail.types";
@@ -26,6 +27,7 @@ const getOgImageUrl = (movie: MovieDetailResponse) => {
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   req,
+  res,
   resolvedUrl,
 }) => {
   const id = Number(params?.id);
@@ -50,6 +52,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   // 인기 목록 조회에 실패해도 상세 정보는 보여준다
   const movies =
     popular.status === "fulfilled" ? popular.value.data.results : [];
+
+  if (popular.status === "fulfilled") {
+    res.setHeader("Cache-Control", CDN_CACHE_CONTROL);
+  }
 
   return {
     props: {
