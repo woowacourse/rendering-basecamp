@@ -6,12 +6,12 @@ import MovieHomePage from "@/views/MovieHomePage";
 
 import type { GetServerSideProps } from "next";
 import type { MovieDetailResponse } from "@/types/MovieDetail.types";
-import type { MovieItem } from "@/types/Movie.types";
 import Head from "next/head";
+import { useEffect, useState } from "react";
+import { MovieItem } from "@/types/Movie.types";
 
 interface Props {
   movie: MovieDetailResponse;
-  movies: MovieItem[];
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) => {
@@ -21,24 +21,33 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) 
     return { notFound: true };
   }
 
-  const [{ data: movie }, { data: popularMovies }] = await Promise.all([
-    moviesApi.getDetail(movieId),
-    moviesApi.getPopular(),
-  ]);
+  const { data: movie } = await moviesApi.getDetail(movieId);
 
   return {
     props: {
       movie,
-      movies: popularMovies.results,
     },
   };
 };
 
-export default function MovieDetailPage({ movie, movies }: Props) {
+export default function MovieDetailPage({ movie }: Props) {
   const router = useRouter();
+  const [popularMovies, setPopularMovies] = useState<MovieItem[]>([]);
 
   const imagePath = movie.backdrop_path ?? movie.poster_path;
   const ogImage = imagePath ? `https://image.tmdb.org/t/p/w1280${imagePath}` : undefined;
+
+  useEffect(() => {
+    const fetchPopularMovies = async () => {
+      try {
+        const { data } = await moviesApi.getPopular();
+        setPopularMovies(data.results);
+      } catch {
+        setPopularMovies([]);
+      }
+    };
+    void fetchPopularMovies();
+  }, []);
 
   return (
     <>
@@ -51,7 +60,7 @@ export default function MovieDetailPage({ movie, movies }: Props) {
         <meta property="og:description" content={movie.overview} />
         {ogImage && <meta property="og:image" content={ogImage} />}
       </Head>
-      <MovieHomePage movies={movies} />
+      {popularMovies.length > 0 && <MovieHomePage movies={popularMovies} />}{" "}
       <MovieDetailModal movie={movie} onClose={() => void router.push("/")} />
     </>
   );
