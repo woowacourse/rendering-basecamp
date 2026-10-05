@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
     env: {
         SITE_URL,
     },
+    // next/image로 TMDB 이미지를 최적화하기 위해 외부 도메인 허용
+    images: {
+        remotePatterns: [{ protocol: 'https', hostname: 'image.tmdb.org', pathname: '/t/p/**' }],
+    },
 };
 
 export default nextConfig;

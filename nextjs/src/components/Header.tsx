@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { MovieItem } from '../types/Movie.types';
 import { IconButton } from './common/IconButton';
 import { FeaturedMovie } from './FeaturedMovie';
@@ -9,14 +10,20 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
 
   return (
     <header>
-      <div
-        className={`background-container`}
-        style={
-          featuredMovie && {
-            backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path})`,
-          }
-        }
-      >
+      <div className="background-container">
+        {/* LCP 요소: CSS background 대신 img로 렌더링해 preload scanner가 바로 발견하게 하고,
+            priority로 <link rel="preload"> + eager 로딩, fetchPriority로 다운로드 우선순위를 높임 */}
+        {featuredMovie?.poster_path && (
+          <Image
+            src={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${featuredMovie.poster_path}`}
+            alt=""
+            fill
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+            style={{ objectFit: 'cover', objectPosition: 'center' }}
+          />
+        )}
         <div className="overlay" />
 
         <div className="top-rated-container">

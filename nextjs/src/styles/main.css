@@ -76,9 +76,6 @@ a.primary {
 
 .background-container {
   position: relative;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   height: 500px;
   padding: 48px;
 }
