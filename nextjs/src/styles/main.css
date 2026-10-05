@@ -374,3 +374,25 @@ input:-webkit-autofill {
 .fade-out {
   opacity: 0;
 }
+
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 60vh;
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.error-state-description {
+  color: var(--color-gray-300);
+  line-height: 1.5;
+}
+
+.error-state-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
