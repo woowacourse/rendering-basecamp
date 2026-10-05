@@ -1,11 +1,14 @@
 import { moviesApi } from '@/api/movies';
+import { MovieDetailModalLoader } from '@/components/MovieDetailModalLoader';
 import MovieHomePage from '@/components/MovieHomePage';
 import { SeoHead } from '@/components/SeoHead';
 import { SITE } from '@/constants/site';
+import { closeMovieDetailModal, useShallowHistoryOnHome } from '@/lib/movieModalRoute';
 import { createServerTiming } from '@/lib/serverTiming';
 import type { MovieItem } from '@/types/Movie.types';
 import { getMovieOgImage } from '@/utils/ogImage';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import { useRouter } from 'next/router';
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
     const timing = createServerTiming();
@@ -27,7 +30,13 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 };
 
 export default function Home({ movies }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+    const router = useRouter();
+    useShallowHistoryOnHome();
     const featuredMovie = movies[0] ?? { title: SITE.NAME, backdrop_path: null, poster_path: null };
+
+    // 사이트 안에서 영화를 클릭하면 shallow 라우팅으로 ?movieId만 바뀐다(주소창은 /detail/:id)
+    const selectedMovieId = Number(router.query.movieId);
+    const isModalOpen = Number.isInteger(selectedMovieId) && selectedMovieId > 0;
 
     return (
         <>
@@ -38,6 +47,10 @@ export default function Home({ movies }: InferGetServerSidePropsType<typeof getS
                 image={getMovieOgImage(featuredMovie)}
             />
             <MovieHomePage movies={movies} />
+            {isModalOpen && (
+                // 목록은 이미 props로 있으니 상세 정보만 브라우저에서 가져온다
+                <MovieDetailModalLoader key={selectedMovieId} movieId={selectedMovieId} close={closeMovieDetailModal} />
+            )}
         </>
     );
 }

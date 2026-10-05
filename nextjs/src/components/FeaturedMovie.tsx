@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getMovieDetailLinkProps } from '../lib/movieModalRoute';
 import type { MovieItem } from '../types/Movie.types';
 
 interface FeaturedMovieProps {
@@ -13,7 +14,7 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
                 <span className="text-2xl font-semibold text-yellow">{movie.vote_average}</span>
             </div>
             <h1 className="text-3xl font-semibold">{movie.title}</h1>
-            <Link href={`/detail/${movie.id}`} scroll={false} className="primary detail">
+            <Link {...getMovieDetailLinkProps(movie.id)} className="primary detail">
                 자세히 보기
             </Link>
         </div>

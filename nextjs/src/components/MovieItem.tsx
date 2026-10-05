@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getMovieDetailLinkProps } from '../lib/movieModalRoute';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
 
 interface MovieItemProps {
@@ -15,7 +16,7 @@ export const MovieItem = ({ movie, ref }: MovieItemProps) => {
 
   return (
     <li ref={ref} className="movie-item" data-index={movie.id}>
-      <Link href={`/detail/${movie.id}`} scroll={false} className="item">
+      <Link {...getMovieDetailLinkProps(movie.id)} className="item">
         <img className="thumbnail" src={imageUrl} alt={title} loading="lazy" />
         <div className="item-desc">
           <p className="rate">

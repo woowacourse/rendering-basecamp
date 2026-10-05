@@ -13,8 +13,15 @@ export const MovieDetailModalLoader = ({
 }: MovieDetailModalLoaderProps) => {
   const { data: movie, isLoading, error } = useMovieDetail(movieId);
 
-  if (isLoading) {
-    return <Loading />;
+  // 첫 렌더(요청 시작 전)에는 data/error가 모두 없으므로 로딩으로 취급
+  if (isLoading || (movie == null && error == null)) {
+    return (
+      <div className="modal-background active">
+        <div className="modal">
+          <Loading />
+        </div>
+      </div>
+    );
   }
 
   if (error) {
