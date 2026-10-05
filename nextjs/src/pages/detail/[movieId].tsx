@@ -1,19 +1,12 @@
-import type { GetServerSideProps } from 'next';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { moviesApi } from '../../api/movies';
 import { MovieDetailModal } from '../../components/MovieDetailModal';
-import type { MovieItem } from '../../types/Movie.types';
-import type { MovieDetailResponse } from '../../types/MovieDetail.types';
 import MovieHomePage from '../index';
 
-type DetailProps = {
-  movies: MovieItem[];
-  movie: MovieDetailResponse;
-};
-
-export const getServerSideProps: GetServerSideProps<DetailProps> = async ({ params }) => {
+export const getServerSideProps = (async ({ params }) => {
   const movieId = Number(params?.movieId);
 
   if (!Number.isInteger(movieId) || movieId <= 0) {
@@ -31,9 +24,12 @@ export const getServerSideProps: GetServerSideProps<DetailProps> = async ({ para
       movie: detailResponse.data,
     },
   };
-};
+}) satisfies GetServerSideProps;
 
-export default function MovieDetailPage({ movies, movie }: DetailProps) {
+export default function MovieDetailPage({
+  movies,
+  movie,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
   return (

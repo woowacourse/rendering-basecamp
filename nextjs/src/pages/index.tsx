@@ -1,17 +1,12 @@
-import type { GetServerSideProps } from 'next';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 
 import { moviesApi } from '../api/movies';
 import { Header } from '../components/Header';
 import { MovieList } from '../components/MovieList';
 import { Footer } from '../components/Footer';
-import type { MovieItem } from '../types/Movie.types';
 
-type HomeProps = {
-  movies: MovieItem[];
-};
-
-export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+export const getServerSideProps = (async () => {
   const response = await moviesApi.getPopular();
 
   return {
@@ -19,9 +14,11 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
       movies: response.data.results,
     },
   };
-};
+}) satisfies GetServerSideProps;
 
-export default function Home({ movies }: HomeProps) {
+export default function Home({
+  movies,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (movies.length === 0) {
     return <div>영화 정보를 불러오는데 실패했습니다.</div>;
   }
