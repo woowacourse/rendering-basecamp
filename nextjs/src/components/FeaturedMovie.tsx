@@ -1,5 +1,4 @@
-import { useRouter } from 'next/router';
-import { Button } from './common/Button';
+import Link from 'next/link';
 import type { MovieItem } from '../types/Movie.types';
 
 interface FeaturedMovieProps {
@@ -7,12 +6,6 @@ interface FeaturedMovieProps {
 }
 
 export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
-  const router = useRouter();
-
-  const handleDetailClick = () => {
-    router.push(`/detail/${movie.id}`, undefined, { scroll: false });
-  };
-
   return (
     <div className="top-rated-movie">
       <div className="rate">
@@ -22,9 +15,13 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
         </span>
       </div>
       <h1 className="text-3xl font-semibold">{movie.title}</h1>
-      <Button variant="primary" onClick={handleDetailClick} className="detail">
+      <Link
+        href={`/detail/${movie.id}`}
+        scroll={false}
+        className="primary detail"
+      >
         자세히 보기
-      </Button>
+      </Link>
     </div>
   );
 };

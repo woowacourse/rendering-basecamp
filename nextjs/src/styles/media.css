@@ -163,7 +163,8 @@
     align-items: center;
   }
 
-  button.primary {
+  button.primary,
+  a.primary {
     padding: 2px 10px;
   }
 }
