@@ -8,7 +8,7 @@ export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
 
   const handleMovieClick = async (movie: MovieItemType) => {
     const movieDetail = await moviesApi.getDetail(movie.id);
-    await openMovieDetailModal(movieDetail.data);
+    openMovieDetailModal(movieDetail.data);
   };
 
   return (
