@@ -48,3 +48,8 @@ export interface MovieDetailResponse {
   vote_average: number;
   vote_count: number;
 }
+
+export type MovieDetailPageData = Pick<
+  MovieDetailResponse,
+  "id" | "title" | "genres" | "overview" | "vote_average" | "poster_path" | "backdrop_path"
+>;

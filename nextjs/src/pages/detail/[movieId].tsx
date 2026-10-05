@@ -5,14 +5,14 @@ import { MovieDetailModal } from "@/components/MovieDetailModal";
 import MovieHomePage from "@/views/MovieHomePage";
 
 import type { GetServerSideProps } from "next";
-import type { MovieDetailResponse } from "@/types/MovieDetail.types";
+import type { MovieDetailPageData } from "@/types/MovieDetail.types";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { MovieItem } from "@/types/Movie.types";
 import axios from "axios";
 
 interface Props {
-  movie: MovieDetailResponse;
+  movie: MovieDetailPageData;
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) => {
@@ -23,8 +23,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) 
   }
 
   try {
-    const { data: movie } = await moviesApi.getDetail(movieId);
-
+    const { data } = await moviesApi.getDetail(movieId);
+    const movie: MovieDetailPageData = {
+      id: data.id,
+      title: data.title,
+      genres: data.genres,
+      overview: data.overview,
+      vote_average: data.vote_average,
+      poster_path: data.poster_path,
+      backdrop_path: data.backdrop_path,
+    };
     return {
       props: {
         movie,
