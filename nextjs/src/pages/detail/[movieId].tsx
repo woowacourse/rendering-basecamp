@@ -12,6 +12,7 @@ interface MovieDetailPageProps {
   movies: MovieItem[];
   movieDetail: MovieDetailResponse;
   pageUrl: string;
+  origin: string;
 }
 
 export const getServerSideProps: GetServerSideProps<
@@ -33,6 +34,8 @@ export const getServerSideProps: GetServerSideProps<
     return { notFound: true };
   }
 
+  const origin = getOrigin(req);
+
   return {
     props: {
       movies:
@@ -40,7 +43,8 @@ export const getServerSideProps: GetServerSideProps<
           ? popularResult.value.data.results
           : [],
       movieDetail: detailResult.value.data,
-      pageUrl: `${getOrigin(req)}/detail/${movieId}`,
+      pageUrl: `${origin}/detail/${movieId}`,
+      origin,
     },
   };
 };
@@ -49,13 +53,18 @@ export default function MovieDetailPage({
   movies,
   movieDetail,
   pageUrl,
+  origin,
 }: MovieDetailPageProps) {
   // 모달을 서버에서부터 렌더링해 영화 정보가 초기 HTML에 포함되도록 한다.
   const [isModalOpen, setIsModalOpen] = useState(true);
 
   return (
     <>
-      <MovieDetailHead movieDetail={movieDetail} pageUrl={pageUrl} />
+      <MovieDetailHead
+        movieDetail={movieDetail}
+        pageUrl={pageUrl}
+        origin={origin}
+      />
       <MovieHome movies={movies} />
       {isModalOpen && (
         <MovieDetailModal
@@ -70,9 +79,11 @@ export default function MovieDetailPage({
 function MovieDetailHead({
   movieDetail,
   pageUrl,
+  origin,
 }: {
   movieDetail: MovieDetailResponse;
   pageUrl: string;
+  origin: string;
 }) {
   const {
     title,
@@ -85,11 +96,13 @@ function MovieDetailHead({
     vote_count,
   } = movieDetail;
   const description = overview || `${title}의 상세 정보를 확인해보세요.`;
+  // backdrop → poster 순으로 사용하고, 둘 다 없으면 기본 이미지로 대체한다.
+  // OG 이미지는 절대 URL이어야 하므로 기본 이미지에도 origin을 붙인다.
   const imageUrl = backdrop_path
     ? `https://image.tmdb.org/t/p/w1280${backdrop_path}`
     : poster_path
       ? `https://image.tmdb.org/t/p/w500${poster_path}`
-      : null;
+      : `${origin}/images/no_image.png`;
 
   // 검색엔진이 영화 정보로 인식할 수 있도록 schema.org Movie 구조화 데이터를 제공한다.
   const structuredData = {
@@ -98,7 +111,7 @@ function MovieDetailHead({
     name: title,
     description,
     url: pageUrl,
-    ...(imageUrl && { image: imageUrl }),
+    image: imageUrl,
     ...(release_date && { datePublished: release_date }),
     genre: genres.map(genre => genre.name),
     ...(vote_count > 0 && {
@@ -120,7 +133,7 @@ function MovieDetailHead({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={pageUrl} />
-      {imageUrl && <meta property="og:image" content={imageUrl} />}
+      <meta property="og:image" content={imageUrl} />
       <meta name="twitter:card" content="summary_large_image" />
       <script
         type="application/ld+json"
