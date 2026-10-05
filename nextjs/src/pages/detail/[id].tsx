@@ -49,7 +49,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     throw error;
   }
 
-  // 인기 목록 조회에 실패해도 상세 정보는 보여준다
   const movies =
     popular.status === "fulfilled" ? popular.value.data.results : [];
 

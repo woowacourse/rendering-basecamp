@@ -22,7 +22,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     .then((response) => response.data.results)
     .catch(() => []);
 
-  // 조회 실패로 빈 목록일 때는 캐싱하지 않는다
   if (movies.length > 0) {
     res.setHeader("Cache-Control", CDN_CACHE_CONTROL);
   }
