@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { MovieItem } from '../types/Movie.types';
 import { IconButton } from './common/IconButton';
 import { FeaturedMovie } from './FeaturedMovie';
@@ -7,14 +8,29 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
     window.location.reload();
   };
 
+  const backgroundImageUrl = featuredMovie
+    ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path}`
+    : null;
+
   return (
     <header>
+      {/* LCP 이미지인 CSS 배경은 preload scanner가 발견하지 못하므로 head에서 미리 요청 */}
+      {backgroundImageUrl && (
+        <Head>
+          <link
+            rel="preload"
+            as="image"
+            href={backgroundImageUrl}
+            fetchPriority="high"
+          />
+        </Head>
+      )}
       <div
         className={`background-container`}
         style={
-          featuredMovie && {
-            backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path})`,
-          }
+          backgroundImageUrl
+            ? { backgroundImage: `url(${backgroundImageUrl})` }
+            : undefined
         }
       >
         <div className="overlay" />
