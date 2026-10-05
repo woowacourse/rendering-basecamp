@@ -32,20 +32,22 @@ export const getServerSideProps = (async ({ params, req }) => {
     return { notFound: true };
   }
 
-  let movie: MovieDetailResponse;
+  const [detailResponse, popularResponse] = await Promise.all([
+    moviesApi.getDetail(movieId).catch((error: unknown) => {
+      if (isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
 
-  try {
-    const response = await moviesApi.getDetail(movieId);
-    movie = response.data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response?.status === 404) {
-      return { notFound: true };
-    }
+      throw error;
+    }),
+    moviesApi.getPopular(),
+  ]);
 
-    throw error;
+  if (!detailResponse) {
+    return { notFound: true };
   }
 
-  const response = await moviesApi.getPopular();
+  const movie = detailResponse.data;
   const protocol = req.headers["x-forwarded-proto"] === "https" ? "https" : "http";
   const host = req.headers.host ?? "localhost:3000";
   const pageUrl = `${protocol}://${host}/detail/${movie.id}`;
@@ -53,7 +55,7 @@ export const getServerSideProps = (async ({ params, req }) => {
   return {
     props: {
       movie,
-      movies: response.data.results,
+      movies: popularResponse.data.results,
       pageUrl,
     },
   };
