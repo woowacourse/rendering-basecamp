@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -29,10 +30,23 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 }) => {
   const id = Number(params?.id);
 
+  if (!Number.isInteger(id) || id <= 0) {
+    return { notFound: true };
+  }
+
   const [popular, detail] = await Promise.all([
     moviesApi.getPopular(),
     moviesApi.getDetail(id),
-  ]);
+  ]).catch((error) => {
+    if (isAxiosError(error) && error.response?.status === 404) {
+      return [null, null] as const;
+    }
+    throw error;
+  });
+
+  if (!popular || !detail) {
+    return { notFound: true };
+  }
 
   return {
     props: {
