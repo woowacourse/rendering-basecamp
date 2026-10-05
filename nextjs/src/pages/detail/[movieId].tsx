@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
@@ -31,7 +32,27 @@ export const getServerSideProps: GetServerSideProps<
   ]);
 
   if (detailResult.status === 'rejected') {
-    return { notFound: true };
+    // TMDB가 404를 준 경우에만 "없는 영화"로 응답한다.
+    // 장애나 토큰 만료처럼 일시적인 실패를 404로 응답하면 크롤러가 멀쩡한 페이지를 색인에서 제외할 수 있다.
+    if (
+      isAxiosError(detailResult.reason) &&
+      detailResult.reason.response?.status === 404
+    ) {
+      return { notFound: true };
+    }
+    console.error(
+      `[detail/${movieId}] 영화 상세 조회 실패`,
+      detailResult.reason
+    );
+    throw detailResult.reason;
+  }
+
+  if (popularResult.status === 'rejected') {
+    // 배경 목록은 없어도 상세 정보는 보여줄 수 있으므로 로그만 남긴다.
+    console.error(
+      `[detail/${movieId}] 인기 영화 목록 조회 실패`,
+      popularResult.reason
+    );
   }
 
   const origin = getOrigin(req);

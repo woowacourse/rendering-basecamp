@@ -17,20 +17,36 @@ const SITE_DESCRIPTION =
 
 export const getServerSideProps: GetServerSideProps<
   MovieHomePageProps
-> = async ({ req }) => {
+> = async ({ req, res }) => {
   const origin = getOrigin(req);
 
   try {
     const response = await moviesApi.getPopular();
     return { props: { movies: response.data.results, origin } };
-  } catch {
+  } catch (error) {
+    // 실패 화면이 정상 페이지(200)로 색인되지 않도록 일시적 장애를 뜻하는 503으로 응답한다.
+    console.error('[home] 인기 영화 목록 조회 실패', error);
+    res.statusCode = 503;
     return { props: { movies: [], origin } };
   }
 };
 
 export default function MovieHomePage({ movies, origin }: MovieHomePageProps) {
   const featuredMovie = movies[0];
-  const imageUrl = featuredMovie?.backdrop_path
+
+  if (!featuredMovie) {
+    return (
+      <>
+        <Head>
+          <title>{SITE_TITLE}</title>
+          <meta name="robots" content="noindex" />
+        </Head>
+        <MovieHome movies={movies} />
+      </>
+    );
+  }
+
+  const imageUrl = featuredMovie.backdrop_path
     ? `https://image.tmdb.org/t/p/w1280${featuredMovie.backdrop_path}`
     : null;
 
@@ -48,14 +64,12 @@ export default function MovieHomePage({ movies, origin }: MovieHomePageProps) {
         <meta name="twitter:card" content="summary_large_image" />
         {/* LCP 이미지인 CSS 배경은 preload scanner가 발견하지 못하므로 head에서 미리 요청한다.
             배경이 모달에 가려지는 상세 페이지에서는 모달 이미지와 경쟁하지 않도록 홈에서만 preload한다. */}
-        {featuredMovie && (
-          <link
-            rel="preload"
-            as="image"
-            href={getFeaturedBackgroundUrl(featuredMovie)}
-            fetchPriority="high"
-          />
-        )}
+        <link
+          rel="preload"
+          as="image"
+          href={getFeaturedBackgroundUrl(featuredMovie)}
+          fetchPriority="high"
+        />
       </Head>
       <MovieHome movies={movies} />
     </>
