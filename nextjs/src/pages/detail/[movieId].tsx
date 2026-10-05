@@ -57,19 +57,22 @@ export const getServerSideProps: GetServerSideProps<
     return { notFound: true };
   }
 
-  try {
-    const [popularResponse, detailResponse] = await Promise.all([
-      moviesApi.getPopular(),
-      moviesApi.getDetail(movieId),
-    ]);
+  const [popularResult, detailResult] = await Promise.allSettled([
+    moviesApi.getPopular(),
+    moviesApi.getDetail(movieId),
+  ]);
 
-    return {
-      props: {
-        movies: popularResponse.data.results,
-        movie: detailResponse.data,
-      },
-    };
-  } catch {
+  if (detailResult.status === 'rejected') {
     return { notFound: true };
   }
+
+  return {
+    props: {
+      movies:
+        popularResult.status === 'fulfilled'
+          ? popularResult.value.data.results
+          : [],
+      movie: detailResult.value.data,
+    },
+  };
 };
