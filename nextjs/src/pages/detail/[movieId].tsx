@@ -5,6 +5,8 @@ import { useMovieDetailModal } from "@/hooks/useMovieDetailModal";
 import { MovieHomePage } from "..";
 import { moviesApi } from "../../api/movies";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { notFound } from "next/navigation";
+import axios from "axios";
 
 type Params = {
   movieId: string;
@@ -16,14 +18,23 @@ export async function getServerSideProps(
   context: GetServerSidePropsContext<Params>,
 ) {
   const movieId = Number(context.params!.movieId);
-  const [popularResult, detailResult] = await Promise.all([
-    moviesApi.getPopular(),
-    moviesApi.getDetail(movieId),
-  ]);
 
-  return {
-    props: { movies: popularResult.data.results, detail: detailResult.data },
-  };
+  if (!Number.isSafeInteger(movieId) || movieId <= 0) return { notFound: true };
+
+  try {
+    const [popularResult, detailResult] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(movieId),
+    ]);
+
+    return {
+      props: { movies: popularResult.data.results, detail: detailResult.data },
+    };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404)
+      return { notFound: true };
+    throw error;
+  }
 }
 
 export default function MovieDetailPage({ movies, detail }: Props) {
