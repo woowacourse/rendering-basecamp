@@ -2,7 +2,7 @@ import type { GetServerSideProps } from "next";
 import { moviesApi } from "@/api/movies";
 import type { MovieItem } from "@/types/Movie.types";
 
-const SITE_URL = "https://rendering-basecamp-five.vercel.app";
+const SITE_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 
 function generateSiteMap(movies: MovieItem[]) {
   return `<?xml version="1.0" encoding="UTF-8"?>
