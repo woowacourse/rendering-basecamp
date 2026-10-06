@@ -3,16 +3,18 @@ import Head from "next/head";
 import { moviesApi } from "../api/movies";
 import { MovieItem } from "../types/Movie.types";
 
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { usePopularMovies } from "@/hooks/queries/usePopularMovies";
 
 import HomeView from "../components/HomeView";
 
-export const getServerSideProps = (async () => {
+export const getStaticProps = (async () => {
   const movieDetail = await moviesApi.getPopular();
   const movies: MovieItem[] = movieDetail.data.results;
-  return { props: { movies } };
-}) satisfies GetServerSideProps<{ movies: MovieItem[] }>;
+  return { props: { movies }, revalidate: 60 * 60 * 24 };
+}) satisfies GetStaticProps<{
+  movies: MovieItem[];
+}>;
 
 const APP_NAME = "Movielist";
 
@@ -21,7 +23,7 @@ const siteUrl = `https://${productionDomain}`;
 
 export default function Home({
   movies: initialMovies,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const { data: movies } = usePopularMovies({ initialMovies });
   if (!movies) return;
 
