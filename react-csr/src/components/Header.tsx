@@ -1,8 +1,17 @@
+import { preload } from 'react-dom';
 import { MovieItem } from '../types/Movie.types';
 import { IconButton } from './common/IconButton';
 import { FeaturedMovie } from './FeaturedMovie';
 
 export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
+  const backgroundImageUrl = featuredMovie?.poster_path
+    ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path}`
+    : undefined;
+
+  if (backgroundImageUrl) {
+    preload(backgroundImageUrl, { as: 'image', fetchPriority: 'high' });
+  }
+
   const handleLogoClick = () => {
     window.location.reload();
   };
@@ -12,9 +21,9 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
       <div
         className={`background-container`}
         style={
-          featuredMovie && {
-            backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path})`,
-          }
+          backgroundImageUrl
+            ? { backgroundImage: `url(${backgroundImageUrl})` }
+            : undefined
         }
       >
         <div className="overlay" />
