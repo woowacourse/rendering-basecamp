@@ -13,7 +13,7 @@ const SITE_URL = process.env.SITE_URL ?? "http://localhost:3000";
 const DEFAULT_OG = {
   title: "영화 리뷰",
   description: "지금 인기 있는 영화를 확인하고 별점을 남겨보세요.",
-  image: `${SITE_URL}/images/logo.png`,
+  image: "https://image.tmdb.org/t/p/w1280/stKGOm8UyhuLPR9sZLjs5AkmncA.jpg",
   url: SITE_URL,
 };
 
