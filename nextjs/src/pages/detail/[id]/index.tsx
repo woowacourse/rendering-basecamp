@@ -20,13 +20,16 @@ export const getStaticPaths = async () => ({
 });
 
 export const getStaticProps = (async ({ params }) => {
-  const moviesData = await moviesApi.getPopular();
-  const movies: MovieItem[] = moviesData.data.results;
-
   if (!params) return { notFound: true };
+
   const movieId = params.id;
 
-  const movieDetail = await moviesApi.getDetail(Number(movieId));
+  const [moviesData, movieDetail] = await Promise.all([
+    moviesApi.getPopular(),
+    moviesApi.getDetail(Number(movieId)),
+  ]);
+
+  const movies: MovieItem[] = moviesData.data.results;
 
   return {
     props: {
