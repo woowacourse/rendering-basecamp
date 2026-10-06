@@ -8,7 +8,10 @@ import type { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-const DEFAULT_OG_IMAGE = 'https://rendering-basecamp-bice.vercel.app/images/og_default.png';
+const SITE_URL = process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`
+  : 'http://localhost:3000';
+const DEFAULT_OG_IMAGE = `${SITE_URL}/images/og_default.png`;
 
 interface HomeProps {
   popularMovies: MovieResponse;
