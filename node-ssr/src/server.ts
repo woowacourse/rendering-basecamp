@@ -11,13 +11,10 @@ const PORT = 8080;
 
 app.use(express.json());
 
-app.get('/', async (_req: Request, res: Response) => {
-  const { results } = await moviesApi.getPopular();
-
-  const createMovieListElement = (results: Movie[]) =>
-    results
-      .map(
-        ({ title, poster_path, vote_average }) => /*html*/ `
+const createMovieListElement = (results: Movie[]) =>
+  results
+    .map(
+      ({ title, poster_path, vote_average }) => /*html*/ `
     <li class="movie-item">
       <div class="item">
         <img class="thumbnail"
@@ -37,21 +34,10 @@ app.get('/', async (_req: Request, res: Response) => {
       </div>
     </li>
   `,
-      )
-      .join('');
+    )
+    .join('');
 
-  res.send(/*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="stylesheet" href="/styles/index.css" />
-      <title>영화 리뷰</title>
-    </head>
-
-    <body>
+const createHomeElement = (results: Movie[]) => /*html*/ `
       <div id="wrap">
         <header>
           <div class="background-container"
@@ -83,6 +69,23 @@ app.get('/', async (_req: Request, res: Response) => {
           <p><img src="/images/woowacourse_logo.png" width="180" alt="우아한테크코스" /></p>
         </footer>
       </div>
+`;
+app.get('/', async (_req: Request, res: Response) => {
+  const { results } = await moviesApi.getPopular();
+
+  res.send(/*html*/ `
+    <!DOCTYPE html>
+    <html lang="ko">
+
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" href="/styles/index.css" />
+      <title>영화 리뷰</title>
+    </head>
+
+    <body>
+      ${createHomeElement(results)}
     </body>
 
     </html>
