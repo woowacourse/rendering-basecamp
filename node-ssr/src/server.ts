@@ -90,24 +90,25 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
     const modalHtml = `
       <div class="modal-background active" id="modalBackground">
         <div class="modal">
-          <a href="/">
-            <button class="close-modal" id="closeModal">
-              <img src="/images/modal_button_close.png" />
-            </button>
-          </a>
+          <div class="modal-header">
+            <h2 class="modal-title">${movieDetail.title}</h2>
+            <a href="/" class="modal-close-btn" id="closeModal" aria-label="닫기">
+              <img src="/images/modal_button_close.png" width="24" height="24" alt="" />
+            </a>
+          </div>
           <div class="modal-container">
-            <div class="modal-image">
-              <img src="https://image.tmdb.org/t/p/w500${movieDetail.poster_path}" />
-            </div>
+            <img class="modal-image" src="https://image.tmdb.org/t/p/w500${movieDetail.poster_path}" alt="${movieDetail.title}" />
             <div class="modal-description">
-              <h2>${movieDetail.title}</h2>
-              <p class="category">${releaseYear} · ${genres}</p>
-              <p class="rate">
-                <img src="/images/star_empty.png" class="star" />
-                <span>${movieDetail.vote_average.toFixed(1)}</span>
-              </p>
-              <hr />
-              <p class="detail">${movieDetail.overview}</p>
+              <div class="movie-info-line">
+                <span class="movie-meta">${releaseYear} · ${genres}</span>
+                <div class="movie-rating">
+                  <img src="/images/star_filled.png" width="16" height="16" alt="" />
+                  <span class="rating-value">${movieDetail.vote_average.toFixed(1)}</span>
+                </div>
+              </div>
+              <div class="overview-section">
+                <p class="overview-text">${movieDetail.overview}</p>
+              </div>
             </div>
           </div>
         </div>
