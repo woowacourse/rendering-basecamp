@@ -5,6 +5,9 @@ import path from "path";
 import { moviesApi } from "./service/tmdbApi";
 import { renderLayout, renderMessagePage } from "./views/layout";
 import { renderHome } from "./views/home";
+import { TMDB_IMAGE_URL } from "./views/constants";
+import { renderModal } from "./views/modal";
+import { isAxiosError } from "axios";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 8080;
@@ -23,6 +26,43 @@ app.get("/", async (_req: Request, res: Response) => {
       }),
     );
   } catch {
+    res
+      .status(500)
+      .send(renderMessagePage("영화 정보를 불러오는데 실패했습니다."));
+  }
+});
+
+app.get("/detail/:id", async (req: Request, res: Response) => {
+  const movieId = Number(req.params.id);
+
+  if (!Number.isInteger(movieId) || movieId < 1) {
+    res.status(404).send(renderMessagePage("존재하지 않는 영화입니다."));
+    return;
+  }
+
+  try {
+    const [{ results: movies }, movie] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(movieId),
+    ]);
+
+    res.send(
+      renderLayout({
+        title: `${movie.title} - 영화 리뷰`,
+        description: movie.overview || `${movie.title}의 정보를 확인해 보세요.`,
+        ogTitle: movie.title,
+        ogImage: movie.poster_path
+          ? `${TMDB_IMAGE_URL}/w500${movie.poster_path}`
+          : undefined,
+        body: renderHome(movies) + renderModal(movie),
+      }),
+    );
+  } catch (error) {
+    if (isAxiosError(error) && error.response?.status === 404) {
+      res.status(404).send(renderMessagePage("존재하지 않는 영화입니다."));
+      return;
+    }
+
     res
       .status(500)
       .send(renderMessagePage("영화 정보를 불러오는데 실패했습니다."));
