@@ -12,7 +12,7 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
 
   const handleDetailClick = async () => {
     const movieDetail = await moviesApi.getDetail(movie.id);
-    await openMovieDetailModal(movieDetail.data);
+    openMovieDetailModal(movieDetail.data);
   };
 
   return (

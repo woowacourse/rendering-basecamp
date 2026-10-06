@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import MovieHomePage from '../index';
 import { moviesApi } from '@/api/movies';
 import { useMovieDetailModal } from '@/hooks/useMovieDetailModal';
@@ -40,13 +40,9 @@ export const getServerSideProps: GetServerSideProps<DetailProps> = async (contex
 
 function DetailPageOpenModal({ movieDetail }: { movieDetail: MovieDetailResponse }) {
   const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
 
   useEffect(() => {
-    if (onceRef.current === true) return;
-    
-    onceRef.current = true;
-    openMovieDetailModal(movieDetail);
+    return openMovieDetailModal(movieDetail);
   }, [movieDetail, openMovieDetailModal]);
 
   return null;
