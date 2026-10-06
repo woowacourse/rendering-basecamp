@@ -1,4 +1,5 @@
 import { escapeHtml } from "../utils/escapeHtml";
+import { INLINE_CSS } from "./styles";
 
 interface LayoutOptions {
   title: string;
@@ -29,7 +30,7 @@ export const renderLayout = ({
     <meta property="og:title" content="${escapeHtml(ogTitle)}" />
     <meta property="og:description" content="${escapeHtml(description)}" />
     ${ogImage ? `<meta property="og:image" content="${escapeHtml(ogImage)}" />` : ""}
-    <link rel="stylesheet" href="/styles/index.css" />
+    <style>${INLINE_CSS}</style>
   </head>
   <body>
     ${body}
