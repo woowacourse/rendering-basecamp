@@ -11,7 +11,7 @@ export const MovieItem = ({ movie }: MovieItemProps) => {
   const imageUrl = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : '/images/no_image.png';
 
   return (
-    <Link href={`/detail/${movie.id}`} scroll={false} className="item">
+    <Link href={`/detail/${movie.id}`} scroll={false} shallow className="item">
       <img className="thumbnail" src={imageUrl} alt={title} loading="lazy" />
       <div className="item-desc">
         <p className="rate">

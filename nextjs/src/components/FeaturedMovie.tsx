@@ -3,11 +3,23 @@ import { Button } from './common/Button';
 import type { MovieItem } from '../types/Movie.types';
 
 interface FeaturedMovieProps {
-  movie: MovieItem;
+  movie?: MovieItem | null;
+  error?: Error | null;
 }
 
-export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
+export const FeaturedMovie = ({ movie, error }: FeaturedMovieProps) => {
   const router = useRouter();
+
+  if (error) {
+    return (
+      <div className="top-rated-movie" role="alert">
+        <h1 className="text-3xl font-semibold">추천 영화를 불러오지 못했습니다.</h1>
+        <p className="text-opacity-blue">{error.message}</p>
+      </div>
+    );
+  }
+
+  if (!movie) return null;
 
   return (
     <div className="top-rated-movie">
@@ -19,7 +31,12 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
       <Button
         variant="primary"
         className="detail"
-        onClick={() => router.push(`/detail/${movie.id}`, undefined, { scroll: false })}
+        onClick={() =>
+          router.push(`/detail/${movie.id}`, undefined, {
+            scroll: false,
+            shallow: true,
+          })
+        }
       >
         자세히 보기
       </Button>

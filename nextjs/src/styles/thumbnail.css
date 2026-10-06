@@ -17,6 +17,10 @@
   border-radius: 8px;
 }
 
+.thumbnail-list .result-container {
+  gap: 8px;
+}
+
 .item {
   user-select: none;
   cursor: pointer;
