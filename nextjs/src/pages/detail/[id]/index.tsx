@@ -1,4 +1,4 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 
 import { moviesApi } from "@/api/movies";
@@ -14,7 +14,12 @@ import { MovieDetailResponse } from "@/types/MovieDetail.types";
 import HomeView from "@/components/HomeView";
 import { useRouter } from "next/router";
 
-export const getServerSideProps = (async ({ params }) => {
+export const getStaticPaths = async () => ({
+  paths: [],
+  fallback: "blocking",
+});
+
+export const getStaticProps = (async ({ params }) => {
   const moviesData = await moviesApi.getPopular();
   const movies: MovieItem[] = moviesData.data.results;
 
@@ -28,8 +33,9 @@ export const getServerSideProps = (async ({ params }) => {
       movies,
       movie: movieDetail.data,
     },
+    revalidate: 60 * 60 * 24,
   };
-}) satisfies GetServerSideProps<{
+}) satisfies GetStaticProps<{
   movies: MovieItem[];
   movie: MovieDetailResponse;
 }>;
@@ -42,7 +48,7 @@ const siteUrl = `https://${productionDomain}`;
 export default function MovieDetail({
   movies: initialMovies,
   movie: initialMovie,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
 
   const { data: movies } = usePopularMovies({ initialMovies });
