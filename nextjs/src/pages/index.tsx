@@ -3,9 +3,7 @@ import type {
   InferGetServerSidePropsType,
 } from "next";
 import { moviesApi } from "../api/movies";
-import { Header } from "../components/Header";
-import { MovieList } from "../components/MovieList";
-import { Footer } from "../components/Footer";
+import { MovieHomeContent } from "../components/MovieHomeContent";
 import type { MovieItem } from "../types/Movie.types";
 
 export const getServerSideProps = (async () => {
@@ -25,11 +23,5 @@ export default function Home({
     return <p>영화 정보가 없습니다.</p>;
   }
 
-  return (
-    <div id="wrap">
-      <Header featuredMovie={movies[0]} />
-      <MovieList movies={movies} />
-      <Footer />
-    </div>
-  );
+  return <MovieHomeContent movies={movies} />;
 }

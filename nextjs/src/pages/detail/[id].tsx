@@ -6,9 +6,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { isAxiosError } from "axios";
 import { moviesApi } from "../../api/movies";
-import { Header } from "../../components/Header";
-import { MovieList } from "../../components/MovieList";
-import { Footer } from "../../components/Footer";
+import { MovieHomeContent } from "../../components/MovieHomeContent";
 import { MovieDetailModal } from "../../components/MovieDetailModal";
 import type { MovieItem } from "../../types/Movie.types";
 import type { MovieDetailResponse } from "../../types/MovieDetail.types";
@@ -97,11 +95,7 @@ export default function MovieDetailPage({
         <meta property="og:type" content="video.movie" key="og-type" />
         <meta property="og:locale" content="ko_KR" key="og-locale" />
       </Head>
-      <div id="wrap">
-        {movies.length > 0 && <Header featuredMovie={movies[0]} />}
-        <MovieList movies={movies} />
-        <Footer />
-      </div>
+      <MovieHomeContent movies={movies} />
       <MovieDetailModal
         key={movie.id}
         movie={movie}
