@@ -12,7 +12,7 @@ import {
 import { moviesApi } from "./service/tmdbApi";
 
 const app = express();
-const PORT = 8080;
+const PORT = Number(process.env.PORT) || 8080;
 
 app.use(express.json());
 
