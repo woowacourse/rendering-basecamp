@@ -15,25 +15,27 @@ const renderHome = (movies: Movie[]) => {
     .map(
       (movie) => /* html */ `
         <li class="movie-item">
-          <div class="item">
-            <img
-              class="thumbnail"
-              src="${
-                movie.poster_path
-                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                  : "/images/no_image.png"
-              }"
-              alt="${movie.title}"
-              loading="lazy"
-            />
-            <div class="item-desc">
-              <p class="rate">
-                <img src="/images/star_empty.png" class="star" alt="" />
-                <span>${movie.vote_average.toFixed(1)}</span>
-              </p>
-              <strong>${movie.title}</strong>
+          <a href="/detail/${movie.id}">
+            <div class="item">
+              <img
+                class="thumbnail"
+                src="${
+                  movie.poster_path
+                    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                    : "/images/no_image.png"
+                }"
+                alt="${movie.title}"
+                loading="lazy"
+              />
+              <div class="item-desc">
+                <p class="rate">
+                  <img src="/images/star_empty.png" class="star" alt="" />
+                  <span>${movie.vote_average.toFixed(1)}</span>
+                </p>
+                <strong>${movie.title}</strong>
+              </div>
             </div>
-          </div>
+          </a>
         </li>
       `,
     )
@@ -112,14 +114,15 @@ const renderModal = (movie: MovieDetail) => {
       <div class="modal">
         <div class="modal-header">
           <h1 class="modal-title">${movie.title}</h1>
-          <button class="modal-close-btn">
+          <a href="/">
             <img
               src="/images/modal_button_close.png"
               width="24"
               height="24"
+              class="modal-close-btn"
               alt="닫기"
             />
-          </button>
+          </a>
         </div>
 
         <div class="modal-container">
