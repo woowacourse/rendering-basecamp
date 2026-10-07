@@ -15,7 +15,7 @@ const createHeaderHtml = (movie: Movie) => {
   const title = movie.title;
   const rating = movie.vote_average.toFixed(1);
 
-  const imagePath = movie.backdrop_path;
+  const imagePath = movie.poster_path;
   const backgroundImageUrl = imagePath
     ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${imagePath}`
     : '/images/no_image.png';
