@@ -20,6 +20,15 @@ app.get("/", async (_req: Request, res: Response) => {
   res.render("index", { movies: data.results });
 });
 
+app.get("/detail/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  const moviesData = await moviesApi.getPopular();
+  const movieDetail = await moviesApi.getDetail(Number(id));
+
+  res.render("detail", { movies: moviesData.results, movie: movieDetail });
+});
+
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
 app.use(express.static(path.join(__dirname, "../public")));
 
