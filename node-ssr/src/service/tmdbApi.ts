@@ -25,7 +25,7 @@ export const moviesApi = {
    */
   getPopular: async (page: number = 1) => {
     const response = await apiClient.get<MovieResponse>(
-      `/movie/popular?page=${page}&language=ko-KR`
+      `/movie/popular?page=${page}&language=ko-KR`,
     );
     return response.data;
   },
@@ -35,7 +35,7 @@ export const moviesApi = {
    */
   getDetail: async (id: number) => {
     const response = await apiClient.get<MovieDetailResponse>(
-      `/movie/${id}?language=ko-KR`
+      `/movie/${id}?language=ko-KR`,
     );
     return response.data;
   },
