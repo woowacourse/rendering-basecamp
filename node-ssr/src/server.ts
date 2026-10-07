@@ -7,7 +7,7 @@ import { moviesApi } from './service/tmdbApi';
 import { renderHome, renderModal } from './service/render';
 
 const app = express();
-const PORT = 8080;
+const PORT = Number(process.env.PORT) || 8080;
 
 app.use(express.json());
 
@@ -28,7 +28,7 @@ app.get('/detail/:id', async (req: Request, res: Response) => {
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
 app.use(express.static(path.join(__dirname, '../public')));
 
-app.listen(PORT, (): void => {
+app.listen(PORT, '0.0.0.0', (): void => {
   console.log(`🌟 서버가 http://localhost:${PORT} 에서 실행 중입니다.`);
 });
 
