@@ -173,7 +173,28 @@ export const renderModal = (movie: MovieDetail) => {
   `;
 };
 
-export const renderHtml = (title: string, body: string) => /* html */ `
+export const renderOpenGraph = ({
+  type,
+  title,
+  description,
+  image,
+}: {
+  type?: "website";
+  title: string;
+  description: string;
+  image?: string;
+}) => /* html */ `
+  ${type ? `<meta property="og:type" content="${type}" />` : ""}
+  <meta property="og:title" content="${title}" />
+  <meta property="og:description" content="${description}" />
+  ${image ? `<meta property="og:image" content="${image}" />` : ""}
+`;
+
+export const renderHtml = (
+  title: string,
+  body: string,
+  head = "",
+) => /* html */ `
   <!DOCTYPE html>
   <html lang="ko">
     <head>
@@ -181,6 +202,7 @@ export const renderHtml = (title: string, body: string) => /* html */ `
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="stylesheet" href="/styles/index.css" />
       <title>${title}</title>
+      ${head}
     </head>
     <body>
       ${body}

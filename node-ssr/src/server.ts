@@ -3,7 +3,12 @@ dotenv.config();
 
 import express, { Request, Response } from "express";
 import path from "path";
-import { renderHome, renderHtml, renderModal } from "./render";
+import {
+  renderHome,
+  renderHtml,
+  renderModal,
+  renderOpenGraph,
+} from "./render";
 import { moviesApi } from "./service/tmdbApi";
 
 const app = express();
@@ -13,7 +18,18 @@ app.use(express.json());
 
 app.get("/", async (_req: Request, res: Response) => {
   const { results: movies } = await moviesApi.getPopular();
-  const html = renderHtml("영화 리뷰", renderHome(movies));
+  const html = renderHtml(
+    "영화 리뷰",
+    renderHome(movies),
+    renderOpenGraph({
+      type: "website",
+      title: "영화 리뷰",
+      description: "인기 영화를 한눈에 확인해보세요.",
+      image: movies[0].poster_path
+        ? `https://image.tmdb.org/t/p/w780${movies[0].poster_path}`
+        : undefined,
+    }),
+  );
 
   res.send(html);
 });
@@ -26,8 +42,15 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
   ]);
 
   const html = renderHtml(
-    movieDetail.title,
+    `${movieDetail.title} - 영화 리뷰`,
     renderHome(movies) + renderModal(movieDetail),
+    renderOpenGraph({
+      title: movieDetail.title,
+      description: movieDetail.overview || "영화 상세 정보",
+      image: movieDetail.poster_path
+        ? `https://image.tmdb.org/t/p/w780${movieDetail.poster_path}`
+        : undefined,
+    }),
   );
 
   res.send(html);
