@@ -3,16 +3,52 @@ dotenv.config();
 
 import express, { Request, Response } from "express";
 import path from "path";
+import { moviesApi } from "./service/tmdbApi";
+import { Movie } from "./service/types";
 
 const app = express();
 const PORT = 8080;
 
-const renderHome = () => /* html */ `
-  <div id="wrap">
+const renderHome = (movies: Movie[]) => {
+  const featuredMovie = movies[0];
+  const movieItems = movies
+    .map(
+      (movie) => /* html */ `
+        <li class="movie-item">
+          <div class="item">
+            <img
+              class="thumbnail"
+              src="${
+                movie.poster_path
+                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                  : "/images/no_image.png"
+              }"
+              alt="${movie.title}"
+              loading="lazy"
+            />
+            <div class="item-desc">
+              <p class="rate">
+                <img src="/images/star_empty.png" class="star" alt="" />
+                <span>${movie.vote_average.toFixed(1)}</span>
+              </p>
+              <strong>${movie.title}</strong>
+            </div>
+          </div>
+        </li>
+      `,
+    )
+    .join("");
+
+  return /* html */ `
+    <div id="wrap">
     <header>
       <div
         class="background-container"
-        style="background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/stKGOm8UyhuLPR9sZLjs5AkmncA.jpg)"
+        style="background-image: url(${
+          featuredMovie.poster_path
+            ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${featuredMovie.poster_path}`
+            : "/images/no_image.png"
+        })"
       >
         <div class="overlay"></div>
         <div class="top-rated-container">
@@ -31,9 +67,11 @@ const renderHome = () => /* html */ `
                 height="32"
                 alt=""
               />
-              <span class="text-2xl font-semibold text-yellow">7.7</span>
+              <span class="text-2xl font-semibold text-yellow">
+                ${featuredMovie.vote_average.toFixed(1)}
+              </span>
             </div>
-            <h1 class="text-3xl font-semibold">인사이드 아웃 2</h1>
+            <h1 class="text-3xl font-semibold">${featuredMovie.title}</h1>
             <button class="primary detail">자세히 보기</button>
           </div>
         </div>
@@ -44,23 +82,7 @@ const renderHome = () => /* html */ `
       <section class="container">
         <h2 class="text-2xl font-bold mb-64">지금 인기 있는 영화</h2>
         <ul class="thumbnail-list">
-          <li class="movie-item">
-            <div class="item">
-              <img
-                class="thumbnail"
-                src="https://media.themoviedb.org/t/p/w440_and_h660_face/pmemGuhr450DK8GiTT44mgwWCP7.jpg"
-                alt="인사이드 아웃 2"
-                loading="lazy"
-              />
-              <div class="item-desc">
-                <p class="rate">
-                  <img src="/images/star_empty.png" class="star" alt="" />
-                  <span>7.7</span>
-                </p>
-                <strong>인사이드 아웃 2</strong>
-              </div>
-            </div>
-          </li>
+          ${movieItems}
         </ul>
       </section>
     </main>
@@ -75,12 +97,15 @@ const renderHome = () => /* html */ `
         />
       </p>
     </footer>
-  </div>
-`;
+    </div>
+  `;
+};
 
 app.use(express.json());
 
-app.get("/", (_req: Request, res: Response) => {
+app.get("/", async (_req: Request, res: Response) => {
+  const { results: movies } = await moviesApi.getPopular();
+
   const html = /* html */ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -91,7 +116,7 @@ app.get("/", (_req: Request, res: Response) => {
         <title>영화 리뷰</title>
       </head>
       <body>
-        ${renderHome()}
+        ${renderHome(movies)}
       </body>
     </html>
   `;
