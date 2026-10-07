@@ -56,21 +56,23 @@
               class="movie-item"
               data-index="<%= movie.id %>"
             >
-              <div class="item">
-                <img
-                  class="thumbnail"
-                  src="<%= movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/images/no_image.png' %>"
-                  alt="<%= movie.title %>"
-                  loading="lazy"
-                />
-                <div class="item-desc">
-                  <p class="rate">
-                    <img src="/images/star_empty.png" class="star" />
-                    <span><%= movie.vote_average.toFixed(1) %></span>
-                  </p>
-                  <strong><%= movie.title %></strong>
+              <a href="/detail/<%= movie.id %>">
+                <div class="item">
+                  <img
+                    class="thumbnail"
+                    src="<%= movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/images/no_image.png' %>"
+                    alt="<%= movie.title %>"
+                    loading="lazy"
+                  />
+                  <div class="item-desc">
+                    <p class="rate">
+                      <img src="/images/star_empty.png" class="star" />
+                      <span><%= movie.vote_average.toFixed(1) %></span>
+                    </p>
+                    <strong><%= movie.title %></strong>
+                  </div>
                 </div>
-              </div>
+              </a>
             </li>
           <% }); %>
         </ul>
