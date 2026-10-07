@@ -11,7 +11,11 @@ export function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-export function renderPage(movies: Movie[], modal: string = ""): string {
+export function renderPage(
+  movies: Movie[],
+  head: string,
+  modal: string = "",
+): string {
   const firstMovie = movies[0];
 
   const bannerPosterUrl = firstMovie?.poster_path
@@ -100,7 +104,7 @@ export function renderPage(movies: Movie[], modal: string = ""): string {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
-        <title>영화 리뷰</title>
+        ${head}
       </head>
       <body>
         <div id="wrap">
@@ -123,10 +127,14 @@ export function renderPage(movies: Movie[], modal: string = ""): string {
 }
 
 export function renderHomePage(movies: Movie[]): string {
-  return renderPage(movies);
+  return renderPage(movies, "<title>영화 리뷰</title>");
 }
 
-export function renderDetailPage(movies: Movie[], movie: MovieDetail): string {
+export function renderDetailPage(
+  movies: Movie[],
+  movie: MovieDetail,
+  siteUrl: string,
+): string {
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : "/images/no_image.png";
@@ -202,5 +210,19 @@ export function renderDetailPage(movies: Movie[], movie: MovieDetail): string {
     </div>
   `;
 
-  return renderPage(movies, modal);
+  const pageUrl = new URL(`/detail/${movie.id}`, siteUrl).href;
+  const imageUrl = new URL(posterUrl, siteUrl).href;
+
+  const head = `
+  <title>${escapeHtml(movie.title)} | 영화 리뷰</title>
+  <meta name="description" content="${escapeHtml(overview)}" />
+
+  <meta property="og:title" content="${escapeHtml(movie.title)}" />
+  <meta property="og:description" content="${escapeHtml(overview)}" />
+  <meta property="og:image" content="${escapeHtml(imageUrl)}" />
+  <meta property="og:url" content="${escapeHtml(pageUrl)}" />
+  <meta property="og:type" content="video.movie" />
+`;
+
+  return renderPage(movies, modal, head);
 }
