@@ -9,6 +9,9 @@ const PORT = 8080;
 
 app.use(express.json());
 
+app.set("view engine", "ejs");
+app.set("views", "./src/views");
+
 app.get("/", async (_req: Request, res: Response) => {
   res.send(/*html*/ `
     <!DOCTYPE html>
