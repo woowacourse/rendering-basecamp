@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express, { Request, Response } from "express";
+import { moviesApi } from "./service/tmdbApi";
+import { renderHomePage } from "./render";
 import path from "path";
 
 const app = express();
@@ -10,7 +12,9 @@ const PORT = 8080;
 app.use(express.json());
 
 app.get("/", async (_req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
+  const popular = await moviesApi.getPopular(1);
+
+  res.send(renderHomePage(popular.results));
 });
 
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
