@@ -2,12 +2,33 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express, { Request, Response } from 'express';
+import { readFileSync } from 'fs';
 import path from 'path';
 import { moviesApi } from './service/tmdbApi';
 import { Movie, MovieDetail } from './service/types';
 
 const app = express();
 const PORT = 8080;
+
+const pageTemplate = readFileSync(
+  path.join(__dirname, '../public/index.html'),
+  'utf-8',
+);
+
+const renderPage = ({
+  headerHtml,
+  mainHtml,
+  modalHtml = '',
+}: {
+  headerHtml: string;
+  mainHtml: string;
+  modalHtml?: string;
+}) => {
+  return pageTemplate
+    .replace('<!-- HEADER -->', () => headerHtml)
+    .replace('<!-- MAIN -->', () => mainHtml)
+    .replace('<!-- MODAL -->', () => modalHtml);
+};
 
 app.use(express.json());
 
@@ -110,23 +131,7 @@ app.get('/', async (_req: Request, res: Response) => {
   const headerHtml = movies[0] ? createHeaderHtml(movies[0]) : '';
   const mainHtml = createMainHtml(movies);
 
-  res.send(/*html*/ `
-    <!DOCTYPE html>
-     <html lang="ko">
-       <head>
-         <meta charset="UTF-8" />
-         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-         <link rel="stylesheet" href="/styles/index.css" />
-         <title>영화 리뷰</title>
-      </head>
-      <body>
-       <div id="wrap">
-        ${headerHtml}
-        ${mainHtml}
-      </div>
-      </body>
-    </html>
-        `);
+  res.send(renderPage({ headerHtml, mainHtml }));
 });
 
 const createModalHtml = (movieDetail: MovieDetail) => {
@@ -195,24 +200,7 @@ app.get('/detail/:id', async (req: Request, res: Response) => {
   const mainHtml = createMainHtml(movies);
   const modalHtml = createModalHtml(movieDetail);
 
-  res.send(/*html*/ `
-    <!DOCTYPE html>
-     <html lang="ko">
-       <head>
-         <meta charset="UTF-8" />
-         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-         <link rel="stylesheet" href="/styles/index.css" />
-         <title>영화 리뷰</title>
-      </head>
-      <body>
-       <div id="wrap">
-          ${headerHtml}
-          ${mainHtml}
-      </div>
-       ${modalHtml}
-      </body>
-    </html>
-        `);
+  res.send(renderPage({ headerHtml, mainHtml, modalHtml }));
 });
 
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
