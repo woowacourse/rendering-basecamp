@@ -19,8 +19,10 @@ app.get('/', async (_req: Request, res: Response) => {
 
 app.get('/detail/:id', async (req: Request, res: Response) => {
   const movieId = Number(req.params.id);
-  const movieDetail = await moviesApi.getDetail(movieId);
-  const { results: movies } = await moviesApi.getPopular();
+  const [movieDetail, { results: movies }] = await Promise.all([
+    moviesApi.getDetail(movieId),
+    moviesApi.getPopular(),
+  ]);
 
   res.send(renderHome(movies, renderModal(movieDetail), movieDetail));
 });
