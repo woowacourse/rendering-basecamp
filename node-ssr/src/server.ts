@@ -9,18 +9,20 @@ const PORT = 8080;
 
 app.use(express.json());
 
-app.get("/", async (_req: Request, res: Response) => {
-  res.send(/*html*/ `
+app.get("/", (_req: Request, res: Response) => {
+  const html = /* html */ `
     <!DOCTYPE html>
     <html lang="ko">
       <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>영화 리뷰</title>
       </head>
-      <body>
-        테스트
-      </body>
+      <body></body>
     </html>
-        `);
+  `;
+
+  res.send(html);
 });
 
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
