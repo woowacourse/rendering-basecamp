@@ -13,17 +13,7 @@ app.set("view engine", "ejs");
 app.set("views", "./src/views");
 
 app.get("/", async (_req: Request, res: Response) => {
-  res.send(/*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <title>영화 리뷰</title>
-      </head>
-      <body>
-        테스트
-      </body>
-    </html>
-        `);
+  res.render("index");
 });
 
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
