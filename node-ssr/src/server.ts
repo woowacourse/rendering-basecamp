@@ -124,6 +124,26 @@ app.get("/", async (_req: Request, res: Response) => {
   res.send(html);
 });
 
+app.get("/detail/:id", (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const html = /* html */ `
+    <!DOCTYPE html>
+    <html lang="ko">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>영화 상세</title>
+      </head>
+      <body>
+        <h1>영화 ID: ${id}</h1>
+      </body>
+    </html>
+  `;
+
+  res.send(html);
+});
+
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
 app.use(express.static(path.join(__dirname, "../public")));
 
