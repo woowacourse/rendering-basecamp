@@ -10,17 +10,7 @@ const PORT = 8080;
 app.use(express.json());
 
 app.get("/", async (_req: Request, res: Response) => {
-  res.send(/*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <title>영화 리뷰</title>
-      </head>
-      <body>
-        테스트
-      </body>
-    </html>
-        `);
+  res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
