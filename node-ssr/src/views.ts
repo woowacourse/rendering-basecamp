@@ -175,7 +175,14 @@ export const renderHomePage = (
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     ${metadataHtml || "<title>영화 리뷰</title>"}
-    <link rel="stylesheet" href="/styles/index.css" />
+    <link rel="stylesheet" href="/styles/reset.css" />
+    <link rel="stylesheet" href="/styles/colors.css" />
+    <link rel="stylesheet" href="/styles/text.css" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/thumbnail.css" />
+    <link rel="stylesheet" href="/styles/modal.css" />
+    <link rel="stylesheet" href="/styles/animation.css" />
+    <link rel="stylesheet" href="/styles/media.css" />
   </head>
   <body>
     <div id="wrap">
