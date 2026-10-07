@@ -11,6 +11,15 @@ const PORT = 8080;
 
 app.use(express.json());
 
+// JSX에서는 React가 자동으로 처리하던 meta 데이터 특수문자 변환
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
 const getPosterUrl = (posterPath: string | null) => {
   if (posterPath === null) {
     return "/images/no_image.png";
@@ -23,6 +32,7 @@ const renderMovieItems = (movies: Movie[]) => {
   const movieItems = movies
     .map((movie) => {
       const posterUrl = getPosterUrl(movie.poster_path);
+      const title = escapeHtml(movie.title);
 
       return `
       <li class="movie-item">
@@ -30,7 +40,7 @@ const renderMovieItems = (movies: Movie[]) => {
           <img
             class="thumbnail"
             src="${posterUrl}"
-            alt="${movie.title}"
+            alt="${title}"
             loading="lazy"
           />
           <div class="item-desc">
@@ -42,7 +52,7 @@ const renderMovieItems = (movies: Movie[]) => {
               />
               <span>${movie.vote_average.toFixed(1)}</span>
             </p>
-            <strong>${movie.title}</strong>
+            <strong>${title}</strong>
           </div>
         </a>
       </li>
@@ -54,17 +64,20 @@ const renderMovieItems = (movies: Movie[]) => {
 };
 
 const renderMovieDetailModal = (movie: MovieDetailResponse) => {
-  const genreNames = movie.genres.map((genre) => genre.name).join(", ");
+  const title = escapeHtml(movie.title);
+  const genreNames = escapeHtml(
+    movie.genres.map((genre) => genre.name).join(", "),
+  );
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
     : "/images/no_image.png";
-  const overview = movie.overview || "줄거리 정보가 없습니다.";
+  const overview = escapeHtml(movie.overview || "줄거리 정보가 없습니다.");
 
   return /* html */ `
     <div class="modal-background active">
       <div class="modal">
         <div class="modal-header">
-          <h1 class="modal-title">${movie.title}</h1>
+          <h1 class="modal-title">${title}</h1>
 
           <a href="/">
             <img
@@ -80,7 +93,7 @@ const renderMovieDetailModal = (movie: MovieDetailResponse) => {
         <div class="modal-container">
           <img
             src="${posterUrl}"
-            alt="${movie.title}"
+            alt="${title}"
             class="modal-image"
           />
 
@@ -135,8 +148,31 @@ const renderMovieDetailModal = (movie: MovieDetailResponse) => {
   `;
 };
 
-const renderHomePage = (movies: Movie[], modalHtml = "") => {
+const renderMovieMetadata = (
+  movie: MovieDetailResponse,
+  origin: string,
+  pageUrl: string,
+) => {
+  const title = escapeHtml(movie.title);
+  const description = escapeHtml(movie.overview || `${movie.title} 상세 정보`);
+  const imageUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : `${origin}/images/no_image.png`;
+
+  return /* html */ `
+    <title>${title}</title>
+    <meta name="description" content="${description}" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:image" content="${imageUrl}" />
+    <meta property="og:url" content="${escapeHtml(pageUrl)}" />
+    <meta property="og:type" content="website" />
+  `;
+};
+
+const renderHomePage = (movies: Movie[], modalHtml = "", metadataHtml = "") => {
   const featuredMovie = movies[0];
+  const featuredMovieTitle = escapeHtml(featuredMovie.title);
   const backdropUrl = featuredMovie.backdrop_path
     ? `https://image.tmdb.org/t/p/w1280${featuredMovie.backdrop_path}`
     : "/images/no_image.png";
@@ -148,8 +184,8 @@ const renderHomePage = (movies: Movie[], modalHtml = "") => {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    ${metadataHtml || "<title>영화 리뷰</title>"}
     <link rel="stylesheet" href="/styles/index.css" />
-    <title>영화 리뷰</title>
   </head>
   <body>
     <div id="wrap">
@@ -163,7 +199,7 @@ const renderHomePage = (movies: Movie[], modalHtml = "") => {
                 <img src="/images/star_empty.png" width="32" height="32" />
                 <span class="text-2xl font-semibold text-yellow">${featuredMovie.vote_average.toFixed(1)}</span>
               </div>
-              <h1 class="text-3xl font-semibold">${featuredMovie.title}</h1>
+              <h1 class="text-3xl font-semibold">${featuredMovieTitle}</h1>
               <a class="primary detail" href="/detail/${featuredMovie.id}">자세히 보기</a>
             </div>
           </div>
@@ -219,7 +255,14 @@ app.get("/detail/:id", async (req: Request, res: Response) => {
   }
 
   const modalHtml = renderMovieDetailModal(movie);
-  res.send(renderHomePage(popularResponse.results, modalHtml));
+  const origin = `${req.protocol}://${req.get("host")}`;
+  const metadataHtml = renderMovieMetadata(
+    movie,
+    origin,
+    `${origin}${req.originalUrl}`,
+  );
+
+  res.send(renderHomePage(popularResponse.results, modalHtml, metadataHtml));
 });
 
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
