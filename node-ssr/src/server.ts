@@ -19,15 +19,18 @@ const renderPage = ({
   headerHtml,
   mainHtml,
   modalHtml = '',
+  ogHtml = '',
 }: {
   headerHtml: string;
   mainHtml: string;
   modalHtml?: string;
+  ogHtml?: string;
 }) => {
   return pageTemplate
     .replace('<!-- HEADER -->', () => headerHtml)
     .replace('<!-- MAIN -->', () => mainHtml)
-    .replace('<!-- MODAL -->', () => modalHtml);
+    .replace('<!-- MODAL -->', () => modalHtml)
+    .replace('<!-- OG -->', () => ogHtml);
 };
 
 app.use(express.json());
@@ -190,6 +193,24 @@ const createModalHtml = (movieDetail: MovieDetail) => {
   `;
 };
 
+const createOgHtml = (movie: MovieDetail) => {
+  const siteUrl = 'https://rendering-basecamp-step2-node.vercel.app';
+  const title = movie.title;
+  const description = movie.overview.trim() || `${movie.title} 영화 상세 정보`;
+
+  const imageUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
+    : `${siteUrl}/images/no_image.png`;
+
+  return `
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:type" content="video.movie" />
+    <meta property="og:image" content="${imageUrl}" />
+    <meta property="og:url" content="${siteUrl}/detail/${movie.id}" />
+  `;
+};
+
 app.get('/detail/:id', async (req: Request, res: Response) => {
   const data = await moviesApi.getPopular();
   const movies = data.results;
@@ -199,8 +220,9 @@ app.get('/detail/:id', async (req: Request, res: Response) => {
   const headerHtml = createHeaderHtml(movies[0]);
   const mainHtml = createMainHtml(movies);
   const modalHtml = createModalHtml(movieDetail);
+  const ogHtml = createOgHtml(movieDetail);
 
-  res.send(renderPage({ headerHtml, mainHtml, modalHtml }));
+  res.send(renderPage({ headerHtml, mainHtml, modalHtml, ogHtml }));
 });
 
 // public 폴더 속 정적 파일을 웹에서 접근할 수 있도록 만든다.
