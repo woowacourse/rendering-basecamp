@@ -1,5 +1,35 @@
 import type { Movie, MovieDetailResponse } from './types';
 
+const escapeHtmlAttribute = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+const renderOpenGraphTags = (movie?: MovieDetailResponse) => {
+  if (!movie) {
+    return '';
+  }
+
+  const title = escapeHtmlAttribute(movie.title);
+  const description = escapeHtmlAttribute(
+    movie.overview || '영화 상세 정보를 확인해 보세요.',
+  );
+  const imagePath = movie.backdrop_path ?? movie.poster_path;
+  const image = imagePath
+    ? `https://image.tmdb.org/t/p/original${imagePath}`
+    : '';
+
+  return /*html*/ `
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="${title}" />
+        <meta property="og:description" content="${description}" />
+        ${image ? `<meta property="og:image" content="${escapeHtmlAttribute(image)}" />` : ''}
+  `;
+};
+
 const renderHeader = (featuredMovie: Movie) => {
   const backdropImageUrl = featuredMovie.backdrop_path
     ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${featuredMovie.backdrop_path}`
@@ -97,14 +127,19 @@ const renderFooter = () => /*html*/ `
   </footer>
 `;
 
-export const renderHome = (movies: Movie[], modal = '') => /*html*/ `
+export const renderHome = (
+  movies: Movie[],
+  modal = '',
+  movieDetail?: MovieDetailResponse,
+) => /*html*/ `
     <!doctype html>
     <html lang="ko">
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/styles/index.css" />
-        <title>영화 리뷰</title>
+        <title>${escapeHtmlAttribute(movieDetail?.title ?? '영화 리뷰')}</title>
+        ${renderOpenGraphTags(movieDetail)}
       </head>
       <body>
         <div id="wrap">
