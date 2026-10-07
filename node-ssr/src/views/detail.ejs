@@ -4,7 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/styles/index.css" />
-    <title>영화 리뷰</title>
+     <title><%= movie.title %></title>
+    <meta name="description" content="<%= movie.title %> - <%= movie.overview %>" />
+
+    <meta property="og:title" content="<%= movie.title %>" />
+    <meta property="og:description" content="<%= movie.overview %>" />
+    <meta property="og:image" content="https://image.tmdb.org/t/p/w500<%= movie.poster_path %>" />
+    <meta property="og:image:alt" content="<%= movie.title %> 대표 이미지" />
+
+    <meta property="og:type" content="video.movie" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.ico" />
   </head>
   <body>
     <% const featuredMovie = movies[0]; %>
