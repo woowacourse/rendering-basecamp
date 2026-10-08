@@ -27,7 +27,7 @@ export function renderIndex(popularMovies: Movie[], selectedMovie?: MovieDetail)
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="stylesheet" href="/styles/index.css" />
+      <link rel="stylesheet" href="/styles/index.min.css" />
       <title>${title}</title>
       <meta property="og:title" content="${metadata['og:title']}" />
       <meta property="og:type" content="${metadata['og:type']}" />
