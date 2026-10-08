@@ -27,7 +27,13 @@ export function renderMovieDetailModal(movie?: MovieDetail): string {
         <div class="modal-content">${children}</div>
       </div>
     </div>
-    <script>(${initializeMovieDetailModal.toString()})(${renderMovieDetailModalContent.toString()}, ${JSON.stringify(movie ?? null)});</script>
+    <script>
+      ${initializeMyRating.toString()}
+      ${renderMovieDetailModalContent.toString()}
+      ${initializeMovieDetailModal.toString()}
+
+      initializeMovieDetailModal(renderMovieDetailModalContent, ${JSON.stringify(movie ?? null)});
+    </script>
   `;
 }
 
@@ -38,7 +44,10 @@ declare global {
   }
 }
 
-function initializeMovieDetailModal(renderContent: (movie: MovieDetail) => string, initialMovie: MovieDetail | null): void {
+function initializeMovieDetailModal(
+  renderContent: (movie: MovieDetail) => string,
+  initialMovie: MovieDetail | null,
+): void {
   let selectedMovie = initialMovie;
   let requestVersion = 0;
 
@@ -59,6 +68,7 @@ function initializeMovieDetailModal(renderContent: (movie: MovieDetail) => strin
         selectedMovie = movie;
         modal.dataset.movieId = id;
       }
+      initializeMyRating(selectedMovie!);
       modal.dataset.state = 'success';
       if (location.pathname !== '/detail/' + id) history.pushState(null, '', '/detail/' + id);
     } catch (error) {
@@ -75,6 +85,8 @@ function initializeMovieDetailModal(renderContent: (movie: MovieDetail) => strin
     history.replaceState(null, '', '/');
   };
 
+  if (initialMovie) initializeMyRating(initialMovie);
+
   window.addEventListener('popstate', () => {
     const match = location.pathname.match(/^\/detail\/(\d+)\/?$/);
     if (match) {
@@ -84,5 +96,60 @@ function initializeMovieDetailModal(renderContent: (movie: MovieDetail) => strin
       requestVersion++;
       modal.classList.remove('active');
     }
+  });
+}
+
+function initializeMyRating(movie: MovieDetail): void {
+  const container = document.querySelector<HTMLDivElement>('#movie-detail-modal .star-rating')!;
+  let ratings: { movieId: number; movieName: string; rate: number; rateDate: string }[] = [];
+  try {
+    ratings = JSON.parse(sessionStorage.getItem('movie-ratings') ?? '[]');
+  } catch (error) {
+    console.error('내 별점 조회 실패:', error);
+  }
+  const rating = ratings.find((item) => item.movieId === movie.id)?.rate ?? 0;
+  const scoreText: Record<number, string> = {
+    2: '최악이에요',
+    4: '별로예요',
+    6: '보통이에요',
+    8: '재미있어요',
+    10: '명작이에요',
+  };
+
+  container.innerHTML = Array.from({ length: 5 }, (_, index) => {
+    const score = (index + 1) * 2;
+    return /*html*/ `
+      <button type="button" data-score="${score}">
+        <img
+          src="/images/star_${score <= rating ? 'filled' : 'empty'}.png"
+          width="24"
+          height="24"
+          alt="Star ${index + 1}"
+        />
+      </button>
+    `;
+  }).join('') + `<span class="rating-text">${rating} ${scoreText[rating] ?? '별점을 남겨주세요'}</span>`;
+  container.removeAttribute('aria-busy');
+  container.querySelectorAll<HTMLButtonElement>('button').forEach((button) => {
+    button.onclick = () => {
+      const rate = Number(button.dataset.score);
+      const existing = ratings.find((item) => item.movieId === movie.id);
+      if (existing) {
+        existing.rate = rate;
+      } else {
+        ratings.push({
+          movieId: movie.id,
+          movieName: movie.title,
+          rate,
+          rateDate: new Date().toISOString(),
+        });
+      }
+      try {
+        sessionStorage.setItem('movie-ratings', JSON.stringify(ratings));
+      } catch (error) {
+        console.error('내 별점 저장 실패:', error);
+      }
+      initializeMyRating(movie);
+    };
   });
 }

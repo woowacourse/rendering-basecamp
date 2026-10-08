@@ -41,21 +41,14 @@ export function renderMovieDetailModalContent(movie: MovieDetail): string {
           </p>
         </div>
 
-        <!-- TODO: 내 별점 섹션
         <div class="my-rating-section">
           <div class="rating-header">
             <span class="rating-label">내 별점</span>
-            <div class="star-rating">
-              <img src="/images/star_filled.png" width="24" height="24" alt="Star 1" />
-              <img src="/images/star_filled.png" width="24" height="24" alt="Star 2" />
-              <img src="/images/star_filled.png" width="24" height="24" alt="Star 3" />
-              <img src="/images/star_filled.png" width="24" height="24" alt="Star 4" />
-              <img src="/images/star_empty.png" width="24" height="24" alt="Star 5" />
-              <span class="rating-text"></span>
+            <div class="star-rating" aria-busy="true">
+              <div class="rating-skeleton" aria-label="내 별점을 불러오는 중입니다."></div>
             </div>
           </div>
         </div>
-        -->
       </div>
     </div>
   `;
