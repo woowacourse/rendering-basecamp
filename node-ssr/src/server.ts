@@ -1,5 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import { PORT } from './config';
 
 import express, { Request, Response } from 'express';
 import path from 'path';
@@ -7,7 +6,6 @@ import { moviesApi } from './service/tmdbApi';
 import { renderIndex } from './render/renderIndex';
 
 const app = express();
-const PORT = 8080;
 
 app.use(express.json());
 
