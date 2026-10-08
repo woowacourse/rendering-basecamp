@@ -1,3 +1,14 @@
+const STYLESHEETS = [
+  "reset",
+  "colors",
+  "text",
+  "main",
+  "thumbnail",
+  "modal",
+  "animation",
+  "media",
+];
+
 interface LayoutProps {
   title: string;
   head?: string;
@@ -10,7 +21,7 @@ export const renderLayout = ({ title, head = "", body }: LayoutProps) => /*html*
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles/index.css" />
+    ${STYLESHEETS.map((name) => `<link rel="stylesheet" href="/styles/${name}.css" />`).join("\n    ")}
     <title>${title}</title>
     ${head}
   </head>
