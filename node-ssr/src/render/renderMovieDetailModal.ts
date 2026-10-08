@@ -61,7 +61,7 @@ function initializeMovieDetailModal(
       'og:url': new URL(movie ? `/detail/${movie.id}` : '/', origin).href,
       'og:image': movie?.poster_path
         ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
-        : new URL('/images/no_image.png', origin).href,
+        : new URL('/images/og_default.png', origin).href,
       'og:description': movie
         ? movie.overview || '줄거리 정보가 없습니다.'
         : '인기 영화를 살펴보고 나만의 별점을 남겨보세요.',

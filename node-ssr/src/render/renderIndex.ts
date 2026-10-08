@@ -14,7 +14,7 @@ export function renderIndex(popularMovies: Movie[], selectedMovie?: MovieDetail)
     'og:url': new URL(selectedMovie ? `/detail/${selectedMovie.id}` : '/', ORIGIN).href,
     'og:image': selectedMovie?.poster_path
       ? `https://image.tmdb.org/t/p/original${selectedMovie.poster_path}`
-      : new URL('/images/no_image.png', ORIGIN).href,
+      : new URL('/images/og_default.png', ORIGIN).href,
     'og:description': selectedMovie
       ? selectedMovie.overview || '줄거리 정보가 없습니다.'
       : '인기 영화를 살펴보고 나만의 별점을 남겨보세요.',
