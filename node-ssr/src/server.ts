@@ -4,6 +4,7 @@ dotenv.config();
 import express, { Request, Response } from "express";
 import path from "path";
 import { SERVER_PORT } from "./constants/site";
+import { CSS_BUNDLE } from "./utils/cssBundle";
 import { PageResponse } from "./controllers/types";
 import { homeController } from "./controllers/homeController";
 import { movieDetailController } from "./controllers/movieDetailController";
@@ -16,6 +17,10 @@ app.use(express.json());
 const send = (res: Response, { status, html }: PageResponse) => {
   res.status(status).type("html").send(html);
 };
+
+app.get("/styles/bundle.css", (_req: Request, res: Response) => {
+  res.type("css").send(CSS_BUNDLE);
+});
 
 app.get("/", async (_req: Request, res: Response) => {
   send(res, await homeController());
