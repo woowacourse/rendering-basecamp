@@ -30,6 +30,8 @@
   max-width: 720px;
   width: 80%;
   max-height: 85vh;
+  min-height: min(500px, 85vh);
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
@@ -69,6 +71,7 @@
 .modal-image {
   width: 280px;
   height: 420px;
+  aspect-ratio: 2 / 3;
   border-radius: 8px;
   object-fit: cover;
   flex-shrink: 0;
@@ -160,4 +163,26 @@
   margin-left: 10px;
   color: var(--color-bluegray-30);
   font-size: 0.85rem;
+}
+.modal-background .modal-loading,
+.modal-background .modal-content,
+.modal-background .modal-error {
+  display: none;
+}
+
+.modal-background[data-state="loading"] > .modal {
+  display: none;
+}
+
+.modal-background[data-state="loading"] > .modal-loading {
+  display: block;
+}
+
+.modal-background[data-state="success"] .modal-content {
+  display: contents;
+}
+
+.modal-background[data-state="error"] .modal-error {
+  display: block;
+  padding: 0 20px 20px;
 }

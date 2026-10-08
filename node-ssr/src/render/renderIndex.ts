@@ -1,10 +1,11 @@
-import type { Movie } from '../service/types';
+import type { Movie, MovieDetail } from '../service/types';
 import { renderFeaturedMovie } from './renderFeaturedMovie';
 import { renderFeaturedMovieFallback } from './renderFeaturedMovieFallback';
+import { renderMovieDetailModal } from './renderMovieDetailModal';
 import { renderMovieList } from './renderMovieList';
 import { renderMovieListFallback } from './renderMovieListFallback';
 
-export function renderIndex(movies: Movie[]): string {
+export function renderIndex(popularMovies: Movie[], selectedMovie?: MovieDetail): string {
   return /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -18,16 +19,17 @@ export function renderIndex(movies: Movie[]): string {
 
     <body>
       <div id="wrap">
-        ${movies.length > 0 ? renderFeaturedMovie(movies[0]) : renderFeaturedMovieFallback()}
+        ${popularMovies.length > 0 ? renderFeaturedMovie(popularMovies[0]) : renderFeaturedMovieFallback()}
         <main>
-          ${movies.length > 0 ? renderMovieList(movies) : renderMovieListFallback()}
+          ${popularMovies.length > 0 ? renderMovieList(popularMovies) : renderMovieListFallback()}
         </main>
         <footer class="footer">
           <p>&copy; 우아한테크코스 All Rights Reserved.</p>
           <p><img src="/images/woowacourse_logo.png" width="180" alt="우아한테크코스" /></p>
         </footer>
       </div>
-      <!-- TODO: 영화 상세 모달 -->
+      ${renderMovieDetailModal(selectedMovie)}
+
     </body>
 
     </html>

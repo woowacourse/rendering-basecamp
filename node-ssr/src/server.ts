@@ -11,15 +11,40 @@ const PORT = 8080;
 
 app.use(express.json());
 
-app.get('/', async (_req: Request, res: Response) => {
+app.get(['/', '/detail/:id'], async (req: Request, res: Response) => {
   try {
-    const popularMovies = await moviesApi.getPopular();
+    const { id } = req.params;
+    if (id !== undefined && (!/^\d+$/.test(String(id)) || !Number.isSafeInteger(Number(id)) || Number(id) <= 0)) {
+      res.sendStatus(400);
+      return;
+    }
 
-    const html = renderIndex(popularMovies.results);
+    const [popularMovies, selectedMovie] = await Promise.all([
+      moviesApi.getPopular(),
+      id ? moviesApi.getDetail(Number(id)) : undefined,
+    ]);
+
+    const html = renderIndex(popularMovies.results, selectedMovie);
 
     res.send(html);
   } catch (error) {
     console.error('영화 페이지 렌더링 실패:', error);
+    res.sendStatus(500);
+  }
+});
+
+app.get('/api/movies/:id', async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  if (!/^\d+$/.test(String(req.params.id)) || !Number.isSafeInteger(id) || id <= 0) {
+    res.sendStatus(400);
+    return;
+  }
+
+  try {
+    const movie = await moviesApi.getDetail(id);
+    res.json(movie);
+  } catch (error) {
+    console.error('영화 상세 조회 실패:', error);
     res.sendStatus(500);
   }
 });

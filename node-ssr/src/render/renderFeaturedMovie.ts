@@ -20,8 +20,7 @@ export function renderFeaturedMovie(movie: Movie): string {
               <span class="text-2xl font-semibold text-yellow">${movie.vote_average}</span>
             </div>
             <h1 class="text-3xl font-semibold">${movie.title}</h1>
-            <!-- TODO: 영화 상세 모달 -->
-            <button class="primary detail">자세히 보기</button>
+            <button class="primary detail" onclick="if (typeof window.openMovieDetailModal === 'function') window.openMovieDetailModal('${movie.id}'); else location.href = '/detail/${movie.id}';">자세히 보기</button>
           </div>
         </div>
       </div>

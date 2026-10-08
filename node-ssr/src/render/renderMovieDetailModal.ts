@@ -1,59 +1,88 @@
 import type { MovieDetail } from '../service/types';
+import { renderMovieDetailModalContent } from './renderMovieDetailModalContent';
 
-export function renderMovieDetailModal(movie: MovieDetail): string {
+export function renderMovieDetailModal(movie?: MovieDetail): string {
+  const children = movie ? renderMovieDetailModalContent(movie) : '';
+
   return /*html*/ `
-    <div class="modal-background active">
+    <div
+      id="movie-detail-modal"
+      class="modal-background ${children ? 'active' : ''}"
+      data-state="${children ? 'success' : 'loading'}"
+      data-movie-id="${movie?.id ?? ''}"
+      onclick="if (event.target === this) window.closeMovieDetailModal();"
+      onkeydown="if (event.key === 'Escape') window.closeMovieDetailModal();"
+      tabindex="-1"
+    >
+      <div class="modal-loading" role="status" aria-label="영화 정보를 불러오는 중입니다.">
+        <div class="loading-spinner" aria-hidden="true"></div>
+      </div>
       <div class="modal">
-        <!-- 모달 헤더 -->
-        <div class="modal-header">
-          <h1 class="modal-title">${movie.title}</h1>
-          <img src="/images/modal_button_close.png" width="24" height="24" class="modal-close-btn" alt="Close" />
-        </div>
-    
-        <div class="modal-container">
-          <img 
-            class="modal-image" 
-            alt="${movie.title}" 
-            src="${
-              movie.poster_path ? `https://image.tmdb.org/t/p/original${movie.poster_path}` : '/images/no_image.png'
-            }" 
-            onerror="this.onerror = null; this.src = '/images/no_image.png';" 
-          />
-          <div class="modal-description">
-            <!-- 영화 정보 섹션 -->
-            <div class="movie-info-line">
-              <span class="movie-meta">${movie.genres.map((genre) => genre.name).join(', ')}</span>
-              <div class="movie-rating">
-                <img src="/images/star_filled.png" width="16" height="16" />
-                <span class="rating-value">${movie.vote_average}</span>
-              </div>
-            </div>
-    
-            <!-- 줄거리 -->
-            <div class="overview-section">
-              <p class="overview-text">
-                ${movie.overview}
-              </p>
-            </div>
-    
-            <!-- TODO: 내 별점 섹션
-            <div class="my-rating-section">
-              <div class="rating-header">
-                <span class="rating-label">내 별점</span>
-                <div class="star-rating">
-                  <img src="/images/star_filled.png" width="24" height="24" alt="Star 1" />
-                  <img src="/images/star_filled.png" width="24" height="24" alt="Star 2" />
-                  <img src="/images/star_filled.png" width="24" height="24" alt="Star 3" />
-                  <img src="/images/star_filled.png" width="24" height="24" alt="Star 4" />
-                  <img src="/images/star_empty.png" width="24" height="24" alt="Star 5" />
-                  <span class="rating-text"></span>
-                </div>
-              </div>
-            </div>
-            -->
+        <div class="modal-error" role="alert">
+          <div class="modal-header">
+            <p>내용을 불러올 수 없습니다.</p>
+            <button type="button" class="modal-close-btn" onclick="window.closeMovieDetailModal();" aria-label="닫기">×</button>
           </div>
         </div>
+        <div class="modal-content">${children}</div>
       </div>
     </div>
+    <script>(${initializeMovieDetailModal.toString()})(${renderMovieDetailModalContent.toString()}, ${JSON.stringify(movie ?? null)});</script>
   `;
+}
+
+declare global {
+  interface Window {
+    openMovieDetailModal: (id: string) => Promise<void>;
+    closeMovieDetailModal: () => void;
+  }
+}
+
+function initializeMovieDetailModal(renderContent: (movie: MovieDetail) => string, initialMovie: MovieDetail | null): void {
+  let selectedMovie = initialMovie;
+  let requestVersion = 0;
+
+  window.openMovieDetailModal = async (id) => {
+    const modal = document.querySelector<HTMLDivElement>('#movie-detail-modal')!;
+    const content = modal.querySelector<HTMLDivElement>('.modal-content')!;
+    const version = ++requestVersion;
+    modal.classList.add('active');
+
+    try {
+      if (!selectedMovie || String(selectedMovie.id) !== id) {
+        modal.dataset.state = 'loading';
+        const response = await fetch('/api/movies/' + encodeURIComponent(id));
+        if (!response.ok) throw new Error('영화 상세 조회 실패');
+        const movie: MovieDetail = await response.json();
+        if (version !== requestVersion) return;
+        content.innerHTML = renderContent(movie);
+        selectedMovie = movie;
+        modal.dataset.movieId = id;
+      }
+      modal.dataset.state = 'success';
+      if (location.pathname !== '/detail/' + id) history.pushState(null, '', '/detail/' + id);
+    } catch (error) {
+      if (version !== requestVersion) return;
+      console.error(error);
+      modal.dataset.state = 'error';
+    }
+  };
+
+  window.closeMovieDetailModal = () => {
+    const modal = document.querySelector<HTMLDivElement>('#movie-detail-modal')!;
+    requestVersion++;
+    modal.classList.remove('active');
+    history.replaceState(null, '', '/');
+  };
+
+  window.addEventListener('popstate', () => {
+    const match = location.pathname.match(/^\/detail\/(\d+)\/?$/);
+    if (match) {
+      void window.openMovieDetailModal(match[1]);
+    } else {
+      const modal = document.querySelector<HTMLDivElement>('#movie-detail-modal')!;
+      requestVersion++;
+      modal.classList.remove('active');
+    }
+  });
 }
