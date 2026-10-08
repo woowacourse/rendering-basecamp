@@ -50,6 +50,26 @@ function initializeMovieDetailModal(
 ): void {
   let selectedMovie = initialMovie;
   let requestVersion = 0;
+  const origin = new URL(document.querySelector<HTMLMetaElement>('meta[property="og:url"]')!.content).origin;
+
+  function updateMetadata(movie?: MovieDetail): void {
+    const title = movie ? `${movie.title} | 영화 리뷰` : '영화 리뷰';
+    document.title = title;
+    const metadata = {
+      'og:title': title,
+      'og:type': movie ? 'video.movie' : 'website',
+      'og:url': new URL(movie ? `/detail/${movie.id}` : '/', origin).href,
+      'og:image': movie?.poster_path
+        ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
+        : new URL('/images/no_image.png', origin).href,
+      'og:description': movie
+        ? movie.overview || '줄거리 정보가 없습니다.'
+        : '인기 영화를 살펴보고 나만의 별점을 남겨보세요.',
+    };
+    Object.entries(metadata).forEach(([property, value]) => {
+      document.querySelector<HTMLMetaElement>(`meta[property="${property}"]`)!.content = value;
+    });
+  }
 
   window.openMovieDetailModal = async (id) => {
     const modal = document.querySelector<HTMLDivElement>('#movie-detail-modal')!;
@@ -69,6 +89,7 @@ function initializeMovieDetailModal(
         modal.dataset.movieId = id;
       }
       initializeMyRating(selectedMovie!);
+      updateMetadata(selectedMovie!);
       modal.dataset.state = 'success';
       if (location.pathname !== '/detail/' + id) history.pushState(null, '', '/detail/' + id);
     } catch (error) {
@@ -83,6 +104,7 @@ function initializeMovieDetailModal(
     requestVersion++;
     modal.classList.remove('active');
     history.replaceState(null, '', '/');
+    updateMetadata();
   };
 
   if (initialMovie) initializeMyRating(initialMovie);
@@ -95,6 +117,7 @@ function initializeMovieDetailModal(
       const modal = document.querySelector<HTMLDivElement>('#movie-detail-modal')!;
       requestVersion++;
       modal.classList.remove('active');
+      updateMetadata();
     }
   });
 }
