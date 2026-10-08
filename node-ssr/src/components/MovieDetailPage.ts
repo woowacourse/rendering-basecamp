@@ -51,7 +51,7 @@ export const MovieDetailPage = (
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/styles/index.css" />
+        <link rel="stylesheet" href="/assets/app.css" />
         <title>${movieDetail.title} | 영화 리뷰</title>
         ${ogTags}
       </head>
