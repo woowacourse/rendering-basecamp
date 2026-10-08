@@ -16,7 +16,7 @@ export const MovieHome = (movies: Movie[]) => {
       <body>
         <div id="wrap">
           <header>
-            <div class="background-container" style="${featuredMovie.backdrop_path ? `background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${featuredMovie.backdrop_path});` : ""}">
+            <div class="background-container" style="${featuredMovie.poster_path ? `background-image: url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${featuredMovie.poster_path});` : ""}">
               <div class="overlay"></div>
               <div class="top-rated-container">
                 <img src="/images/logo.png" width="117" height="20" class="logo" alt="MovieLogo" />
