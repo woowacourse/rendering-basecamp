@@ -8,6 +8,7 @@ import { MovieHome } from '../../components/MovieHome';
 import { MovieDetailModal } from '../../components/MovieDetailModal';
 import { ROUTES } from '../../constants/routes';
 import { SITE_NAME } from '../../constants/site';
+import { hasNavigatedInApp } from '../../utils/navigation';
 import { getRequestOrigin } from '../../utils/url';
 import type { MovieItem } from '../../types/Movie.types';
 import type { MovieDetailResponse } from '../../types/MovieDetail.types';
@@ -63,6 +64,12 @@ export default function MovieDetailPage({ movies, movie, origin }: Props) {
 
   const closeModal = () => {
     setIsModalOpen(false);
+
+    if (hasNavigatedInApp()) {
+      router.back();
+      return;
+    }
+
     router.replace(ROUTES.HOME, undefined, { scroll: false });
   };
 
