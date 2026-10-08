@@ -16,15 +16,13 @@ const PORT = 8080;
 
 app.use(express.json());
 
-const STYLESHEETS = ['reset', 'colors', 'text', 'main', 'thumbnail', 'modal', 'animation', 'media'];
-
 const renderDocument = (title: string, body: string) => /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
         <head>
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            ${STYLESHEETS.map((name) => `<link rel="stylesheet" href="/styles/${name}.css" />`).join('')}
+            <link rel="stylesheet" href="/styles/index.css" />
             <title>${escapeHtml(title)}</title>
         </head>
         <body>
