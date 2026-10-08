@@ -11,7 +11,7 @@ function escapeHtml(value: string): string {
 
 function imageUrl(
   filePath: string | null,
-  size: "w500" | "w1280" = "w500",
+  size: "w500" | "w1920_and_h800_multi_faces" = "w500",
 ): string {
   if (!filePath || !/^\/[a-zA-Z0-9._-]+$/.test(filePath)) {
     return "/images/no_image.png";
@@ -72,8 +72,8 @@ export function renderHome(movies: Movie[]): string {
       <div
         class="background-container"
         style="background-image: url('${imageUrl(
-          featured.backdrop_path,
-          "w1280",
+          featured.poster_path,
+          "w1920_and_h800_multi_faces",
         )}');"
       >
         <div class="overlay"></div>
