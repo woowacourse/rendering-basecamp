@@ -5,14 +5,18 @@ import { usePopularMovies } from '../hooks/queries/usePopularMovies';
 import { Loading } from '../components/common/Loading';
 
 export default function MovieHomePage() {
-  const { data: movies, isLoading } = usePopularMovies();
+  const { data: movies, isLoading, error } = usePopularMovies();
 
-  if (isLoading === true) {
+  if (isLoading) {
     return <Loading />;
   }
 
-  if (movies == null || movies.length === 0) {
-    return <div>영화 정보를 불러오는데 실패했습니다.</div>;
+  if (error || movies == null) {
+    return <div role="alert">영화 정보를 불러오는데 실패했습니다.</div>;
+  }
+
+  if (movies.length === 0) {
+    return <div>표시할 영화가 없습니다.</div>;
   }
 
   return (

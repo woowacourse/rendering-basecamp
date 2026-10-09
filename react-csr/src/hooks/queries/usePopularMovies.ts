@@ -3,11 +3,11 @@ import { moviesApi } from '../../api/movies';
 import { MovieItem } from '../../types/Movie.types';
 
 /**
- * 영화 상세 정보를 조회하는 훅
+ * 인기 영화 목록을 조회하는 훅
  */
 export const usePopularMovies = () => {
   const [data, setData] = useState<MovieItem[] | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
