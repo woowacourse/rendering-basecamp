@@ -1,0 +1,37 @@
+import { Movie } from '../service/types';
+
+export interface OgImage {
+    url: string;
+    width: number;
+    height: number;
+    alt: string;
+}
+
+type MovieImageSource = Pick<Movie, 'title' | 'backdrop_path' | 'poster_path'>;
+
+export const getMovieOgImage = (movie: MovieImageSource, origin: string): OgImage => {
+    if (movie.backdrop_path) {
+        return {
+            url: `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`,
+            width: 1280,
+            height: 720,
+            alt: movie.title,
+        };
+    }
+
+    if (movie.poster_path) {
+        return {
+            url: `https://image.tmdb.org/t/p/w780${movie.poster_path}`,
+            width: 780,
+            height: 1170,
+            alt: movie.title,
+        };
+    }
+
+    return {
+        url: `${origin}/images/no_image.png`,
+        width: 200,
+        height: 300,
+        alt: movie.title,
+    };
+};

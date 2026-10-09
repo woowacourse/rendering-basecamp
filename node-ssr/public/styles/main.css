@@ -25,6 +25,7 @@ button {
   background: none;
 }
 
+a.primary,
 button.primary {
   padding: 8px 16px;
   color: var(--color-white);
