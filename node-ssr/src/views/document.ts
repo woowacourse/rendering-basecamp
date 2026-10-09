@@ -1,4 +1,5 @@
 import { escapeHtml } from "./escapeHtml";
+import { INLINE_STYLES } from "./styles";
 
 interface DocumentContent {
   title: string;
@@ -11,7 +12,7 @@ export const renderDocument = ({ title, head = "", body }: DocumentContent) => /
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles/index.css" />
+    <style>${INLINE_STYLES}</style>
     <title>${escapeHtml(title)}</title>
     ${head}
   </head>
