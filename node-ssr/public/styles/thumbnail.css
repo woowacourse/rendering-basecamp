@@ -17,6 +17,7 @@
 }
 
 .item {
+  display: block;
   user-select: none;
   cursor: pointer;
 }
