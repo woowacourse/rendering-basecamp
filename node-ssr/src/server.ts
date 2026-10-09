@@ -3,6 +3,7 @@ dotenv.config();
 
 import express, { ErrorRequestHandler, Request, Response } from "express";
 import path from "path";
+import { withServerTiming } from "./serverTiming";
 import { moviesApi } from "./service/tmdbApi";
 import { renderDetailPage } from "./views/detailPage";
 import { renderErrorPage } from "./views/errorPage";
@@ -26,7 +27,7 @@ const getPopularMoviesOrEmpty = async () => {
 };
 
 app.get("/", async (_req: Request, res: Response) => {
-  const { results: movies } = await moviesApi.getPopular();
+  const { results: movies } = await withServerTiming(res, "tmdb", () => moviesApi.getPopular());
   res.send(renderHomePage(movies));
 });
 
@@ -38,10 +39,9 @@ app.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) => {
     return;
   }
 
-  const [movie, movies] = await Promise.all([
-    moviesApi.getDetail(movieId),
-    getPopularMoviesOrEmpty(),
-  ]);
+  const [movie, movies] = await withServerTiming(res, "tmdb", () =>
+    Promise.all([moviesApi.getDetail(movieId), getPopularMoviesOrEmpty()])
+  );
 
   if (movie === null) {
     res.status(404).send(renderNotFoundPage());
