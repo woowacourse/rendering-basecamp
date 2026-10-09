@@ -9,3 +9,11 @@ export const getRequestOrigin = (request: IncomingMessage) => {
 
   return `${protocol}://${request.headers.host}`;
 };
+
+export const getSiteOrigin = (request: IncomingMessage) => {
+  const productionHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+
+  return productionHost
+    ? `https://${productionHost}`
+    : getRequestOrigin(request);
+};

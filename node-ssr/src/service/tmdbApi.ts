@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { MovieDetailResponse, MovieResponse } from "./types";
 
 export const BASE_URL = "https://api.themoviedb.org/3";
@@ -31,12 +31,20 @@ export const moviesApi = {
   },
 
   /**
-   * 영화 상세 정보 조회
+   * 영화 상세 정보 조회. TMDB에 없는 영화면 null
    */
   getDetail: async (id: number) => {
-    const response = await apiClient.get<MovieDetailResponse>(
-      `/movie/${id}?language=ko-KR`
-    );
-    return response.data;
+    try {
+      const response = await apiClient.get<MovieDetailResponse>(
+        `/movie/${id}?language=ko-KR`
+      );
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
+
+      throw error;
+    }
   },
 } as const;
