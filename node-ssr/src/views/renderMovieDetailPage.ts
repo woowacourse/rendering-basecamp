@@ -1,6 +1,6 @@
 import {Movie, MovieDetail} from '../service/types';
 import escapeHtml from '../utils/escapeHtml';
-import {posterUrl, renderDocument} from './renderDocument';
+import {PageMetadata, posterUrl, renderDocument} from './renderDocument';
 
 type BackgroundPageRenderer = (movies: Movie[]) => string;
 
@@ -11,6 +11,7 @@ export const renderMovieDetailPage = (
 ): string =>
 	renderDocument(
 		`${backgroundPageRenderer(movies)}${renderModal(detailMovie)}`,
+		toPageMetadata(detailMovie),
 	);
 
 export const renderModal = (movie: MovieDetail): string => `
@@ -37,3 +38,19 @@ export const renderModal = (movie: MovieDetail): string => `
         </div>
       </div>
     </div>`;
+
+const toPageMetadata = (movie: MovieDetail): PageMetadata => {
+	const title = `${movie.title}`;
+	const description = movie.overview || '영화 상세 정보를 확인해 보세요.';
+	const image = posterUrl(movie.backdrop_path ?? movie.poster_path, 'w1280');
+
+	return {
+		title,
+		description,
+		openGraph: {
+			title: movie.title,
+			description,
+			image,
+		},
+	};
+};

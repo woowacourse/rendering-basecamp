@@ -1,9 +1,9 @@
 import {Movie} from '../service/types';
 import escapeHtml from '../utils/escapeHtml';
-import {IMAGE_BASE_URL, posterUrl, renderDocument} from './renderDocument';
+import {IMAGE_BASE_URL, PageMetadata, posterUrl, renderDocument} from './renderDocument';
 
 export const renderHomePage = (movies: Movie[]): string =>
-	renderDocument(renderPopularMovies(movies));
+	renderDocument(renderPopularMovies(movies), toPageMetadata(movies));
 
 export const renderPopularMovies = (movies: Movie[]): string => `
   <div id="wrap">
@@ -64,3 +64,18 @@ const renderMovieItems = (movies: Movie[]): string =>
         </li>`,
 	)
 	.join('');
+
+const toPageMetadata = (movies: Movie[]): PageMetadata => {
+	const featuredMovie = movies[0];
+	const title = '지금 인기 있는 영화';
+	const description = featuredMovie?.overview || '지금 인기 있는 영화를 확인해 보세요.';
+	const image = featuredMovie?.backdrop_path
+		? `${IMAGE_BASE_URL}/w1280${featuredMovie.backdrop_path}`
+		: undefined;
+
+	return {
+		title,
+		description,
+		openGraph: {title, description, image},
+	};
+};
