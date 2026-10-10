@@ -20,7 +20,10 @@ const DEFAULT_PAGE_METADATA: PageMetadata = {
 export const posterUrl = (path: string | null, size: string): string =>
 	path ? `${IMAGE_BASE_URL}/${size}${path}` : '/images/no_image.png';
 
-export const renderDocument = (content: string, metadata?: PageMetadata): string => {
+export const renderDocument = (
+	content: string,
+	metadata?: PageMetadata,
+): string => {
 	const pageMetadata = metadata ?? DEFAULT_PAGE_METADATA;
 
 	const defaultTitleSuffix = ` | ${DEFAULT_PAGE_METADATA.title}`;
@@ -36,7 +39,7 @@ export const renderDocument = (content: string, metadata?: PageMetadata): string
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="stylesheet" href="/styles/index.css" />
+      <link rel="stylesheet" href="/styles/bundle.css" />
       <title>${escapeHtml(title)}</title>
       <meta name="description" content="${escapeHtml(pageMetadata.description)}" />
       <meta property="og:title" content="${escapeHtml(pageMetadata.openGraph?.title ?? pageMetadata.title)}" />
