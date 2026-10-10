@@ -18,6 +18,7 @@
     "axios": "^1.11.0",
     "express": "^5.1.0",
     "overlay-kit": "^1.8.5",
+    "path-to-regexp": "8.2.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

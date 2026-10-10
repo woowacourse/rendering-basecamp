@@ -6,6 +6,9 @@ import { fileURLToPath } from 'url';
 
 import { renderToString } from 'react-dom/server';
 import App from './App';
+import { ORIGIN } from './constants/url';
+import { routes } from './routes';
+import type { InitialData } from './router/context';
 
 const app = express();
 const PORT = Number(process.env.PORT ?? 3000);
@@ -35,25 +38,29 @@ function generateHTML() {
     `;
 }
 
-app.get('/', (_req, res) => {
-  const template = generateHTML();
+for (const route of routes) {
+  app.get(route.path, async (req, res) => {
+    const host = req.get('host');
 
-  const renderedApp = renderToString(<App />);
+    const origin = host ? `${req.protocol}://${host}` : ORIGIN;
+    const url = new URL(req.originalUrl, origin);
 
-  const renderedHTMLWithInitialData = template.replace(
-    '<!--{INIT_DATA_AREA}-->',
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
-    </script>
-  `,
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace('<!--{BODY_AREA}-->', renderedApp);
+    const initialData: InitialData = {
+      url: url.href,
+      props: route.loader ? await route.loader({ params: req.params, url }) : {},
+    };
 
-  res.send(renderedHTML);
-});
+    const renderedApp = renderToString(<App initialData={initialData} />);
+
+    const serializedData = JSON.stringify(initialData).replace(/</g, '\\u003c');
+
+    const html = generateHTML()
+      .replace('<!--{BODY_AREA}-->', () => renderedApp)
+      .replace('<!--{INIT_DATA_AREA}-->', () => `<script>window.__INITIAL_DATA__ = ${serializedData};</script>`);
+
+    res.send(html);
+  });
+}
 
 // Start server
 app.listen(PORT, () => {
