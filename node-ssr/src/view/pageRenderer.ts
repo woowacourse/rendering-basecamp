@@ -1,11 +1,15 @@
 import fs from "fs";
 import path from "path";
-import type { Movie } from "../service/types";
+import type { Movie, MovieDetailResponse } from "../service/types";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
 const PUBLIC_DIRECTORY = path.join(__dirname, "../../public");
 const pageTemplate = fs.readFileSync(
   path.join(PUBLIC_DIRECTORY, "index.html"),
+  "utf-8"
+);
+const modalTemplate = fs.readFileSync(
+  path.join(PUBLIC_DIRECTORY, "modal.html"),
   "utf-8"
 );
 
@@ -70,6 +74,38 @@ const renderMovieItem = (movie: Movie): string => {
   `;
 };
 
+const renderOpenGraphTags = (movie: MovieDetailResponse): string => {
+  const imagePath = movie.poster_path ?? movie.backdrop_path;
+  const imageTag = imagePath
+    ? `<meta property="og:image" content="${escapeHtml(
+        createImageUrl(imagePath, "w500")
+      )}" />`
+    : "";
+
+  return /* html */ `
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="${escapeHtml(movie.title)}" />
+    <meta property="og:description" content="${escapeHtml(
+      movie.overview || `${movie.title}의 상세 정보를 확인해 보세요.`
+    )}" />
+    ${imageTag}
+  `;
+};
+
+const renderMovieDetailModal = (movie: MovieDetailResponse): string =>
+  fillTemplate(modalTemplate, {
+    MOVIE_TITLE: escapeHtml(movie.title),
+    MOVIE_POSTER_URL: escapeHtml(
+      createImageUrl(movie.poster_path, "original")
+    ),
+    MOVIE_GENRES: escapeHtml(
+      movie.genres.map((genre) => genre.name).join(", ") ||
+        "장르 정보가 없습니다."
+    ),
+    MOVIE_VOTE_AVERAGE: movie.vote_average.toFixed(1),
+    MOVIE_OVERVIEW: escapeHtml(movie.overview || "줄거리 정보가 없습니다."),
+  });
+
 const renderMoviePage = (movies: Movie[], options: PageOptions): string => {
   const featuredMovie = movies[0];
 
@@ -99,4 +135,16 @@ export const renderHomePage = (movies: Movie[]): string =>
   renderMoviePage(movies, {
     pageTitle: "영화 리뷰",
     pageDescription: "현재 인기 있는 영화 목록을 확인해 보세요.",
+  });
+
+export const renderDetailPage = (
+  movies: Movie[],
+  movie: MovieDetailResponse
+): string =>
+  renderMoviePage(movies, {
+    pageTitle: `${movie.title} | 영화 리뷰`,
+    pageDescription:
+      movie.overview || `${movie.title}의 상세 정보를 확인해 보세요.`,
+    openGraphTags: renderOpenGraphTags(movie),
+    movieDetailModal: renderMovieDetailModal(movie),
   });

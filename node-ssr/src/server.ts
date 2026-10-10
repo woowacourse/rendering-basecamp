@@ -1,10 +1,11 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import axios from "axios";
 import express, { Request, Response } from "express";
 import path from "path";
 import { moviesApi } from "./service/tmdbApi";
-import { renderHomePage } from "./view/pageRenderer";
+import { renderDetailPage, renderHomePage } from "./view/pageRenderer";
 
 const app = express();
 const PORT = 8080;
@@ -21,6 +22,38 @@ app.get("/", async (_req: Request, res: Response) => {
       .status(502)
       .type("text")
       .send("영화 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+  }
+});
+
+app.get("/detail/:id", async (req: Request, res: Response) => {
+  const movieId = Number(req.params.id);
+
+  if (!Number.isInteger(movieId) || movieId <= 0) {
+    res.status(404).type("text").send("존재하지 않는 영화입니다.");
+    return;
+  }
+
+  try {
+    const [popularMovies, movieDetail] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(movieId),
+    ]);
+
+    res
+      .type("html")
+      .send(renderDetailPage(popularMovies.results, movieDetail));
+  } catch (error: unknown) {
+    const statusCode =
+      axios.isAxiosError(error) && error.response?.status === 404 ? 404 : 502;
+
+    res
+      .status(statusCode)
+      .type("text")
+      .send(
+        statusCode === 404
+          ? "존재하지 않는 영화입니다."
+          : "영화 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."
+      );
   }
 });
 
