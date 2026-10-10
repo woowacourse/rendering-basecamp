@@ -8,7 +8,7 @@ import { moviesApi } from "./service/tmdbApi";
 import { renderDetailPage, renderHomePage } from "./view/pageRenderer";
 
 const app = express();
-const PORT = 8080;
+const PORT = Number(process.env.PORT) || 8080;
 
 app.use(express.json());
 
