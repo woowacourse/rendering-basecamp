@@ -107,10 +107,8 @@
   }
 
   .modal-image {
-    width: 550px;
-    max-width: 30%;
+    width: min(30%, 33.333vh);
     height: auto;
-    max-height: 50vh;
     object-fit: cover;
   }
 
