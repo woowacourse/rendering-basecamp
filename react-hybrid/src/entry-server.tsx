@@ -1,10 +1,19 @@
-import { Router, Request, Response } from "express";
+import 'dotenv/config';
 
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const router = Router();
+import { renderToString } from 'react-dom/server';
+import App from './App';
+
+const app = express();
+const PORT = Number(process.env.PORT ?? 3000);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use('/static', express.static(path.join(__dirname, '../dist/static')));
 
 function generateHTML() {
   return /*html*/ `
@@ -26,27 +35,27 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+app.get('/', (_req, res) => {
   const template = generateHTML();
 
   const renderedApp = renderToString(<App />);
 
   const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
+    '<!--{INIT_DATA_AREA}-->',
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
         movies: ${JSON.stringify([])}
       }
     </script>
-  `
+  `,
   );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+  const renderedHTML = renderedHTMLWithInitialData.replace('<!--{BODY_AREA}-->', renderedApp);
 
   res.send(renderedHTML);
 });
 
-export default router;
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
