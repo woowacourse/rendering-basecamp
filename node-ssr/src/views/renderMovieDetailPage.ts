@@ -34,6 +34,15 @@ export const renderModal = (movie: MovieDetail): string => `
             <div class="overview-section">
               <p class="overview-text">${escapeHtml(movie.overview || '줄거리 정보가 없습니다.')}</p>
             </div>
+            <div class="my-rating-section">
+              <div class="rating-header">
+                <span class="rating-label">내 별점</span>
+                <div class="star-rating">
+                  ${Array.from({length: 5}, (_, index) => `<img src="/images/star_empty.png" width="24" height="24" alt="Star ${index + 1}" />`).join('')}
+                  <span class="rating-text">0 별점을 남겨주세요</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

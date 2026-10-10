@@ -25,12 +25,12 @@ const renderHero = (movie: Movie | undefined): string => {
 		return '<div class="background-container"><p>인기 영화를 불러오지 못했습니다.</p></div>';
 	}
 
-	const backdrop = movie.backdrop_path
-		? `${IMAGE_BASE_URL}/w1920_and_h800_multi_faces${movie.backdrop_path}`
+	const heroImage = movie.poster_path
+		? `${IMAGE_BASE_URL}/w1920_and_h800_multi_faces/${movie.poster_path}`
 		: '/images/dizzy_planet.png';
 
 	return `
-      <div class="background-container" style="background-image: url('${escapeHtml(backdrop)}');">
+      <div class="background-container" style="background-image: url('${escapeHtml(heroImage)}');">
         <div class="overlay"></div>
         <div class="top-rated-container">
           <img src="/images/logo.png" width="117" height="20" class="logo" alt="MovieLogo" />
@@ -52,7 +52,7 @@ const renderMovieItems = (movies: Movie[]): string =>
 		(movie) => `
         <li class="movie-item">
           <a class="item" href="/detail/${movie.id}">
-            <img class="thumbnail" src="${escapeHtml(posterUrl(movie.poster_path, 'w440_and_h660_face'))}" alt="${escapeHtml(movie.title)}" loading="lazy" />
+			<img class="thumbnail" src="${escapeHtml(posterUrl(movie.poster_path, 'w500'))}" alt="${escapeHtml(movie.title)}" loading="lazy" />
             <div class="item-desc">
               <p class="rate">
                 <img src="/images/star_empty.png" class="star" alt="별점" />
