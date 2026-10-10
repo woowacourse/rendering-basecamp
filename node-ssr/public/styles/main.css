@@ -25,7 +25,8 @@ button {
   background: none;
 }
 
-button.primary {
+.primary {
+  display: inline-block;
   padding: 8px 16px;
   color: var(--color-white);
   font-weight: bold;
