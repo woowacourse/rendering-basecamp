@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { RouterContext, type InitialData } from './context';
 import { useRoute } from './useRoute';
 import { useLoader } from './useLoader';
-import { ROUTE_CHANGE_COMPLETE_EVENT } from './navigation';
+import { ROUTE_CHANGE_COMPLETE_EVENT, ROUTE_CHANGE_ERROR_EVENT } from './navigation';
 
 interface RouterProps {
   initialData?: InitialData;
@@ -27,9 +27,16 @@ function RouterContent() {
   useEffect(() => {
     if (state.status !== 'ready') {
       completedRoute.current = undefined;
+      if (state.status === 'error') {
+        window.dispatchEvent(new CustomEvent(ROUTE_CHANGE_ERROR_EVENT, { detail: { url: url.href } }));
+      }
       return;
     }
-    if (!route || completedRoute.current === routeKey) return;
+    if (!route) {
+      window.dispatchEvent(new CustomEvent(ROUTE_CHANGE_ERROR_EVENT, { detail: { url: url.href } }));
+      return;
+    }
+    if (completedRoute.current === routeKey) return;
     completedRoute.current = routeKey;
     window.dispatchEvent(new CustomEvent(ROUTE_CHANGE_COMPLETE_EVENT, { detail: { url: url.href } }));
   }, [route, routeKey, state.status, url.href]);
