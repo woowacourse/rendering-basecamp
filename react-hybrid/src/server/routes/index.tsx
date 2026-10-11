@@ -3,6 +3,7 @@ import { Router, Request, Response } from "express";
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
+import { moviesApi } from "../../client/api/movies";
 
 const router = Router();
 
@@ -26,27 +27,32 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
+router.get("/", async (_: Request, res: Response) => {
+  try {
+    const response = await moviesApi.getPopular();
+    const movies = response.data.results;
+    const initialData = { movies };
 
-  const renderedApp = renderToString(<App />);
+    const template = generateHTML();
+    const renderedApp = renderToString(<App initialData={initialData} />);
 
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+    const renderedHTMLWithInitialData = template.replace(
+      "<!--{INIT_DATA_AREA}-->",
+      /*html*/ `
+      <script>
+        window.__INITIAL_DATA__ = ${JSON.stringify(initialData)};
+      </script>
+    `
+    );
+    const renderedHTML = renderedHTMLWithInitialData
+      .replace("<!--{BODY_AREA}-->", renderedApp)
+      .replace("<!--{OG_TAGS}-->", "");
 
-  res.send(renderedHTML);
+    res.send(renderedHTML);
+  } catch (error) {
+    console.error("Failed to render home page:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 export default router;
