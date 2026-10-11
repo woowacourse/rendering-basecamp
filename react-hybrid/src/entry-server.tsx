@@ -45,9 +45,11 @@ for (const route of routes) {
     const origin = host ? `${req.protocol}://${host}` : ORIGIN;
     const url = new URL(req.originalUrl, origin);
 
+    const props = route.loader ? await route.loader({ params: req.params, url }) : {};
+
     const initialData: InitialData = {
       url: url.href,
-      props: route.loader ? await route.loader({ params: req.params, url }) : {},
+      props: props as InitialData['props'],
     };
 
     const renderedApp = renderToString(<App initialData={initialData} />);
