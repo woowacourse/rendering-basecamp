@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { OverlayProvider } from 'overlay-kit';
 import MovieHomePage from './pages/MovieHomePage';
 import MovieDetailPage from './pages/MovieDetailPage';
@@ -11,6 +11,11 @@ interface AppProps {
 }
 
 function App({ movies, movieDetail }: AppProps) {
+  useEffect(() => {
+    performance.mark('hydrated');
+    performance.measure('hydration (actual)', 'beforeRender', 'hydrated');
+  }, []);
+
   return (
     <OverlayProvider>
       {movieDetail ? (
