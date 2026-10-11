@@ -1,7 +1,8 @@
-import { useContext, useEffect, useState, type ReactNode } from 'react';
+import { useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { RouterContext, type InitialData } from './context';
 import { useRoute } from './useRoute';
 import { useLoader } from './useLoader';
+import { ROUTE_CHANGE_COMPLETE_EVENT } from './navigation';
 
 interface RouterProps {
   initialData?: InitialData;
@@ -21,6 +22,17 @@ function RouterContent() {
 
   const routeKey = url.pathname + url.search;
   const state = useLoader(route?.loader, { params, url }, routeKey, initialData?.props);
+  const completedRoute = useRef(initialData ? routeKey : undefined);
+
+  useEffect(() => {
+    if (state.status !== 'ready') {
+      completedRoute.current = undefined;
+      return;
+    }
+    if (!route || completedRoute.current === routeKey) return;
+    completedRoute.current = routeKey;
+    window.dispatchEvent(new CustomEvent(ROUTE_CHANGE_COMPLETE_EVENT, { detail: { url: url.href } }));
+  }, [route, routeKey, state.status, url.href]);
 
   const [previousPage, setPreviousPage] = useState<ReactNode>(null);
 

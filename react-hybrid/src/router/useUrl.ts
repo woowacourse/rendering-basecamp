@@ -1,7 +1,7 @@
 import { useContext, useMemo, useSyncExternalStore } from 'react';
 import { RouterContext } from './context';
 import { ORIGIN } from '../constants/url';
-import { URL_CHANGE_EVENT } from './navigation';
+import { ROUTE_CHANGE_START_EVENT } from './navigation';
 
 function getSnapshot() {
   return window.location.href;
@@ -10,12 +10,12 @@ function getSnapshot() {
 function subscribe(listener: () => void) {
   window.addEventListener('popstate', listener);
   window.addEventListener('hashchange', listener);
-  window.addEventListener(URL_CHANGE_EVENT, listener);
+  window.addEventListener(ROUTE_CHANGE_START_EVENT, listener);
 
   return () => {
     window.removeEventListener('popstate', listener);
     window.removeEventListener('hashchange', listener);
-    window.removeEventListener(URL_CHANGE_EVENT, listener);
+    window.removeEventListener(ROUTE_CHANGE_START_EVENT, listener);
   };
 }
 
