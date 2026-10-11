@@ -1,12 +1,23 @@
 import React from 'react';
 import { OverlayProvider } from 'overlay-kit';
 import MovieHomePage from './pages/MovieHomePage';
+import MovieDetailPage from './pages/MovieDetailPage';
 import { MovieItem } from './types/Movie.types';
+import { MovieDetailResponse } from './types/MovieDetail.types';
 
-function App({ movies }: { movies: MovieItem[] }) {
+interface AppProps {
+  movies: MovieItem[];
+  movieDetail?: MovieDetailResponse;
+}
+
+function App({ movies, movieDetail }: AppProps) {
   return (
     <OverlayProvider>
-      <MovieHomePage movies={movies} />
+      {movieDetail ? (
+        <MovieDetailPage movies={movies} movieDetail={movieDetail} />
+      ) : (
+        <MovieHomePage movies={movies} />
+      )}
     </OverlayProvider>
   );
 }

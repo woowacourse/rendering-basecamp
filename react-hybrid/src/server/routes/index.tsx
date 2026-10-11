@@ -92,7 +92,7 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
 
   const template = generateHTML();
 
-  const renderedApp = renderToString(<App movies={movies} />);
+  const renderedApp = renderToString(<App movies={movies} movieDetail={movieDetail} />);
 
   const renderedHTMLWithOgTags = template.replace(
     '<!--{OG_TAGS}-->',
