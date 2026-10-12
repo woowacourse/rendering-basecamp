@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 
 export interface LoaderContext {
-  params: Record<string, string | string[]>;
+  params: Partial<Record<string, string | string[]>>;
   url: URL;
 }
 

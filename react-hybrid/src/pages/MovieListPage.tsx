@@ -14,9 +14,12 @@ interface MovieListPageProps {
 
 export default function MovieListPage({ movies, selectedMovie }: MovieListPageProps) {
   const { params } = useRoute();
+  const selectedMovieId = params?.id;
 
   const isModalOpen =
-    params.id && selectedMovie && Number(typeof params.id === 'string' ? params.id : params.id[0]) === selectedMovie.id;
+    selectedMovieId &&
+    selectedMovie &&
+    Number(typeof selectedMovieId === 'string' ? selectedMovieId : selectedMovieId[0]) === selectedMovie.id;
 
   return (
     <div id="wrap">
