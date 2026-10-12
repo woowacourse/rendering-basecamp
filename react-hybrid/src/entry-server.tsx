@@ -2,69 +2,53 @@ import 'dotenv/config';
 
 import express from 'express';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { readFile } from 'fs/promises';
 
 import { renderToString } from 'react-dom/server';
 import App from './App';
-import { ORIGIN } from './constants/url';
+import Document from './Document';
+import { FAKE_ORIGIN } from './constants/url';
 import { routes } from './routes';
-import type { InitialData } from './router/context';
+import type { PageData } from './router/context';
+import { AppDataContext, type AppData } from './document/context';
 
 const app = express();
 const PORT = Number(process.env.PORT ?? 3000);
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-app.use('/static', express.static(path.join(__dirname, '../dist/static')));
-
-function generateHTML() {
-  return /*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
-      </head>
-      <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
-}
+const staticDirectory = path.join(__dirname, '../static');
+app.use('/static', express.static(staticDirectory));
 
 for (const route of routes) {
   app.get(route.path, async (req, res) => {
-    const host = req.get('host');
+    const url = new URL(FAKE_ORIGIN + req.originalUrl);
+    const routePath = url.pathname + url.search + url.hash;
 
-    const origin = host ? `${req.protocol}://${host}` : ORIGIN;
-    const url = new URL(req.originalUrl, origin);
+    const props = route.loader ? await route.loader({ params: req.params, path: routePath }) : {};
 
-    const props = route.loader ? await route.loader({ params: req.params, url }) : {};
-
-    const initialData: InitialData = {
-      url: url.href,
-      props: props as InitialData['props'],
+    const initialPage: PageData = {
+      path: routePath,
+      props: props as PageData['props'],
     };
 
-    const renderedApp = renderToString(<App initialData={initialData} />);
+    const manifest: AppData = JSON.parse(await readFile(path.join(staticDirectory, 'manifest.json'), 'utf8'));
 
-    const serializedData = JSON.stringify(initialData).replace(/</g, '\\u003c');
+    const appData: AppData = {
+      ...manifest,
+      initialPage,
+    };
 
-    const html = generateHTML()
-      .replace('<!--{BODY_AREA}-->', () => renderedApp)
-      .replace('<!--{INIT_DATA_AREA}-->', () => `<script>window.__INITIAL_DATA__ = ${serializedData};</script>`);
+    const html = renderToString(
+      <AppDataContext value={appData}>
+        <Document>
+          <App />
+        </Document>
+      </AppDataContext>,
+    );
 
-    res.send(html);
+    res.send('<!DOCTYPE html>' + html);
   });
 }
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

@@ -2,7 +2,7 @@ import type { ComponentType } from 'react';
 
 export interface LoaderContext {
   params: Partial<Record<string, string | string[]>>;
-  url: URL;
+  path: string;
 }
 
 type Loader<TProps> = (context: LoaderContext) => NoInfer<TProps> | Promise<NoInfer<TProps>>;

@@ -1,1 +1,1 @@
-export const ORIGIN = 'http://localhost';
+export const FAKE_ORIGIN = 'http://router.local';

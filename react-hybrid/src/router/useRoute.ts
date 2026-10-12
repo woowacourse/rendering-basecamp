@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
-import { useUrl } from './useUrl';
+import { useLocation } from './useLocation';
 import { match } from 'path-to-regexp';
 import { routes } from '../routes';
 import type { LoaderContext } from './defineRoutes';
 
 export function useRoute() {
-  const url = useUrl();
-  const { pathname } = url;
+  const location = useLocation();
+  const { pathname } = location;
 
   const matchedRoute = useMemo(() => matchRoute(pathname), [pathname]);
 
-  return { url, ...matchedRoute };
+  return { ...location, ...matchedRoute };
 }
 
 const routeMatchers = routes.map(route => ({

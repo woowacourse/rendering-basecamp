@@ -1,9 +1,9 @@
 import { createContext } from 'react';
 import type { RouteProps } from '../routes';
 
-export interface InitialData {
-  url: string;
+export interface PageData {
+  path: string;
   props: RouteProps;
 }
 
-export const RouterContext = createContext<InitialData | undefined | null>(null);
+export const RouterContext = createContext<PageData | undefined | null>(null);
