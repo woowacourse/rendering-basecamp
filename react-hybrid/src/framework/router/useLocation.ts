@@ -1,6 +1,6 @@
 import { useContext, useMemo, useSyncExternalStore } from 'react';
 import { RouterContext } from './context';
-import { FAKE_ORIGIN } from '../constants/url';
+import { FAKE_ORIGIN } from './constants';
 import { ROUTE_CHANGE_START_EVENT } from './navigation';
 
 function getSnapshot() {

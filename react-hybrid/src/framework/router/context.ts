@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { RouteProps } from '../routes';
+import type { RouteProps } from '../../routes';
 
 export interface PageData {
   path: string;

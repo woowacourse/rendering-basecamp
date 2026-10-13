@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useLocation } from './useLocation';
 import { match } from 'path-to-regexp';
-import { routes } from '../routes';
+import { routes } from '../../routes';
 import type { LoaderContext } from './defineRoutes';
 
 export function useRoute() {

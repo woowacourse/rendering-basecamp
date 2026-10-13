@@ -1,4 +1,4 @@
-import { router } from '../router/navigation';
+import { router } from '../framework/router/navigation';
 import { MovieItem } from '../types/Movie.types';
 import { IconButton } from './common/IconButton';
 import { FeaturedMovie } from './FeaturedMovie';

@@ -3,7 +3,7 @@ import { RouterContext, type PageData } from './context';
 import { useRoute } from './useRoute';
 import { useLoader } from './useLoader';
 import { ROUTE_CHANGE_COMPLETE_EVENT, ROUTE_CHANGE_ERROR_EVENT } from './navigation';
-import { useHydrated } from '../hooks/useHydrated';
+import { useHydrated } from '../useHydrated';
 
 interface RouterProps {
   initialPageData?: PageData;

@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react';
-import { defineRoutes } from './router/defineRoutes';
+import { defineRoutes } from './framework/router/defineRoutes';
 import { moviesApi } from './api/movies';
 import MovieListPage from './pages/MovieListPage';
 

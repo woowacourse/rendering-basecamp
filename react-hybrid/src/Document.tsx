@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react';
-import Head from './document/Head';
-import AppScript from './document/AppScript';
-import { useAppData } from './document/context';
-export { AppDataContext } from './document/context';
+import Head from './framework/document/Head';
+import AppScript from './framework/document/AppScript';
+import { useAppData } from './framework/document/context';
 
 interface DocumentProps {
   children?: ReactNode;

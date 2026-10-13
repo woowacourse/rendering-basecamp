@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  ROUTE_CHANGE_START_EVENT,
-  ROUTE_CHANGE_COMPLETE_EVENT,
-  ROUTE_CHANGE_ERROR_EVENT,
-} from '../router/navigation';
+import { ROUTE_CHANGE_START_EVENT, ROUTE_CHANGE_COMPLETE_EVENT, ROUTE_CHANGE_ERROR_EVENT } from '../framework/router/navigation';
 
 export function RouteLoading() {
   const [progress, setProgress] = useState<'loading' | 'complete' | null>(null);

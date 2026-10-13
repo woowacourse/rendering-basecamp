@@ -1,6 +1,6 @@
 import { RouteLoading } from './components/RouteLoading';
-import Router from './router/Router';
-import { useAppData } from './document/context';
+import Router from './framework/router/Router';
+import { useAppData } from './framework/document/context';
 import './styles/index.css';
 
 export default function App() {

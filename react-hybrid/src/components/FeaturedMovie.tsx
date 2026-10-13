@@ -1,6 +1,6 @@
 import { Button } from './common/Button';
 import type { MovieItem } from '../types/Movie.types';
-import { router } from '../router/navigation';
+import { router } from '../framework/router/navigation';
 
 interface FeaturedMovieProps {
   movie: MovieItem;

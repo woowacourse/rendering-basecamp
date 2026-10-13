@@ -2,15 +2,12 @@ const path = require('path');
 const { readFileSync } = require('fs');
 const { createRequire } = require('module');
 const { runInNewContext } = require('vm');
-const { createElement } = require('react');
-const { renderToString } = require('react-dom/server');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { Compilation } = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = (_, argv) => {
   const mode = argv.mode ?? 'production';
-  const isProduction = mode === 'production';
 
   const manifestPath = path.resolve(__dirname, 'dist/static/manifest.json');
 
@@ -19,7 +16,7 @@ module.exports = (_, argv) => {
     dependencies: ['assets'],
     mode,
     target: 'node',
-    entry: path.resolve(__dirname, 'src/Document.tsx'),
+    entry: path.resolve(__dirname, 'src/framework/renderDocument.tsx'),
     output: {
       path: path.resolve(__dirname, 'dist/static'),
       filename: 'template.cjs',
@@ -56,12 +53,8 @@ module.exports = (_, argv) => {
             require: createRequire(__filename),
             URL,
           });
-          const { default: Document, AppDataContext } = module.exports;
-          return (
-            '<!DOCTYPE html>' +
-            (isProduction ? '' : '\n') +
-            renderToString(createElement(AppDataContext, { value: appData }, createElement(Document)))
-          );
+          const { renderDocument } = module.exports;
+          return renderDocument(appData);
         },
       }),
       {

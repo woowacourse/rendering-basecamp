@@ -1,4 +1,4 @@
-import Link from '../router/Link';
+import Link from '../framework/router/Link';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
 
 interface MovieItemProps {

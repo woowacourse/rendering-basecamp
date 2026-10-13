@@ -1,8 +1,10 @@
 import { createContext, useContext } from 'react';
+import type { HeadTag } from '../head/store';
 import type { PageData } from '../router/context';
 
 export interface AppData {
   origin: string;
+  head?: HeadTag[];
   assets?: Assets;
   initialPage?: PageData;
 }

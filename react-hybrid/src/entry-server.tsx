@@ -4,13 +4,12 @@ import express from 'express';
 import path from 'path';
 import { readFile } from 'fs/promises';
 
-import { renderToString } from 'react-dom/server';
 import App from './App';
-import Document from './Document';
-import { FAKE_ORIGIN } from './constants/url';
+import { renderDocument } from './framework/renderDocument';
+import { FAKE_ORIGIN } from './framework/router/constants';
 import { routes } from './routes';
-import type { PageData } from './router/context';
-import { AppDataContext, type AppData } from './document/context';
+import type { PageData } from './framework/router/context';
+import type { AppData } from './framework/document/context';
 
 const app = express();
 const PORT = Number(process.env.PORT ?? 3000);
@@ -37,15 +36,7 @@ for (const route of routes) {
       initialPage,
     };
 
-    const html = renderToString(
-      <AppDataContext value={appData}>
-        <Document>
-          <App />
-        </Document>
-      </AppDataContext>,
-    );
-
-    res.send('<!DOCTYPE html>' + html);
+    res.send(renderDocument(appData, <App />));
   });
 }
 
