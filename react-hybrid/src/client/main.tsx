@@ -1,5 +1,7 @@
 import React from "react";
 import { hydrateRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+
 import App from "./App";
 
 const root = document.getElementById("root");
@@ -9,8 +11,17 @@ if (!root) {
 }
 
 const initialData = window.__INITIAL_DATA__;
+
 performance.mark("beforeHydrate");
-hydrateRoot(root, <App movies={initialData.movies} />);
+
+hydrateRoot(
+  root,
+  <BrowserRouter>
+    <App movies={initialData.movies} movie={initialData.movie} />
+  </BrowserRouter>,
+);
+
 performance.mark("afterHydrate");
 performance.measure("hydration", "beforeHydrate", "afterHydrate");
+
 console.log("hydration 완료");
