@@ -67,10 +67,13 @@ module.exports = (_, argv) => {
 
                 const address =
                   process.env.SITE_URL ||
-                  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ||
+                  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+                    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+                    : undefined) ||
                   (mode === 'development' ? `http://localhost:${process.env.PORT ?? 3000}` : undefined);
 
-                if (!address) throw new Error('사이트 주소가 필요합니다. SITE_URL 또는 VERCEL_URL을 설정해주세요.');
+                if (!address)
+                  throw new Error('사이트 주소가 필요합니다. SITE_URL 또는 VERCEL_PROJECT_PRODUCTION_URL을 설정해주세요.');
                 if (!URL.canParse(address))
                   throw new Error('사이트 주소는 유효한 HTTP 또는 HTTPS 절대 주소여야 합니다.');
 
