@@ -2,6 +2,8 @@ import { Router, Request, Response } from "express";
 
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
+import { moviesApi } from "../../client/api/movies";
+import type { MovieItem } from "../../client/types/Movie.types";
 import React from "react";
 
 const router = Router();
@@ -26,18 +28,24 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get("/", async (_: Request, res: Response) => {
   const template = generateHTML();
+  let movies: MovieItem[] | null = null;
 
-  const renderedApp = renderToString(<App />);
+  try {
+    const response = await moviesApi.getPopular();
+    movies = response.data.results;
+  } catch (error) {
+    console.error("서버에서 인기 영화 정보를 불러오지 못했습니다:", error);
+  }
+
+  const renderedApp = renderToString(<App movies={movies} />);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
+      window.__INITIAL_DATA__ = ${JSON.stringify({ movies })};
     </script>
   `
   );

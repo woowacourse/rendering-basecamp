@@ -1,11 +1,16 @@
 import React from "react";
 import { OverlayProvider } from "overlay-kit";
 import MovieHomePage from "./pages/MovieHomePage";
+import type { MovieItem } from "./types/Movie.types";
 
-function App() {
+interface AppProps {
+  movies: MovieItem[] | null;
+}
+
+function App({ movies }: AppProps) {
   return (
     <OverlayProvider>
-      <MovieHomePage />
+      <MovieHomePage movies={movies} />
     </OverlayProvider>
   );
 }
