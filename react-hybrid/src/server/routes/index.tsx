@@ -26,24 +26,59 @@ function generateHTML() {
     `;
 }
 
+const movies = [
+  {
+    adult: true,
+    backdrop_path: null,
+    genre_ids: [1, 2],
+    id: 1,
+    original_language: "ko",
+    original_title: "첫 번째 영화",
+    overview: "첫 번째 설명임",
+    popularity: 123,
+    poster_path: null,
+    release_date: "2020-10-10",
+    title: "첫 번째 제목임",
+    video: true,
+    vote_average: 10,
+    vote_count: 10,
+  },
+  {
+    adult: true,
+    backdrop_path: null,
+    genre_ids: [1, 2],
+    id: 2,
+    original_language: "ko",
+    original_title: "두 번째 영화",
+    overview: "두 번째 설명임",
+    popularity: 123,
+    poster_path: null,
+    release_date: "2020-10-10",
+    title: "두 번째 제목임",
+    video: true,
+    vote_average: 10,
+    vote_count: 10,
+  },
+];
+
 router.get("/", (_: Request, res: Response) => {
   const template = generateHTML();
 
-  const renderedApp = renderToString(<App />);
+  const renderedApp = renderToString(<App movies={movies} />);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify(movies)}
       }
     </script>
-  `
+  `,
   );
   const renderedHTML = renderedHTMLWithInitialData.replace(
     "<!--{BODY_AREA}-->",
-    renderedApp
+    renderedApp,
   );
 
   res.send(renderedHTML);
