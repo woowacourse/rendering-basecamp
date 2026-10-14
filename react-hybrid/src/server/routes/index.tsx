@@ -1,10 +1,10 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response } from 'express';
 
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import { moviesApi } from "../../client/api/movies";
-import type { MovieItem } from "../../client/types/Movie.types";
-import React from "react";
+import { renderToString } from 'react-dom/server';
+import App from '../../client/App';
+import { moviesApi } from '../../client/api/movies';
+import type { MovieItem } from '../../client/types/Movie.types';
+import React from 'react';
 
 const router = Router();
 
@@ -28,7 +28,7 @@ function generateHTML() {
     `;
 }
 
-router.get("/", async (_: Request, res: Response) => {
+router.get('/', async (_: Request, res: Response) => {
   const template = generateHTML();
   let movies: MovieItem[] | null = null;
 
@@ -36,22 +36,64 @@ router.get("/", async (_: Request, res: Response) => {
     const response = await moviesApi.getPopular();
     movies = response.data.results;
   } catch (error) {
-    console.error("서버에서 인기 영화 정보를 불러오지 못했습니다:", error);
+    console.error('서버에서 인기 영화 정보를 불러오지 못했습니다:', error);
   }
 
-  const renderedApp = renderToString(<App movies={movies} />);
+  const initialData: InitialData = {
+    page: 'home',
+    movies,
+  };
+  const renderedApp = renderToString(<App initialData={initialData} />);
 
   const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
+    '<!--{INIT_DATA_AREA}-->',
     /*html*/ `
     <script>
-      window.__INITIAL_DATA__ = ${JSON.stringify({ movies })};
+      window.__INITIAL_DATA__ = ${JSON.stringify(initialData)};
     </script>
-  `
+  `,
   );
   const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
+    '<!--{BODY_AREA}-->',
+    renderedApp,
+  );
+
+  res.send(renderedHTML);
+});
+
+router.get('/detail/:id', async (req: Request, res: Response) => {
+  const template = generateHTML();
+  const movieId = Number(req.params.id);
+
+  const [popularResponse, detailResponse] = await Promise.all([
+    moviesApi.getPopular().catch(error => {
+      console.error('서버에서 인기 영화 정보를 불러오지 못했습니다:', error);
+      return null;
+    }),
+    moviesApi.getDetail(movieId).catch(error => {
+      console.error('서버에서 영화 상세 정보를 불러오지 못했습니다:', error);
+      return null;
+    }),
+  ]);
+
+  const initialData: InitialData = {
+    page: 'detail',
+    movies: popularResponse?.data.results ?? null,
+    movieDetail: detailResponse?.data ?? null,
+  };
+  const renderedApp = renderToString(<App initialData={initialData} />);
+
+  const renderedHTMLWithInitialData = template.replace(
+    '<!--{INIT_DATA_AREA}-->',
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = ${JSON.stringify(initialData)};
+    </script>
+  `,
+  );
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    '<!--{BODY_AREA}-->',
+    renderedApp,
   );
 
   res.send(renderedHTML);

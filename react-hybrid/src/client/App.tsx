@@ -1,16 +1,19 @@
 import React from "react";
 import { OverlayProvider } from "overlay-kit";
 import MovieHomePage from "./pages/MovieHomePage";
-import type { MovieItem } from "./types/Movie.types";
+import MovieDetailPage from "./pages/MovieDetailPage";
 
-interface AppProps {
-  movies: MovieItem[] | null;
-}
-
-function App({ movies }: AppProps) {
+function App({ initialData }: { initialData: InitialData }) {
   return (
     <OverlayProvider>
-      <MovieHomePage movies={movies} />
+      {initialData.page === "home" ? (
+        <MovieHomePage movies={initialData.movies} />
+      ) : (
+        <MovieDetailPage
+          movies={initialData.movies}
+          movieDetail={initialData.movieDetail ?? null}
+        />
+      )}
     </OverlayProvider>
   );
 }
