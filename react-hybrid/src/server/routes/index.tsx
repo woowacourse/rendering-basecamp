@@ -3,17 +3,49 @@ import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 import App from "../../client/App";
 import { moviesApi } from "../../client/api/movies";
+import type { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 
 const router = Router();
 
-const generateHTML = (
-  renderedApp: string,
-  initialData: {
-    movies: unknown[];
-    movie?: unknown;
-  },
-) => {
+type InitialData = {
+  movies: unknown[];
+  movie?: MovieDetailResponse;
+};
+
+const escapeHtml = (value: string) => {
+  return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+};
+
+const generateHTML = (renderedApp: string, initialData: InitialData) => {
   const serializedData = JSON.stringify(initialData).replace(/</g, "\\u003c");
+
+  const movie = initialData.movie;
+
+  const imagePath = movie?.backdrop_path ?? movie?.poster_path;
+  const ogImage = imagePath ? `https://image.tmdb.org/t/p/w1280${imagePath}` : "";
+
+  const headHtml = movie
+    ? `
+        <title>${escapeHtml(movie.title)} | 영화 리뷰</title>
+        <meta
+          name="description"
+          content="${escapeHtml(movie.overview ?? "")}"
+        />
+
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content="${escapeHtml(movie.title)}"
+        />
+        <meta
+          property="og:description"
+          content="${escapeHtml(movie.overview ?? "")}"
+        />
+        ${ogImage ? `<meta property="og:image" content="${escapeHtml(ogImage)}" />` : ""}
+      `
+    : `
+        <title>영화 리뷰</title>
+      `;
 
   return `
     <!DOCTYPE html>
@@ -22,7 +54,7 @@ const generateHTML = (
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
+        ${headHtml}
       </head>
       <body>
         <div id="root">${renderedApp}</div>
