@@ -13,7 +13,6 @@ module.exports = (_, argv) => {
 
   return {
     name: 'template',
-    dependencies: ['assets'],
     mode,
     target: 'node',
     entry: path.resolve(__dirname, 'src/framework/renderDocument.tsx'),
