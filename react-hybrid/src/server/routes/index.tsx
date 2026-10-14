@@ -1,13 +1,15 @@
 import { Router, Request, Response } from "express";
-
 import { renderToString } from "react-dom/server";
+
 import App from "../../client/App";
-import React from "react";
+import { moviesApi } from "../../client/api/movies";
 
 const router = Router();
 
-function generateHTML() {
-  return /*html*/ `
+const generateHTML = (renderedApp: string, movies: unknown[]) => {
+  const serializedMovies = JSON.stringify({ movies }).replace(/</g, "\\u003c");
+
+  return `
     <!DOCTYPE html>
     <html lang="ko">
       <head>
@@ -15,38 +17,34 @@ function generateHTML() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/styles/index.css" />
         <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
       </head>
       <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
+        <div id="root">${renderedApp}</div>
+
+        <script>
+          window.__INITIAL_DATA__ = ${serializedMovies};
+        </script>
+
         <script src="/static/bundle.js"></script>
       </body>
     </html>
-    `;
-}
+  `;
+};
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
+router.get("/", async (_req: Request, res: Response) => {
+  try {
+    const { data } = await moviesApi.getPopular();
+    const movies = data.results;
 
-  const renderedApp = renderToString(<App />);
+    const renderedApp = renderToString(<App movies={movies} />);
 
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+    const html = generateHTML(renderedApp, movies);
 
-  res.send(renderedHTML);
+    res.type("html").send(html);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("영화 정보를 불러오지 못했습니다.");
+  }
 });
 
 export default router;

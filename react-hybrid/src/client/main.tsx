@@ -1,8 +1,12 @@
-import React from "react";
 import { hydrateRoot } from "react-dom/client";
 import App from "./App";
 
-const initialData = window.__INITIAL_DATA__;
-console.log("initialData", initialData);
+const root = document.getElementById("root");
 
-hydrateRoot(document.getElementById("root"), <App />);
+if (root == null) {
+  throw new Error("root element를 찾을 수 없습니다.");
+}
+
+const initialData = window.__INITIAL_DATA__;
+
+hydrateRoot(root, <App movies={initialData.movies} />);

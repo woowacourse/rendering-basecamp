@@ -1,13 +1,20 @@
-import { Header } from '../components/Header';
-import { MovieList } from '../components/MovieList';
-import { Footer } from '../components/Footer';
-import { usePopularMovies } from '../hooks/queries/usePopularMovies';
-import { Loading } from '../components/common/Loading';
+import { Header } from "../components/Header";
+import { MovieList } from "../components/MovieList";
+import { Footer } from "../components/Footer";
+import { usePopularMovies } from "../hooks/queries/usePopularMovies";
+import { Loading } from "../components/common/Loading";
+import type { MovieItem } from "../types/Movie.types";
 
-export default function MovieHomePage() {
-  const { data: movies, isLoading } = usePopularMovies();
+interface Props {
+  initialMovies?: MovieItem[];
+}
 
-  if (isLoading === true) {
+export default function MovieHomePage({ initialMovies }: Props) {
+  const { data: fetchedMovies, isLoading } = usePopularMovies(initialMovies);
+
+  const movies = initialMovies ?? fetchedMovies;
+
+  if (movies == null && isLoading) {
     return <Loading />;
   }
 
