@@ -7,5 +7,5 @@ console.log("initialData", initialData);
 performance.mark("hydration-requested");
 hydrateRoot(
   document.getElementById("root"),
-  <App movies={initialData["movies"]} />,
+  <App movies={initialData.movies} detailMovie={initialData.detailMovie} />,
 );
