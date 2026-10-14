@@ -1,6 +1,6 @@
-import { apiClient } from '../lib/apiClient';
-import type { MovieResponse } from '../types/Movie.types';
-import type { MovieDetailResponse } from '../types/MovieDetail.types';
+import { apiClient } from "../lib/apiClient";
+import type { MovieResponse } from "../../client/types/Movie.types";
+import type { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 
 export const moviesApi = {
   /**
