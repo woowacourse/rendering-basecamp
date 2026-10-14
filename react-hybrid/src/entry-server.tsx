@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 import express from 'express';
 import path from 'path';
-import { readFile } from 'fs/promises';
+import manifest from '../dist/static/manifest.json';
 
 import App from './App';
 import { renderDocument } from './framework/renderDocument';
@@ -28,8 +28,6 @@ for (const route of routes) {
       path: routePath,
       props: props as PageData['props'],
     };
-
-    const manifest: AppData = JSON.parse(await readFile(path.join(staticDirectory, 'manifest.json'), 'utf8'));
 
     const appData: AppData = {
       ...manifest,
