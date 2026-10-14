@@ -45,7 +45,14 @@ router.get('/', async (_: Request, res: Response) => {
   };
   const renderedApp = renderToString(<App initialData={initialData} />);
 
-  const renderedHTMLWithInitialData = template.replace(
+  const featuredImagePath = movies?.[0]?.backdrop_path;
+  const homeOGTags = /*html*/ `
+    <meta property="og:title" content="영화 리뷰" />
+    <meta property="og:description" content="인기 영화를 둘러보고, 영화 정보를 확인해보세요." />
+    ${featuredImagePath ? `<meta property="og:image" content="https://image.tmdb.org/t/p/original${featuredImagePath}" />` : ''}
+  `;
+  const templateWithOGTags = template.replace('<!--{OG_TAGS}-->', homeOGTags);
+  const renderedHTMLWithInitialData = templateWithOGTags.replace(
     '<!--{INIT_DATA_AREA}-->',
     /*html*/ `
     <script>
@@ -83,7 +90,15 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
   };
   const renderedApp = renderToString(<App initialData={initialData} />);
 
-  const renderedHTMLWithInitialData = template.replace(
+  const ogTags = initialData.movieDetail
+    ? /*html*/ `
+      <meta property="og:title" content="${initialData.movieDetail.title}" />
+      <meta property="og:image" content="https://image.tmdb.org/t/p/original${initialData.movieDetail.poster_path}" />
+      <meta property="og:description" content="${initialData.movieDetail.overview}" />
+    `
+    : '';
+  const templateWithOGTags = template.replace('<!--{OG_TAGS}-->', ogTags);
+  const renderedHTMLWithInitialData = templateWithOGTags.replace(
     '<!--{INIT_DATA_AREA}-->',
     /*html*/ `
     <script>
