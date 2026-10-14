@@ -5,12 +5,12 @@ module.exports = (_, argv) => ({
   name: 'server',
   mode: argv.mode ?? 'production',
   target: 'node',
+  externals: argv.mode === 'development' ? [nodeExternals()] : [],
   entry: path.resolve(__dirname, 'src/entry-server.tsx'),
   output: {
     path: path.resolve(__dirname, 'dist/server'),
     filename: 'server.js',
   },
-  externals: [nodeExternals()],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },

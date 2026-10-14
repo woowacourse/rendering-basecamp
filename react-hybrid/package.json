@@ -2,11 +2,12 @@
   "name": "react-ssr",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server/server.js",
   "scripts": {
     "build:client": "npm run typecheck && webpack --config webpack.client.config.js",
     "build:server": "npm run typecheck && webpack --config webpack.server.config.js",
     "build": "npm run typecheck && webpack",
+    "postbuild": "if [ \"$VERCEL\" = \"1\" ]; then sh build-vercel.sh; fi",
     "dev": "webpack --mode development && concurrently \"webpack --mode development --watch\" \"nodemon\"",
     "start": "node dist/server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
