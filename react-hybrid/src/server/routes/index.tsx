@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 
 import { renderToString } from "react-dom/server";
+import { moviesApi } from "../api/movies";
 import App from "../../client/App";
 import React from "react";
 
@@ -26,43 +27,12 @@ function generateHTML() {
     `;
 }
 
-const movies = [
-  {
-    adult: true,
-    backdrop_path: null,
-    genre_ids: [1, 2],
-    id: 1,
-    original_language: "ko",
-    original_title: "첫 번째 영화",
-    overview: "첫 번째 설명임",
-    popularity: 123,
-    poster_path: null,
-    release_date: "2020-10-10",
-    title: "첫 번째 제목임",
-    video: true,
-    vote_average: 10,
-    vote_count: 10,
-  },
-  {
-    adult: true,
-    backdrop_path: null,
-    genre_ids: [1, 2],
-    id: 2,
-    original_language: "ko",
-    original_title: "두 번째 영화",
-    overview: "두 번째 설명임",
-    popularity: 123,
-    poster_path: null,
-    release_date: "2020-10-10",
-    title: "두 번째 제목임",
-    video: true,
-    vote_average: 10,
-    vote_count: 10,
-  },
-];
-
-router.get("/", (_: Request, res: Response) => {
+router.get("/", async (_: Request, res: Response) => {
   const template = generateHTML();
+
+  const response = await moviesApi.getPopular();
+
+  const movies = response.data.results;
 
   const renderedApp = renderToString(<App movies={movies} />);
 
