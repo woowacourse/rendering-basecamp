@@ -1,12 +1,11 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
-const Dotenv = require("dotenv-webpack");
 
 module.exports = {
-  mode: "development",
+  mode: "production",
   entry: "./src/client/main.tsx",
   output: {
-    path: path.resolve("dist/static"),
+    path: path.resolve(__dirname, "dist/static"),
     filename: "bundle.js",
     clean: true,
     publicPath: "/static/",
@@ -47,7 +46,6 @@ module.exports = {
         { from: "public/styles", to: "styles" },
       ],
     }),
-    new Dotenv(),
   ],
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
