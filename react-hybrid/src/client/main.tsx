@@ -4,4 +4,7 @@ import App from "./App";
 
 const initialData = window.__INITIAL_DATA__;
 
+performance.mark("beforeRender");
 hydrateRoot(document.getElementById("root"), <App {...initialData} />);
+performance.mark("afterHydrate");
+performance.measure("hydration", "beforeRender", "afterHydrate");
