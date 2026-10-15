@@ -85,6 +85,7 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
 
   const initialData: InitialData = {
     page: 'detail',
+    movieId,
     movies: popularResponse?.data.results ?? null,
     movieDetail: detailResponse?.data ?? null,
   };

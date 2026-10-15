@@ -10,6 +10,7 @@ function App({ initialData }: { initialData: InitialData }) {
         <MovieHomePage movies={initialData.movies} />
       ) : (
         <MovieDetailPage
+          movieId={initialData.movieId}
           movies={initialData.movies}
           movieDetail={initialData.movieDetail ?? null}
         />

@@ -5,6 +5,7 @@ declare global {
   type InitialData = {
     page: 'home' | 'detail';
     movies: MovieItem[] | null;
+    movieId?: number;
     movieDetail?: MovieDetailResponse | null;
   };
 
