@@ -64,4 +64,54 @@ router.get("/", async (_: Request, res: Response) => {
   res.send(renderedHTML);
 });
 
+router.get("/detail/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const template = generateHTML();
+
+  const [moviesResonse, movieDetailResponse] = await Promise.all([
+    moviesApi.getPopular(1),
+    moviesApi.getDetail(id),
+  ]);
+  const movies = moviesResonse.data.results;
+  const movieDetail = movieDetailResponse.data;
+
+  const movieDetailOgString = renderToString(
+    <>
+      <title>{movieDetail.title}</title>
+      <meta property="og:title" content={movieDetail.title} />
+      <meta property="og:description" content={movieDetail.overview} />
+      <meta name="description" content={movieDetail.overview} />
+      {movieDetail.poster_path && (
+        <meta
+          property="og:image"
+          content={`https://image.tmdb.org/t/p/original${movieDetail.poster_path}`}
+        />
+      )}
+    </>,
+  );
+
+  const renderedApp = renderToString(
+    <App movies={movies} movieDetail={movieDetail} />,
+  );
+
+  const renderedHTMLWithInitialData = template.replace(
+    "<!--{INIT_DATA_AREA}-->",
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = {
+        movies: ${JSON.stringify(movies)},
+        movieDetail: ${JSON.stringify(movieDetail)}
+      }
+    </script>
+  `,
+  );
+
+  const renderedHTML = renderedHTMLWithInitialData
+    .replace("<title>영화 리뷰</title>", "")
+    .replace("<!--{OG_TAGS}-->", () => movieDetailOgString)
+    .replace("<!--{BODY_AREA}-->", () => renderedApp);
+
+  res.send(renderedHTML);
+});
+
 export default router;
