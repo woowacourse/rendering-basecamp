@@ -16,6 +16,9 @@ function App({ initialData }: AppProps) {
 
   // hydration이 끝난 뒤 한 번 실행된다. (서버에서는 실행되지 않는다)
   useEffect(() => {
+    performance.mark("hydration-end");
+    performance.measure("hydration", "hydration-start", "hydration-end");
+
     // 브라우저 뒤로/앞으로 가기를 하면, 그 기록에 저장해 둔 상세 정보로 화면을 맞춘다.
     window.history.replaceState({ movieDetail: initialData.movieDetail }, "");
     const handlePopState = (event: PopStateEvent) => {
