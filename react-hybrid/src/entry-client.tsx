@@ -25,5 +25,8 @@ const element = (
 if (appData.initialPage === undefined) {
   createRoot(document).render(element);
 } else {
+  performance.mark('beforeRender');
   hydrateRoot(document, element);
+  performance.mark('afterHydrate');
+  performance.measure('hydration', 'beforeRender', 'afterHydrate');
 }
