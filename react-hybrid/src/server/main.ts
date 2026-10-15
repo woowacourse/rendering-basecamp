@@ -4,6 +4,7 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 
+import apiRouter from "./routes/api";
 import movieRouter from "./routes/index";
 
 const app = express();
@@ -19,6 +20,7 @@ const staticPath = path.join(__dirname, "../../dist/static");
 app.use("/static", express.static(staticPath));
 app.use("/images", express.static(path.join(staticPath, "images")));
 
+app.use("/api", apiRouter);
 app.use("/", movieRouter);
 
 // Start server
