@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
 
 import express from "express";
 import path from "path";
@@ -13,7 +12,10 @@ const PORT = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use("/static", express.static(path.join(__dirname, "../../dist/static")));
+const staticPath = path.join(__dirname, "../../dist/static");
+
+app.use("/static", express.static(staticPath));
+app.use("/images", express.static(path.join(staticPath, "images")));
 
 app.use("/", movieRouter);
 
