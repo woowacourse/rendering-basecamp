@@ -9,7 +9,7 @@ performance.mark('hydration-start');
 
 hydrateRoot(
   document.getElementById('root'),
-  <App movies={initialData.movies} />,
+  <App movies={initialData.movies} movieDetail={initialData.movieDetail} />,
 );
 
 performance.mark('hydrateRoot-returned');
