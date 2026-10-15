@@ -1,9 +1,13 @@
-declare global {
-  interface Window {
-    __INITIAL_DATA__: {
-      movies: any[];
-    };
-  }
+import type { MovieItem } from './Movie.types';
+import type { MovieDetailResponse } from './MovieDetail.types';
+
+export interface InitialData {
+  movies: MovieItem[];
+  movieDetail?: MovieDetailResponse | null;
 }
 
-export {};
+declare global {
+  interface Window {
+    __INITIAL_DATA__: InitialData;
+  }
+}
