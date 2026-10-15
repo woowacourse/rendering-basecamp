@@ -10,8 +10,13 @@ import type { InitialData } from "../../client/types/InitialData.types";
 
 const router = Router();
 
+const TMDB_IMAGE_URL = "https://image.tmdb.org/t/p";
+
 interface PageOptions {
   title: string;
+  description: string;
+  ogTitle?: string;
+  ogImage?: string;
   initialData: InitialData;
 }
 
@@ -19,7 +24,13 @@ interface PageOptions {
  * App을 HTML로 렌더링하고, 브라우저가 같은 데이터로 hydration 할 수 있게
  * 렌더링에 쓴 데이터를 window.__INITIAL_DATA__ 로 함께 내려준다.
  */
-function renderPage({ title, initialData }: PageOptions) {
+function renderPage({
+  title,
+  description,
+  ogTitle = title,
+  ogImage,
+  initialData,
+}: PageOptions) {
   const renderedApp = renderToString(<App initialData={initialData} />);
 
   return /*html*/ `<!DOCTYPE html>
@@ -29,6 +40,11 @@ function renderPage({ title, initialData }: PageOptions) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/static/styles/index.css" />
     <title>${escapeHtml(title)}</title>
+    <meta name="description" content="${escapeHtml(description)}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="${escapeHtml(ogTitle)}" />
+    <meta property="og:description" content="${escapeHtml(description)}" />
+    ${ogImage ? `<meta property="og:image" content="${escapeHtml(ogImage)}" />` : ""}
   </head>
   <body>
     <div id="root">${renderedApp}</div>
@@ -71,6 +87,7 @@ router.get("/", async (_: Request, res: Response) => {
     res.send(
       renderPage({
         title: "영화 리뷰",
+        description: "지금 인기 있는 영화를 확인하고 별점을 남겨보세요.",
         initialData: { movies, movieDetail: null },
       })
     );
@@ -98,6 +115,12 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     res.send(
       renderPage({
         title: `${movieDetail.title} - 영화 리뷰`,
+        description:
+          movieDetail.overview || `${movieDetail.title}의 정보를 확인해 보세요.`,
+        ogTitle: movieDetail.title,
+        ogImage: movieDetail.poster_path
+          ? `${TMDB_IMAGE_URL}/w500${movieDetail.poster_path}`
+          : undefined,
         initialData: { movies, movieDetail },
       })
     );
