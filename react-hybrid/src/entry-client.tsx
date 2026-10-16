@@ -1,6 +1,7 @@
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { createHeadStore } from './framework/head/store';
 import { HeadContext } from './framework/head/context';
+import HydrationMeasure from './framework/HydrationMeasure';
 import App from './App';
 import Document from './Document';
 import { AppDataContext, APP_DATA_ID } from './framework/document/context';
@@ -26,7 +27,13 @@ if (appData.initialPage === undefined) {
   createRoot(document).render(element);
 } else {
   performance.mark('beforeRender');
-  hydrateRoot(document, element);
+  hydrateRoot(
+    document,
+    <>
+      {element}
+      <HydrationMeasure />
+    </>
+  );
   performance.mark('afterHydrate');
   performance.measure('hydration', 'beforeRender', 'afterHydrate');
 }
