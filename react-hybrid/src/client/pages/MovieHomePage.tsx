@@ -1,7 +1,7 @@
-import { Header } from "../components/Header";
-import { MovieList } from "../components/MovieList";
-import { Footer } from "../components/Footer";
-import { MovieItem } from "../types/Movie.types";
+import { Header } from '../components/Header';
+import { MovieList } from '../components/MovieList';
+import { Footer } from '../components/Footer';
+import { MovieItem } from '../types/Movie.types';
 
 export default function MovieHomePage({ movies }: { movies: MovieItem[] }) {
   if (movies == null || movies.length === 0) {
