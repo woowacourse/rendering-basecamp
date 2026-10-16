@@ -1,17 +1,18 @@
-const path = require("path");
-const nodeExternals = require("webpack-node-externals");
+const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
-module.exports = {
-  mode: "development",
-  target: "node",
-  entry: path.resolve(__dirname, "src/server/main.ts"),
+module.exports = (_, argv) => ({
+  name: 'server',
+  mode: argv.mode ?? 'production',
+  target: 'node',
+  externals: argv.mode === 'development' ? [nodeExternals()] : [],
+  entry: path.resolve(__dirname, 'src/entry-server.tsx'),
   output: {
-    filename: "server.js",
-    path: path.resolve(__dirname, "dist/server"),
+    path: path.resolve(__dirname, 'dist/server'),
+    filename: 'server.js',
   },
-  externals: [nodeExternals()],
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   module: {
     rules: [
@@ -19,20 +20,14 @@ module.exports = {
         test: /\.(jsx?|tsx?)$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
-          options: {
-            presets: [
-              "@babel/preset-env", 
-              ["@babel/preset-react", { "runtime": "automatic" }],
-              ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
-            ],
-          },
+          loader: 'babel-loader',
+          options: { targets: { node: '20' } },
         },
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
-};
+});
