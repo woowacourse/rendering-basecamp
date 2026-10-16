@@ -1,0 +1,38 @@
+/* 상세 페이지: 모달 본문(.modal-container)을 그대로 쓰고 감싸는 카드만 따로 둔다. */
+.detail-background {
+  height: 360px;
+}
+
+.detail-hero {
+  margin-top: 96px;
+}
+
+.detail-hero > *:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.detail-tagline {
+  color: var(--color-bluegray-30);
+  font-style: italic;
+}
+
+.detail-sub {
+  color: var(--color-bluegray-30);
+  font-size: 0.9rem;
+}
+
+.detail-card {
+  background-color: var(--color-bluegray-90);
+  border-radius: 16px;
+  padding-top: 20px;
+}
+
+.detail-card .overview-text {
+  max-height: none;
+}
+
+@media (max-width: 768px) {
+  .detail-hero {
+    margin-top: 35px;
+  }
+}
