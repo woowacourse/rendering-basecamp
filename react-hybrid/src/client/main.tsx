@@ -6,9 +6,12 @@ import Document from './Document';
 const initialData = window.__INITIAL_DATA__;
 console.log('initialData', initialData);
 
+performance.mark('beforeRender');
 hydrateRoot(
     document,
     <Document initialData={initialData}>
         <App initialPathname={window.location.pathname} initialData={initialData} />
     </Document>
 );
+performance.mark('afterHydrate');
+performance.measure('hydration', 'beforeRender', 'afterHydrate');
