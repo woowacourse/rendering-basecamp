@@ -4,6 +4,8 @@ import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
 
+import { moviesApi } from "../../client/api/movies";
+
 const router = Router();
 
 function generateHTML() {
@@ -26,24 +28,27 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get("/", async (_: Request, res: Response) => {
   const template = generateHTML();
 
   const renderedApp = renderToString(<App />);
+
+  const popularData = await moviesApi.getPopular();
+  const movies = popularData.data.results;
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify(movies)}
       }
     </script>
-  `
+  `,
   );
   const renderedHTML = renderedHTMLWithInitialData.replace(
     "<!--{BODY_AREA}-->",
-    renderedApp
+    renderedApp,
   );
 
   res.send(renderedHTML);
