@@ -1,6 +1,7 @@
 import type { MovieDetailResponse } from '../types/MovieDetail.types';
 import { MovieDetailContent } from './MovieDetailContent';
 import { Footer } from './Footer';
+import { Link } from './common/Link';
 
 export const MovieDetail = ({ movie }: { movie: MovieDetailResponse }) => {
     const { title, tagline, release_date, runtime, backdrop_path } = movie;
@@ -18,9 +19,9 @@ export const MovieDetail = ({ movie }: { movie: MovieDetailResponse }) => {
                     <div className="overlay" />
 
                     <div className="top-rated-container">
-                        <a href="/" className="logo">
+                        <Link to="/" className="logo">
                             <img src="/images/logo.png" width="117" height="20" alt="MovieLogo" />
-                        </a>
+                        </Link>
 
                         <div className="detail-hero">
                             <h1 className="text-3xl font-semibold">{title}</h1>
