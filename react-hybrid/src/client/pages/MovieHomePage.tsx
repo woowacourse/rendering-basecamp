@@ -4,6 +4,7 @@ import { Footer } from '../components/Footer';
 import { Loading } from '../components/common/Loading';
 import { HomeData, PageProps } from '../../router';
 import { useLoaderData } from '../hooks/useLoaderData';
+import { Head, SITE_NAME, toOgImageUrl } from '../components/Head';
 
 export default function MovieHomePage({ params, loader, initialData }: PageProps<HomeData>) {
     const { data, error, isLoading } = useLoaderData({ params, loader, initialData });
@@ -18,6 +19,11 @@ export default function MovieHomePage({ params, loader, initialData }: PageProps
 
     return (
         <div id="wrap">
+            <Head
+                title={SITE_NAME}
+                description="지금 인기 있는 영화를 확인해보세요."
+                image={toOgImageUrl(movies[0].backdrop_path)}
+            />
             <Header featuredMovie={movies[0]} />
             <MovieList movies={movies} />
             <Footer />
