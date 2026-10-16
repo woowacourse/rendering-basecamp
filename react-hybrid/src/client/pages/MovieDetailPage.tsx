@@ -1,33 +1,18 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import MovieHomePage from './MovieHomePage';
-import { moviesApi } from '../api/movies';
+import { PageProps } from '../../router';
+import { MovieDetailResponse } from '../types/MovieDetail.types';
+import { useLoaderData } from '../hooks/useLoaderData';
+import { MovieDetail } from '../components/MovieDetail';
+import { Loading } from '../components/common/Loading';
 
-export default function MovieDetailPage() {
-  return (
-    <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
-    </>
-  );
-}
-
-function DetailPageOpenModal() {
-  const { movieId } = useParams();
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
-
-  useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
-      return;
+export default function MovieDetailPage({ params, loader, initialData }: PageProps<MovieDetailResponse>) {
+    const { data: movie, error, isLoading } = useLoaderData({ params, loader, initialData });
+    if (isLoading === true) {
+        return <Loading />;
     }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [movieId, openMovieDetailModal]);
 
-  return null;
+    if (movie == null || error) {
+        return <div>영화 정보를 불러오는데 실패했습니다.{error && `에러 메세지${error}`}</div>;
+    }
+
+    return <MovieDetail movie={movie} />;
 }
