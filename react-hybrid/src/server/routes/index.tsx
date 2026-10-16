@@ -1,8 +1,10 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response } from 'express';
 
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
+import { renderToString } from 'react-dom/server';
+import App from '../../client/App';
+import { moviesApi } from '../../client/api/movies';
+import type { MovieItem } from '../../client/types/Movie.types';
+import React from 'react';
 
 const router = Router();
 
@@ -26,24 +28,88 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get('/', async (_: Request, res: Response) => {
   const template = generateHTML();
+  let movies: MovieItem[] | null = null;
 
-  const renderedApp = renderToString(<App />);
+  try {
+    const response = await moviesApi.getPopular();
+    movies = response.data.results;
+  } catch (error) {
+    console.error('서버에서 인기 영화 정보를 불러오지 못했습니다:', error);
+  }
 
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
+  const initialData: InitialData = {
+    page: 'home',
+    movies,
+  };
+  const renderedApp = renderToString(<App initialData={initialData} />);
+
+  const featuredImagePath = movies?.[0]?.backdrop_path;
+  const homeOGTags = /*html*/ `
+    <meta property="og:title" content="영화 리뷰" />
+    <meta property="og:description" content="인기 영화를 둘러보고, 영화 정보를 확인해보세요." />
+    ${featuredImagePath ? `<meta property="og:image" content="https://image.tmdb.org/t/p/original${featuredImagePath}" />` : ''}
+  `;
+  const templateWithOGTags = template.replace('<!--{OG_TAGS}-->', homeOGTags);
+  const renderedHTMLWithInitialData = templateWithOGTags.replace(
+    '<!--{INIT_DATA_AREA}-->',
     /*html*/ `
     <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
+      window.__INITIAL_DATA__ = ${JSON.stringify(initialData)};
     </script>
-  `
+  `,
   );
   const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
+    '<!--{BODY_AREA}-->',
+    renderedApp,
+  );
+
+  res.send(renderedHTML);
+});
+
+router.get('/detail/:id', async (req: Request, res: Response) => {
+  const template = generateHTML();
+  const movieId = Number(req.params.id);
+
+  const [popularResponse, detailResponse] = await Promise.all([
+    moviesApi.getPopular().catch(error => {
+      console.error('서버에서 인기 영화 정보를 불러오지 못했습니다:', error);
+      return null;
+    }),
+    moviesApi.getDetail(movieId).catch(error => {
+      console.error('서버에서 영화 상세 정보를 불러오지 못했습니다:', error);
+      return null;
+    }),
+  ]);
+
+  const initialData: InitialData = {
+    page: 'detail',
+    movieId,
+    movies: popularResponse?.data.results ?? null,
+    movieDetail: detailResponse?.data ?? null,
+  };
+  const renderedApp = renderToString(<App initialData={initialData} />);
+
+  const ogTags = initialData.movieDetail
+    ? /*html*/ `
+      <meta property="og:title" content="${initialData.movieDetail.title}" />
+      <meta property="og:image" content="https://image.tmdb.org/t/p/original${initialData.movieDetail.poster_path}" />
+      <meta property="og:description" content="${initialData.movieDetail.overview}" />
+    `
+    : '';
+  const templateWithOGTags = template.replace('<!--{OG_TAGS}-->', ogTags);
+  const renderedHTMLWithInitialData = templateWithOGTags.replace(
+    '<!--{INIT_DATA_AREA}-->',
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = ${JSON.stringify(initialData)};
+    </script>
+  `,
+  );
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    '<!--{BODY_AREA}-->',
+    renderedApp,
   );
 
   res.send(renderedHTML);

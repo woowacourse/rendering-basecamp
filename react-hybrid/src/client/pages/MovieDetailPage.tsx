@@ -1,33 +1,36 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
 import MovieHomePage from './MovieHomePage';
-import { moviesApi } from '../api/movies';
+import { MovieDetailModal } from '../components/MovieDetailModal';
+import type { MovieItem } from '../types/Movie.types';
+import type { MovieDetailResponse } from '../types/MovieDetail.types';
+import { useMovieDetail } from '../hooks/queries/useMovieDetail';
+import { Loading } from '../components/common/Loading';
 
-export default function MovieDetailPage() {
-  return (
-    <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
-    </>
-  );
+interface MovieDetailPageProps {
+  movieId?: number;
+  movies: MovieItem[] | null;
+  movieDetail: MovieDetailResponse | null;
 }
 
-function DetailPageOpenModal() {
-  const { movieId } = useParams();
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
+export default function MovieDetailPage({
+  movieId,
+  movies,
+  movieDetail,
+}: MovieDetailPageProps) {
+  const { data: movie, isLoading, error } = useMovieDetail(movieId, movieDetail);
 
-  useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
-      return;
-    }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [movieId, openMovieDetailModal]);
-
-  return null;
+  return (
+    <>
+      <MovieHomePage movies={movies} />
+      {isLoading ? (
+        <Loading />
+      ) : error || !movie ? (
+        <p>영화 상세 정보를 불러오지 못했습니다.</p>
+      ) : (
+        <MovieDetailModal
+          movie={movie}
+          onClose={() => window.location.assign('/')}
+        />
+      )}
+    </>
+  );
 }
