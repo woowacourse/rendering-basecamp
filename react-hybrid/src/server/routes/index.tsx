@@ -1,11 +1,19 @@
 import { Router, Request, Response } from 'express';
 
 import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router-dom';
 import App from '../../client/App';
 import React from 'react';
 import { moviesApi } from '../../client/api/movies';
+import type { MovieItem } from '../../client/types/Movie.types';
+import type { MovieDetailResponse } from '../../client/types/MovieDetail.types';
 
 const router = Router();
+
+interface InitialData {
+  movies: MovieItem[];
+  movieDetail?: MovieDetailResponse;
+}
 
 function generateHTML() {
   return /*html*/ `
@@ -27,32 +35,63 @@ function generateHTML() {
     `;
 }
 
+function renderPage(initialData: InitialData, location: string) {
+  const template = generateHTML();
+  const renderedApp = renderToString(
+    <StaticRouter location={location}>
+      <App movies={initialData.movies} movieDetail={initialData.movieDetail} />
+    </StaticRouter>,
+  );
+
+  return template
+    .replace(
+      '<!--{INIT_DATA_AREA}-->',
+      /*html*/ `
+        <script>
+          window.__INITIAL_DATA__ = ${JSON.stringify(initialData)}
+        </script>
+      `,
+    )
+    .replace('<!--{BODY_AREA}-->', renderedApp);
+}
+
 router.get('/', async (_: Request, res: Response) => {
   try {
-    const template = generateHTML();
-
     const response = await moviesApi.getPopular();
     const movies = response.data.results;
 
-    const renderedApp = renderToString(<App movies={movies} />);
+    res.send(renderPage({ movies }, '/'));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('영화 정보를 불러오지 못했습니다.');
+  }
+});
 
-    const renderedHTMLWithInitialData = template.replace(
-      '<!--{INIT_DATA_AREA}-->',
-      /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify(movies)}
-      }
-    </script>
-  `,
-    );
-    const renderedHTML = renderedHTMLWithInitialData.replace(
-      '<!--{BODY_AREA}-->',
-      renderedApp,
-    );
+router.get('/detail/:movieId', async (req: Request, res: Response) => {
+  const movieId = Number(req.params.movieId);
 
-    res.send(renderedHTML);
-  } catch {
+  if (!Number.isInteger(movieId) || movieId < 1) {
+    res.status(400).send('잘못된 영화 ID입니다.');
+    return;
+  }
+
+  try {
+    const [popularResponse, detailResponse] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(movieId),
+    ]);
+
+    res.send(
+      renderPage(
+        {
+          movies: popularResponse.data.results,
+          movieDetail: detailResponse.data,
+        },
+        req.path,
+      ),
+    );
+  } catch (error) {
+    console.error(error);
     res.status(500).send('영화 정보를 불러오지 못했습니다.');
   }
 });
