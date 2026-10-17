@@ -2,6 +2,8 @@ import React from "react";
 import { hydrateRoot } from "react-dom/client";
 import App from "./App";
 
+console.log("defer적용");
+
 const initialData = window.__INITIAL_DATA__;
 console.log("initialData", initialData);
 
