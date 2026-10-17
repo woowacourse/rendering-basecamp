@@ -1,25 +1,26 @@
-import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
+import express from 'express';
+import path from 'path';
 
 import apiRouter from './routes/api';
-import movieRouter from "./routes/index";
+import movieRouter from './routes/index';
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const staticDirectory = path.join(__dirname, '../../dist/static');
+const staticDirectory = path.resolve(__dirname, '../static');
 
 app.use('/static', express.static(staticDirectory));
 app.use(express.static(staticDirectory));
 
 app.use('/api', apiRouter);
-app.use("/", movieRouter);
+app.use('/', movieRouter);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+const server = app.listen(PORT);
+
+server.on('listening', () => {
+  console.log(`서버가 http://localhost:${PORT}에서 실행 중입니다.`);
+});
+
+server.on('error', error => {
+  console.error('서버 실행에 실패했습니다.', error);
 });
