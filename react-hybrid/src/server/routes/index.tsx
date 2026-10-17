@@ -1,10 +1,31 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response } from 'express';
 
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
+import { renderToString } from 'react-dom/server';
+import App from '../../client/App';
+import React from 'react';
+
+import { moviesApi } from '../api/movies';
+import type { MovieDetailResponse } from '../types/MovieDetail.types';
 
 const router = Router();
+
+function generateOGTags(movie: MovieDetailResponse) {
+  const imageUrl = movie.backdrop_path
+    ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+    : '';
+
+  return renderToString(
+    <>
+      <meta property="og:title" content={movie.title} />
+      <meta
+        property="og:description"
+        content={movie.overview || '줄거리 정보가 없습니다.'}
+      />
+      {imageUrl && <meta property="og:image" content={imageUrl} />}
+      <meta property="og:type" content="video.movie" />
+    </>
+  );
+}
 
 function generateHTML() {
   return /*html*/ `
@@ -18,7 +39,7 @@ function generateHTML() {
         <!--{OG_TAGS}-->
       </head>
       <body>
-        <div id="root"><!--{BODY_AREA}--></div>
+        <div id ="root"><!--{BODY_AREA}--></div>
         <!--{INIT_DATA_AREA}-->
         <script src="/static/bundle.js"></script>
       </body>
@@ -26,25 +47,61 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
   const template = generateHTML();
 
-  const renderedApp = renderToString(<App />);
+  const { results: movies } = await moviesApi
+    .getPopular()
+    .then(res => res.data);
+  const renderedApp = renderToString(<App path={req.path} movies={movies} />);
 
   const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
+    '<!--{INIT_DATA_AREA}-->',
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify(movies)}
       }
     </script>
   `
   );
   const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
+    '<!--{BODY_AREA}-->',
     renderedApp
   );
+
+  res.send(renderedHTML);
+});
+
+router.get('/detail/:id', async (req: Request, res: Response) => {
+  const template = generateHTML();
+
+  const [popular, detail] = await Promise.all([
+    moviesApi.getPopular(),
+    moviesApi.getDetail(Number(req.params.id)),
+  ]);
+  const movies = popular.data.results;
+  const movieDetail = detail.data;
+  const ogTags = generateOGTags(movieDetail);
+
+  const renderedApp = renderToString(
+    <App path={req.path} movies={movies} movieDetail={movieDetail} />
+  );
+
+  const renderedHTMLWithInitialData = template.replace(
+    '<!--{INIT_DATA_AREA}-->',
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = {
+        movies: ${JSON.stringify(movies)},
+        movieDetail: ${JSON.stringify(movieDetail)}
+      }
+    </script>
+  `
+  );
+  const renderedHTML = renderedHTMLWithInitialData
+    .replace('<!--{BODY_AREA}-->', renderedApp)
+    .replace('<!--{OG_TAGS}-->', ogTags);
 
   res.send(renderedHTML);
 });

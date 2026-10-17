@@ -1,8 +1,23 @@
-import React from "react";
-import { hydrateRoot } from "react-dom/client";
-import App from "./App";
+import React from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import App from './App';
 
-const initialData = window.__INITIAL_DATA__;
-console.log("initialData", initialData);
+const { movies, movieDetail } = window.__INITIAL_DATA__;
 
-hydrateRoot(document.getElementById("root"), <App />);
+performance.mark('beforeRender');
+
+hydrateRoot(
+  document.getElementById('root'),
+  <App
+    path={window.location.pathname}
+    movies={movies}
+    movieDetail={movieDetail}
+  />
+);
+
+performance.mark('afterHydrate');
+performance.measure('hydration', 'beforeRender', 'afterHydrate');
+
+console.log(
+  `hydrateRoot 호출 시간: ${performance.getEntriesByName('hydration')[0].duration}ms`
+);
