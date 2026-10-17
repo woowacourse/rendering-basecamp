@@ -47,7 +47,7 @@ module.exports = {
         { from: "public/styles", to: "styles" },
       ],
     }),
-    new Dotenv(),
+    new Dotenv({ systemvars: true }),
   ],
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
