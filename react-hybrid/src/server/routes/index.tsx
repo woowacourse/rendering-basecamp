@@ -1,14 +1,28 @@
 import { Router, Request, Response } from "express";
 
-import { renderToString } from "react-dom/server";
+import { renderToStaticMarkup, renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
 
 import { moviesApi } from "../../client/api/movies";
+import type { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 
 const router = Router();
 
-function generateHTML() {
+function generateHTML(movieDetail: MovieDetailResponse | null) {
+  const metadata = movieDetail ? renderToStaticMarkup(
+    <>
+      <title>{movieDetail.title}</title>
+      <meta name="description" content={movieDetail.overview || `${movieDetail.title} 상세 정보`} />
+      <meta property="og:title" content={movieDetail.title} />
+      <meta property="og:description" content={movieDetail.overview || `${movieDetail.title} 상세 정보`} />
+      {movieDetail.poster_path && (
+        <meta property="og:image" content={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`} />
+      )}
+      <meta property="og:type" content="website" />
+    </>
+  ) : "<title>영화 리뷰</title>";
+
   return /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -16,8 +30,7 @@ function generateHTML() {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
+        ${metadata}
       </head>
       <body>
         <div id="root"><!--{BODY_AREA}--></div>
@@ -45,7 +58,7 @@ async function renderPage(req: Request, res: Response) {
 
   const serializedData = JSON.stringify(initialData).replace(/</g, "\\u003c");
 
-  const html = generateHTML()
+  const html = generateHTML(initialData.movieDetail)
     .replace("<!--{BODY_AREA}-->", () => renderedApp)
     .replace(
       "<!--{INIT_DATA_AREA}-->",
