@@ -1,5 +1,6 @@
 import { ErrorRequestHandler, Router, Request, Response } from "express";
 import { tmdbApi } from "../api/tmdb";
+import { pickMovieDetail } from "../movieFields";
 import { parseMovieId } from "./parseMovieId";
 
 const apiRouter = Router();
@@ -12,7 +13,7 @@ apiRouter.get("/movies/:id", async (req: Request<{ id: string }>, res: Response)
     return;
   }
 
-  res.json(movie);
+  res.json(pickMovieDetail(movie));
 });
 
 const handleApiError: ErrorRequestHandler = (error, _req, res, _next) => {

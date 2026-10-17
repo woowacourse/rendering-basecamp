@@ -2,12 +2,12 @@ import { useState } from 'react';
 import MovieHomePage from './MovieHomePage';
 import { MovieDetailModal } from '../components/MovieDetailModal';
 import { SITE_NAME } from '../constants/site';
-import type { MovieItem } from '../types/Movie.types';
-import type { MovieDetailResponse } from '../types/MovieDetail.types';
+import type { MovieSummary } from '../types/Movie.types';
+import type { MovieDetail } from '../types/MovieDetail.types';
 
 interface MovieDetailPageProps {
-  movies: MovieItem[];
-  movie: MovieDetailResponse;
+  movies: MovieSummary[];
+  movie: MovieDetail;
 }
 
 export default function MovieDetailPage({ movies, movie }: MovieDetailPageProps) {

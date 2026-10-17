@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { moviesApi } from '../../api/movies';
-import { MovieDetailResponse } from '../../types/MovieDetail.types';
+import { MovieDetail } from '../../types/MovieDetail.types';
 
 /**
  * 영화 상세 정보를 조회하는 훅
  */
 export const useMovieDetail = (id: number) => {
-  const [data, setData] = useState<MovieDetailResponse | null>(null);
+  const [data, setData] = useState<MovieDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 

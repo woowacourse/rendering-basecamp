@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { tmdbApi } from "../api/tmdb";
 import { renderDocument } from "../renderDocument";
 import { renderNotFoundPage } from "../errorPages";
+import { pickMovieDetail, pickMovieSummary } from "../movieFields";
 import { renderMovieOpenGraphTags } from "../openGraph";
 import { SITE_NAME } from "../../client/constants/site";
 import { parseMovieId } from "./parseMovieId";
@@ -20,7 +21,9 @@ const getPopularMoviesOrEmpty = async () => {
 router.get("/", async (_req: Request, res: Response) => {
   const movies = await tmdbApi.getPopularMovies();
 
-  res.send(renderDocument({ name: "home", props: { movies } }));
+  res.send(
+    renderDocument({ name: "home", props: { movies: movies.map(pickMovieSummary) } })
+  );
 });
 
 router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) => {
@@ -42,7 +45,10 @@ router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) =>
   const origin = process.env.PUBLIC_ORIGIN ?? `${req.protocol}://${req.get("host")}`;
   res.send(
     renderDocument(
-      { name: "detail", props: { movies, movie } },
+      {
+        name: "detail",
+        props: { movies: movies.map(pickMovieSummary), movie: pickMovieDetail(movie) },
+      },
       {
         title: `${movie.title} | ${SITE_NAME}`,
         headTags: renderMovieOpenGraphTags(movie, origin),

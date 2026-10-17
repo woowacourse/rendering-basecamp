@@ -1,10 +1,10 @@
 import { Header } from '../components/Header';
 import { MovieList } from '../components/MovieList';
 import { Footer } from '../components/Footer';
-import type { MovieItem } from '../types/Movie.types';
+import type { MovieSummary } from '../types/Movie.types';
 
 interface MovieHomePageProps {
-  movies: MovieItem[];
+  movies: MovieSummary[];
 }
 
 export default function MovieHomePage({ movies }: MovieHomePageProps) {

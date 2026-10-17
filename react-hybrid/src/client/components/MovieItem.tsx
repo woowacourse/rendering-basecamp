@@ -1,8 +1,8 @@
-import type { MovieItem as MovieItemType } from '../types/Movie.types';
+import type { MovieSummary } from '../types/Movie.types';
 
 interface MovieItemProps {
-  movie: MovieItemType;
-  onClick: (movie: MovieItemType) => void;
+  movie: MovieSummary;
+  onClick: (movie: MovieSummary) => void;
   ref?: React.Ref<HTMLLIElement>;
 }
 
