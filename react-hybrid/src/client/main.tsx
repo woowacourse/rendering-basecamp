@@ -9,7 +9,4 @@ if (!root) {
   throw new Error("root 요소를 찾을 수 없습니다.");
 }
 
-hydrateRoot(
-  document.getElementById("root"),
-  <App movies={initialData.movies} />,
-);
+hydrateRoot(root, <App {...initialData} />);

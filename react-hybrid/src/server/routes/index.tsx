@@ -28,22 +28,34 @@ function generateHTML() {
     `;
 }
 
-router.get("/", async (_: Request, res: Response) => {
-  const response = await moviesApi.getPopular();
-  const movies = response.data.results;
+async function renderPage(req: Request, res: Response) {
+  const movieId = req.params.id;
 
-  const renderedApp = renderToString(<App movies={movies} />);
+  const [popularResponse, detailResponse] = await Promise.all([
+    moviesApi.getPopular(),
+    movieId ? moviesApi.getDetail(Number(movieId)) : Promise.resolve(null),
+  ]);
 
-  const initialData = JSON.stringify({ movies }).replace(/</g, "\\u003c");
+  const initialData = {
+    movies: popularResponse.data.results,
+    movieDetail: detailResponse?.data ?? null,
+  };
 
-  const renderHtml = generateHTML()
+  const renderedApp = renderToString(<App {...initialData} />);
+
+  const serializedData = JSON.stringify(initialData).replace(/</g, "\\u003c");
+
+  const html = generateHTML()
     .replace("<!--{BODY_AREA}-->", () => renderedApp)
     .replace(
       "<!--{INIT_DATA_AREA}-->",
-      () => `<script>window.__INITIAL_DATA__ = ${initialData};</script>`,
+      () => `<script>window.__INITIAL_DATA__ = ${serializedData};</script>`,
     );
 
-  res.send(renderHtml);
-});
+  res.send(html);
+}
+
+router.get("/", renderPage);
+router.get("/detail/:id", renderPage);
 
 export default router;
