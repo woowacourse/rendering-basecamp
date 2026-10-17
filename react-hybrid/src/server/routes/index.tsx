@@ -1,54 +1,23 @@
-import { Router, Request, Response } from "express";
-
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
-import type { InitialData } from "../../client/types/InitialData.types";
+import { Router, Request, Response } from 'express';
+import type { InitialData } from '../../client/types/InitialData.types';
+import { tmdbApi } from '../service/tmdbApi';
+import { renderDocument } from '../view/renderDocument';
 
 const router = Router();
 
-function generateHTML() {
-  return /*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
-      </head>
-      <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
-}
+router.get('/', async (_req: Request, res: Response) => {
+  try {
+    const popularMovies = await tmdbApi.getPopular();
+    const initialData: InitialData = { movies: popularMovies.results };
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
-  const initialData: InitialData = { movies: [] };
-
-  const renderedApp = renderToString(<App initialData={initialData} />);
-
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify(initialData.movies)}
-      }
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
-
-  res.send(renderedHTML);
+    res.type('html').send(renderDocument(initialData));
+  } catch (error) {
+    console.error('인기 영화 SSR에 실패했습니다.', error);
+    res
+      .status(502)
+      .type('text')
+      .send('영화 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+  }
 });
 
 export default router;
