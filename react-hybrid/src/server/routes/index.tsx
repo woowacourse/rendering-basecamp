@@ -15,7 +15,35 @@ interface InitialData {
   movieDetail?: MovieDetailResponse;
 }
 
-function generateHTML() {
+interface PageMetadata {
+  title: string;
+  description: string;
+  image?: string;
+  type?: string;
+}
+
+const DEFAULT_METADATA: PageMetadata = {
+  title: '영화 리뷰',
+  description: '지금 인기 있는 영화를 확인하고 별점을 남겨보세요.',
+  type: 'website',
+};
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+function generateHTML(metadata: PageMetadata = DEFAULT_METADATA) {
+  const title = escapeHtml(metadata.title);
+  const description = escapeHtml(metadata.description);
+  const type = escapeHtml(metadata.type ?? 'website');
+  const imageTag = metadata.image
+    ? `<meta property="og:image" content="${escapeHtml(metadata.image)}" />`
+    : '';
+
   return /*html*/ `
     <!DOCTYPE html>
     <html lang="ko">
@@ -23,8 +51,12 @@ function generateHTML() {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
+        <title>${title}</title>
+        <meta name="description" content="${description}" />
+        <meta property="og:type" content="${type}" />
+        <meta property="og:title" content="${title}" />
+        <meta property="og:description" content="${description}" />
+        ${imageTag}
       </head>
       <body>
         <div id="root"><!--{BODY_AREA}--></div>
@@ -35,8 +67,12 @@ function generateHTML() {
     `;
 }
 
-function renderPage(initialData: InitialData, location: string) {
-  const template = generateHTML();
+function renderPage(
+  initialData: InitialData,
+  location: string,
+  metadata?: PageMetadata,
+) {
+  const template = generateHTML(metadata);
   const renderedApp = renderToString(
     <StaticRouter location={location}>
       <App movies={initialData.movies} movieDetail={initialData.movieDetail} />
@@ -88,6 +124,16 @@ router.get('/detail/:movieId', async (req: Request, res: Response) => {
           movieDetail: detailResponse.data,
         },
         req.path,
+        {
+          title: `${detailResponse.data.title} | 영화 리뷰`,
+          description:
+            detailResponse.data.overview ||
+            `${detailResponse.data.title}의 영화 정보를 확인해보세요.`,
+          image: detailResponse.data.poster_path
+            ? `https://image.tmdb.org/t/p/w500${detailResponse.data.poster_path}`
+            : undefined,
+          type: 'video.movie',
+        },
       ),
     );
   } catch (error) {
