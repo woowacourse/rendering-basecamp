@@ -2,7 +2,12 @@ import { MovieItem } from '../types/Movie.types';
 import { IconButton } from './common/IconButton';
 import { FeaturedMovie } from './FeaturedMovie';
 
-export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
+interface HeaderProps {
+  featuredMovie: MovieItem;
+  onSelectMovie: (movieId: number) => void;
+}
+
+export const Header = ({ featuredMovie, onSelectMovie }: HeaderProps) => {
   const handleLogoClick = () => {
     window.location.reload();
   };
@@ -31,7 +36,9 @@ export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
           />
 
           {/* 추천 영화 섹션 (검색 모드가 아닐 때만 표시) */}
-          {featuredMovie && <FeaturedMovie movie={featuredMovie} />}
+          {featuredMovie && (
+            <FeaturedMovie movie={featuredMovie} onSelectMovie={onSelectMovie} />
+          )}
         </div>
       </div>
     </header>

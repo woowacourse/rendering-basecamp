@@ -1,17 +1,17 @@
-import { apiClient } from '../lib/apiClient';
-import type { MovieResponse } from '../types/Movie.types';
-import type { MovieDetailResponse } from '../types/MovieDetail.types';
+import type { MovieDetailResponse } from "../types/MovieDetail.types";
 
+/**
+ * 브라우저에서 쓰는 API.
+ * TMDB를 직접 부르지 않고 우리 서버의 /api 를 거친다. (토큰은 서버에만 있다)
+ */
 export const moviesApi = {
-  /**
-   * 인기 영화 목록 조회
-   */
-  getPopular: (page: number = 1) =>
-    apiClient.get<MovieResponse>(`/movie/popular?page=${page}&language=ko-KR`),
+  getDetail: async (id: number): Promise<MovieDetailResponse> => {
+    const response = await fetch(`/api/movies/${id}`);
 
-  /**
-   * 영화 상세 정보 조회
-   */
-  getDetail: (id: number) =>
-    apiClient.get<MovieDetailResponse>(`/movie/${id}?language=ko-KR`),
+    if (!response.ok) {
+      throw new Error(`영화 상세 정보를 불러오지 못했습니다. (${response.status})`);
+    }
+
+    return response.json();
+  },
 } as const;

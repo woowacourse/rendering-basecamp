@@ -1,14 +1,14 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
 import { MovieItem } from './MovieItem';
 import type { MovieItem as MovieItemType } from '../types/Movie.types';
-import { moviesApi } from '../api/movies';
 
-export const MovieList = ({ movies }: { movies: MovieItemType[] }) => {
-  const { openMovieDetailModal } = useMovieDetailModal();
+interface MovieListProps {
+  movies: MovieItemType[];
+  onSelectMovie: (movieId: number) => void;
+}
 
-  const handleMovieClick = async (movie: MovieItemType) => {
-    const movieDetail = await moviesApi.getDetail(movie.id);
-    await openMovieDetailModal(movieDetail.data);
+export const MovieList = ({ movies, onSelectMovie }: MovieListProps) => {
+  const handleMovieClick = (movie: MovieItemType) => {
+    onSelectMovie(movie.id);
   };
 
   return (

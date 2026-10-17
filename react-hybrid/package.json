@@ -6,9 +6,9 @@
   "scripts": {
     "build:client": "webpack --config webpack.client.config.js",
     "build:server": "webpack --config webpack.server.config.js",
-    "build": "rm -rf dist && npm run build:client && npm run build:server",
+    "build": "rm -rf dist && npm run build:client -- --mode=production && npm run build:server",
     "start": "npm run build && node dist/server/server.js",
-    "dev": "concurrently \"npm run build:client -- --watch\" \"npm run build:server -- --watch\" \"node dist/server/server.js\"",
+    "dev": "npm run build:client && npm run build:server && concurrently \"npm run build:client -- --watch\" \"npm run build:server -- --watch\" \"nodemon\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
