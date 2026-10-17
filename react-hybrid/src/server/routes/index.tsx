@@ -22,7 +22,7 @@ function generateHTML() {
         <div id="wrap">
           <div id="root"><!--{BODY_AREA}--></div>
           <!--{INIT_DATA_AREA}-->
-          <script defer src="/static/bundle.js"></script>
+          <script src="/static/bundle.js"></script>
         </div>
       </body>
     </html>
