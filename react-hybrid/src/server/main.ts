@@ -11,6 +11,8 @@ const app = express();
 const PORT = process.env.PORT ?? 3000;
 const STATIC_DIRECTORY = path.join(__dirname, "../static");
 
+app.set("trust proxy", true);
+
 app.use("/static", express.static(STATIC_DIRECTORY));
 app.use("/images", express.static(path.join(STATIC_DIRECTORY, "images")));
 

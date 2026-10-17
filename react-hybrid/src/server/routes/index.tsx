@@ -2,6 +2,8 @@ import { Router, Request, Response } from "express";
 import { tmdbApi } from "../api/tmdb";
 import { renderDocument } from "../renderDocument";
 import { renderNotFoundPage } from "../errorPages";
+import { renderMovieOpenGraphTags } from "../openGraph";
+import { SITE_NAME } from "../../client/constants/site";
 import { parseMovieId } from "./parseMovieId";
 
 const router = Router();
@@ -37,7 +39,16 @@ router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) =>
     return;
   }
 
-  res.send(renderDocument({ name: "detail", props: { movies, movie } }));
+  const origin = process.env.PUBLIC_ORIGIN ?? `${req.protocol}://${req.get("host")}`;
+  res.send(
+    renderDocument(
+      { name: "detail", props: { movies, movie } },
+      {
+        title: `${movie.title} | ${SITE_NAME}`,
+        headTags: renderMovieOpenGraphTags(movie, origin),
+      }
+    )
+  );
 });
 
 export default router;

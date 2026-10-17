@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import MovieHomePage from './MovieHomePage';
 import { MovieDetailModal } from '../components/MovieDetailModal';
+import { SITE_NAME } from '../constants/site';
 import type { MovieItem } from '../types/Movie.types';
 import type { MovieDetailResponse } from '../types/MovieDetail.types';
 
@@ -14,6 +15,7 @@ export default function MovieDetailPage({ movies, movie }: MovieDetailPageProps)
 
   const closeModal = () => {
     history.replaceState(null, '', '/');
+    document.title = SITE_NAME;
     setIsModalOpen(false);
   };
 

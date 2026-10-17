@@ -1,10 +1,18 @@
 import { renderToString } from "react-dom/server";
 import App, { type Page } from "../client/App";
+import { SITE_NAME } from "../client/constants/site";
 import { serializeInitialData } from "../client/initialData";
+import { escapeHtml } from "./escapeHtml";
 
-const SITE_NAME = "영화 리뷰";
+interface DocumentHead {
+  title?: string;
+  headTags?: string;
+}
 
-export const renderDocument = (page: Page) => {
+export const renderDocument = (
+  page: Page,
+  { title = SITE_NAME, headTags = "" }: DocumentHead = {}
+) => {
   const appHtml = renderToString(<App page={page} />);
 
   return /*html*/ `<!DOCTYPE html>
@@ -13,7 +21,8 @@ export const renderDocument = (page: Page) => {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/static/styles/index.css" />
-    <title>${SITE_NAME}</title>
+    <title>${escapeHtml(title)}</title>
+    ${headTags}
   </head>
   <body>
     <div id="root">${appHtml}</div>
