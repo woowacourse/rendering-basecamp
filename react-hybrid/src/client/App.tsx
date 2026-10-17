@@ -1,8 +1,17 @@
-import React from "react";
-import { OverlayProvider } from "overlay-kit";
+import { OverlayProvider } from 'overlay-kit';
+import MovieHomePage from './pages/MovieHomePage';
+import type { InitialData } from './types/InitialData.types';
 
-function App() {
-  return <OverlayProvider>App</OverlayProvider>;
+interface AppProps {
+  initialData: InitialData;
+}
+
+function App({ initialData }: AppProps) {
+  return (
+    <OverlayProvider>
+      <MovieHomePage movies={initialData.movies} />
+    </OverlayProvider>
+  );
 }
 
 export default App;

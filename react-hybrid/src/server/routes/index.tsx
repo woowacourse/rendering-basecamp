@@ -3,6 +3,7 @@ import { Router, Request, Response } from "express";
 import { renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
+import type { InitialData } from "../../client/types/InitialData.types";
 
 const router = Router();
 
@@ -28,15 +29,16 @@ function generateHTML() {
 
 router.get("/", (_: Request, res: Response) => {
   const template = generateHTML();
+  const initialData: InitialData = { movies: [] };
 
-  const renderedApp = renderToString(<App />);
+  const renderedApp = renderToString(<App initialData={initialData} />);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify(initialData.movies)}
       }
     </script>
   `
