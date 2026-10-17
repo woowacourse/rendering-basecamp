@@ -1,10 +1,11 @@
 import { Router, Request, Response } from "express";
 
-import { renderToString } from "react-dom/server";
+import { renderToStaticMarkup, renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
 import { moviesApi } from "../../client/api/movies";
 import type { MovieItem } from "../../client/types/Movie.types";
+import type { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 import {
   InitialDataContext,
   type InitialData,
@@ -52,6 +53,24 @@ async function fetchMovieDetail(movieId: number) {
   }
 }
 
+function renderOgTags(movie?: MovieDetailResponse) {
+  if (!movie) return "";
+
+  // renderToStaticMarkup 이 content 속 따옴표·꺾쇠를 이스케이프해 준다
+  return renderToStaticMarkup(
+    <>
+      <meta property="og:title" content={movie.title} />
+      <meta property="og:description" content={movie.overview} />
+      {movie.poster_path && (
+        <meta
+          property="og:image"
+          content={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+        />
+      )}
+    </>
+  );
+}
+
 function renderPage(initialData: InitialData) {
   const template = generateHTML();
 
@@ -72,7 +91,10 @@ function renderPage(initialData: InitialData) {
     </script>
   `
   );
-  return renderedHTMLWithInitialData.replace("<!--{BODY_AREA}-->", renderedApp);
+  // 문자열 대신 함수로 넘겨야 줄거리 속 "$&" 같은 글자가 치환 패턴으로 해석되지 않는다
+  return renderedHTMLWithInitialData
+    .replace("<!--{OG_TAGS}-->", () => renderOgTags(initialData.movieDetail))
+    .replace("<!--{BODY_AREA}-->", renderedApp);
 }
 
 router.get("/", async (_: Request, res: Response) => {
