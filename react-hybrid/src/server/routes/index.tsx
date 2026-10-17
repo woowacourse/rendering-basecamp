@@ -34,7 +34,6 @@ router.get('/', async (req: Request, res: Response) => {
   const { results: movies } = await moviesApi
     .getPopular()
     .then(res => res.data);
-  console.log(movies);
   const renderedApp = renderToString(<App path={req.path} movies={movies} />);
 
   const renderedHTMLWithInitialData = template.replace(
@@ -43,6 +42,39 @@ router.get('/', async (req: Request, res: Response) => {
     <script>
       window.__INITIAL_DATA__ = {
         movies: ${JSON.stringify(movies)}
+      }
+    </script>
+  `
+  );
+  const renderedHTML = renderedHTMLWithInitialData.replace(
+    '<!--{BODY_AREA}-->',
+    renderedApp
+  );
+
+  res.send(renderedHTML);
+});
+
+router.get('/detail/:id', async (req: Request, res: Response) => {
+  const template = generateHTML();
+
+  const [popular, detail] = await Promise.all([
+    moviesApi.getPopular(),
+    moviesApi.getDetail(Number(req.params.id)),
+  ]);
+  const movies = popular.data.results;
+  const movieDetail = detail.data;
+
+  const renderedApp = renderToString(
+    <App path={req.path} movies={movies} movieDetail={movieDetail} />
+  );
+
+  const renderedHTMLWithInitialData = template.replace(
+    '<!--{INIT_DATA_AREA}-->',
+    /*html*/ `
+    <script>
+      window.__INITIAL_DATA__ = {
+        movies: ${JSON.stringify(movies)},
+        movieDetail: ${JSON.stringify(movieDetail)}
       }
     </script>
   `
