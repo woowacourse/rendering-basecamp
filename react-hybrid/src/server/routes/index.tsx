@@ -1,52 +1,28 @@
 import { Router, Request, Response } from "express";
-
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
+import { moviesApi } from "../../client/api/movies";
+import { renderDocument } from "../renderDocument";
 
 const router = Router();
 
-function generateHTML() {
-  return /*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
-      </head>
-      <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
-}
+router.get("/", async (_req: Request, res: Response) => {
+  const { data } = await moviesApi.getPopular();
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
+  res.send(renderDocument({ name: "home", props: { movies: data.results } }));
+});
 
-  const renderedApp = renderToString(<App />);
+router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) => {
+  const movieId = Number(req.params.id);
+  const [popular, detail] = await Promise.all([
+    moviesApi.getPopular(),
+    moviesApi.getDetail(movieId),
+  ]);
 
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
-    </script>
-  `
+  res.send(
+    renderDocument({
+      name: "detail",
+      props: { movies: popular.data.results, movie: detail.data },
+    })
   );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
-
-  res.send(renderedHTML);
 });
 
 export default router;

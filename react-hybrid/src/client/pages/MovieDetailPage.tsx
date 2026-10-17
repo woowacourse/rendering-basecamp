@@ -1,33 +1,26 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 import MovieHomePage from './MovieHomePage';
-import { moviesApi } from '../api/movies';
+import { MovieDetailModal } from '../components/MovieDetailModal';
+import type { MovieItem } from '../types/Movie.types';
+import type { MovieDetailResponse } from '../types/MovieDetail.types';
 
-export default function MovieDetailPage() {
-  return (
-    <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
-    </>
-  );
+interface MovieDetailPageProps {
+  movies: MovieItem[];
+  movie: MovieDetailResponse;
 }
 
-function DetailPageOpenModal() {
-  const { movieId } = useParams();
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
+export default function MovieDetailPage({ movies, movie }: MovieDetailPageProps) {
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
-  useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
-      return;
-    }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [movieId, openMovieDetailModal]);
+  const closeModal = () => {
+    history.replaceState(null, '', '/');
+    setIsModalOpen(false);
+  };
 
-  return null;
+  return (
+    <>
+      <MovieHomePage movies={movies} />
+      {isModalOpen && <MovieDetailModal movie={movie} onClose={closeModal} />}
+    </>
+  );
 }
