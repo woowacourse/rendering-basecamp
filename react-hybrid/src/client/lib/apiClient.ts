@@ -1,9 +1,8 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const apiClient = axios.create({
-  baseURL: "https://api.themoviedb.org/3",
+  baseURL: '/api',
   headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+    'Content-Type': 'application/json',
   },
 });
