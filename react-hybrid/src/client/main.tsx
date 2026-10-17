@@ -1,8 +1,17 @@
-import React from "react";
-import { hydrateRoot } from "react-dom/client";
-import App from "./App";
+import React from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import App from './App';
+import Document from './Document';
 
 const initialData = window.__INITIAL_DATA__;
-console.log("initialData", initialData);
+console.log('initialData', initialData);
 
-hydrateRoot(document.getElementById("root"), <App />);
+performance.mark('beforeRender');
+hydrateRoot(
+    document,
+    <Document initialData={initialData}>
+        <App initialPathname={window.location.pathname} initialData={initialData} />
+    </Document>
+);
+performance.mark('afterHydrate');
+performance.measure('hydration', 'beforeRender', 'afterHydrate');
