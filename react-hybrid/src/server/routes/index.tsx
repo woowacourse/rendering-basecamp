@@ -4,6 +4,7 @@ import { renderDocument } from "../renderDocument";
 import { renderNotFoundPage } from "../errorPages";
 import { pickMovieDetail, pickMovieSummary } from "../movieFields";
 import { renderMovieOpenGraphTags } from "../openGraph";
+import { withServerTiming } from "../serverTiming";
 import { SITE_NAME } from "../../client/constants/site";
 import { parseMovieId } from "./parseMovieId";
 
@@ -19,11 +20,12 @@ const getPopularMoviesOrEmpty = async () => {
 };
 
 router.get("/", async (_req: Request, res: Response) => {
-  const movies = await tmdbApi.getPopularMovies();
+  const movies = await withServerTiming(res, "tmdb", () => tmdbApi.getPopularMovies());
 
-  res.send(
+  const html = await withServerTiming(res, "render", () =>
     renderDocument({ name: "home", props: { movies: movies.map(pickMovieSummary) } })
   );
+  res.send(html);
 });
 
 router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) => {
@@ -33,17 +35,16 @@ router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) =>
     return;
   }
 
-  const [movie, movies] = await Promise.all([
-    tmdbApi.findMovieDetail(movieId),
-    getPopularMoviesOrEmpty(),
-  ]);
+  const [movie, movies] = await withServerTiming(res, "tmdb", () =>
+    Promise.all([tmdbApi.findMovieDetail(movieId), getPopularMoviesOrEmpty()])
+  );
   if (movie === null) {
     res.status(404).send(renderNotFoundPage());
     return;
   }
 
   const origin = process.env.PUBLIC_ORIGIN ?? `${req.protocol}://${req.get("host")}`;
-  res.send(
+  const html = await withServerTiming(res, "render", () =>
     renderDocument(
       {
         name: "detail",
@@ -55,6 +56,7 @@ router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) =>
       }
     )
   );
+  res.send(html);
 });
 
 export default router;
