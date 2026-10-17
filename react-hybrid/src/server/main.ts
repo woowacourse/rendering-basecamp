@@ -1,5 +1,6 @@
 import "dotenv/config";
 
+import compression from "compression";
 import express, { ErrorRequestHandler } from "express";
 import path from "path";
 
@@ -12,6 +13,7 @@ const PORT = process.env.PORT ?? 3000;
 const STATIC_DIRECTORY = path.join(__dirname, "../static");
 
 app.set("trust proxy", true);
+app.use(compression());
 
 app.use("/static", express.static(STATIC_DIRECTORY));
 app.use("/images", express.static(path.join(STATIC_DIRECTORY, "images")));
