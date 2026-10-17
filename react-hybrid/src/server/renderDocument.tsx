@@ -3,6 +3,7 @@ import App, { type Page } from "../client/App";
 import { SITE_NAME } from "../client/constants/site";
 import { serializeInitialData } from "../client/initialData";
 import { escapeHtml } from "./escapeHtml";
+import { INLINE_STYLES } from "./inlineStyles";
 
 interface DocumentHead {
   title?: string;
@@ -20,7 +21,7 @@ export const renderDocument = (
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/static/styles/index.css" />
+    <style>${INLINE_STYLES}</style>
     <title>${escapeHtml(title)}</title>
     ${headTags}
   </head>
