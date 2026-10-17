@@ -47,7 +47,8 @@ module.exports = {
         { from: "public/styles", to: "styles" },
       ],
     }),
-    new Dotenv(),
+    // Railway 등 배포 환경에서는 .env 파일 대신 시스템 환경변수로 토큰이 주입된다.
+    new Dotenv({ systemvars: true }),
   ],
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],

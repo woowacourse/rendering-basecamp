@@ -1,52 +1,76 @@
 import { Router, Request, Response } from "express";
-
+import axios from "axios";
 import { renderToString } from "react-dom/server";
+
 import App from "../../client/App";
-import React from "react";
+import { moviesApi } from "../../client/api/movies";
+import type { InitialData } from "../../client/types/InitialData.types";
+import { escapeHtml } from "../views/escapeHtml";
+import { renderLayout } from "../views/layout";
+import { renderMovieOpenGraph } from "../views/openGraph";
 
 const router = Router();
 
-function generateHTML() {
-  return /*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
-      </head>
-      <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
-}
+const renderErrorPage = (message: string) =>
+  renderLayout({
+    title: "영화 리뷰",
+    appHtml: `<div id="wrap"><p>${escapeHtml(message)}</p><a href="/">홈으로</a></div>`,
+  });
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
+router.get("/", async (_req: Request, res: Response) => {
+  try {
+    const { data } = await moviesApi.getPopular();
+    const initialData: InitialData = { movies: data.results };
 
-  const renderedApp = renderToString(<App />);
+    res.send(
+      renderLayout({
+        title: "영화 리뷰",
+        appHtml: renderToString(<App initialData={initialData} />),
+        initialData,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(502).send(renderErrorPage("영화 정보를 불러오는데 실패했습니다."));
+  }
+});
 
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
-    </script>
-  `
-  );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
+router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) => {
+  const movieId = Number(req.params.id);
 
-  res.send(renderedHTML);
+  if (!Number.isInteger(movieId) || movieId <= 0) {
+    res.status(404).send(renderErrorPage("존재하지 않는 영화입니다."));
+    return;
+  }
+
+  try {
+    const [popular, detail] = await Promise.all([
+      moviesApi.getPopular(),
+      moviesApi.getDetail(movieId),
+    ]);
+    const initialData: InitialData = {
+      movies: popular.data.results,
+      movieDetail: detail.data,
+    };
+    const pageUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+
+    res.send(
+      renderLayout({
+        title: `${escapeHtml(detail.data.title)} - 영화 리뷰`,
+        head: renderMovieOpenGraph(detail.data, pageUrl),
+        appHtml: renderToString(<App initialData={initialData} />),
+        initialData,
+      })
+    );
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      res.status(404).send(renderErrorPage("존재하지 않는 영화입니다."));
+      return;
+    }
+
+    console.error(error);
+    res.status(502).send(renderErrorPage("영화 정보를 불러오는데 실패했습니다."));
+  }
 });
 
 export default router;

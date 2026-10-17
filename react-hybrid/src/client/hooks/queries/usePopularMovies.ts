@@ -3,21 +3,24 @@ import { moviesApi } from '../../api/movies';
 import { MovieItem } from '../../types/Movie.types';
 
 /**
- * 영화 상세 정보를 조회하는 훅
+ * 인기 영화 목록을 조회하는 훅
+ * 서버에서 받은 초기 데이터가 있으면 그대로 사용하고, 없을 때만 클라이언트에서 요청한다.
  */
-export const usePopularMovies = () => {
-  const [data, setData] = useState<MovieItem[] | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+export const usePopularMovies = (initialData?: MovieItem[]) => {
+  const [data, setData] = useState<MovieItem[] | null>(initialData ?? null);
+  const [isLoading, setIsLoading] = useState(initialData == null);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    if (initialData != null) return;
+
     const fetchPopularMovies = async () => {
       setIsLoading(true);
       setError(null);
 
       try {
-        const movieDetail = await moviesApi.getPopular();
-        setData(movieDetail.data.results);
+        const response = await moviesApi.getPopular();
+        setData(response.data.results);
       } catch (err) {
         setError(
           err instanceof Error
@@ -30,6 +33,7 @@ export const usePopularMovies = () => {
     };
 
     fetchPopularMovies();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { data, isLoading, error };
