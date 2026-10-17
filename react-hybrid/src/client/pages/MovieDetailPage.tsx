@@ -1,33 +1,23 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 import MovieHomePage from './MovieHomePage';
-import { moviesApi } from '../api/movies';
+import { MovieDetailModal } from '../components/MovieDetailModal';
+import { useInitialData } from '../contexts/InitialDataContext';
 
 export default function MovieDetailPage() {
+  const { movieDetail } = useInitialData();
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+  const handleClose = () => {
+    setIsModalOpen(false);
+    history.pushState(null, '', '/');
+  };
+
   return (
     <>
       <MovieHomePage />
-      <DetailPageOpenModal />
+      {isModalOpen && movieDetail && (
+        <MovieDetailModal movie={movieDetail} onClose={handleClose} />
+      )}
     </>
   );
-}
-
-function DetailPageOpenModal() {
-  const { movieId } = useParams();
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
-
-  useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
-      return;
-    }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [movieId, openMovieDetailModal]);
-
-  return null;
 }
