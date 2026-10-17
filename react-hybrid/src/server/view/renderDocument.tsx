@@ -50,6 +50,7 @@ export const renderDocument = (
     <meta name="description" content="${description}" />
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
+    <meta property="og:type" content="website" />
     ${metadata.image ? `<meta property="og:image" content="${escapeHtml(metadata.image)}" />` : ''}
   </head>
   <body>
