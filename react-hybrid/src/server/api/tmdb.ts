@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import type { MovieResponse } from "../../client/types/Movie.types";
 import type { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 
@@ -10,9 +10,27 @@ const tmdbClient = axios.create({
 });
 
 export const tmdbApi = {
-  getPopular: (page: number = 1) =>
-    tmdbClient.get<MovieResponse>(`/movie/popular?page=${page}&language=ko-KR`),
+  getPopularMovies: async (page: number = 1) => {
+    const { data } = await tmdbClient.get<MovieResponse>(
+      `/movie/popular?page=${page}&language=ko-KR`
+    );
+    return data.results;
+  },
 
-  getDetail: (id: number) =>
-    tmdbClient.get<MovieDetailResponse>(`/movie/${id}?language=ko-KR`),
+  /**
+   * 영화 상세 정보 조회. TMDB에 없는 영화면 null
+   */
+  findMovieDetail: async (id: number) => {
+    try {
+      const { data } = await tmdbClient.get<MovieDetailResponse>(
+        `/movie/${id}?language=ko-KR`
+      );
+      return data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
+      throw error;
+    }
+  },
 } as const;
