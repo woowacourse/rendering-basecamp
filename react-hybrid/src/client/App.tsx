@@ -14,11 +14,7 @@ type Props = {
 function App({ path, movies, movieDetail }: Props) {
   useEffect(() => {
     performance.mark('hydration effect');
-    performance.measure(
-      'hydration effect',
-      'hydration before',
-      'hydration effect'
-    );
+    performance.measure('hydration effect', 'beforeRender', 'hydration effect');
   }, []);
 
   const [, route, movieId] = path.split('/');

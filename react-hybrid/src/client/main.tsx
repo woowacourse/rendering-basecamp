@@ -4,7 +4,7 @@ import App from './App';
 
 const { movies, movieDetail } = window.__INITIAL_DATA__;
 
-performance.mark('hydration before');
+performance.mark('beforeRender');
 
 hydrateRoot(
   document.getElementById('root'),
@@ -15,9 +15,9 @@ hydrateRoot(
   />
 );
 
-performance.mark('hydration after');
-performance.measure('hydrateRoot', 'hydration before', 'hydration after');
+performance.mark('afterHydrate');
+performance.measure('hydration', 'beforeRender', 'afterHydrate');
 
 console.log(
-  `hydrateRoot 호출 시간: ${performance.getEntriesByName('hydrateRoot')[0].duration}ms`
+  `hydrateRoot 호출 시간: ${performance.getEntriesByName('hydration')[0].duration}ms`
 );
