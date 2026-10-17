@@ -1,8 +1,26 @@
-import React from "react";
-import { OverlayProvider } from "overlay-kit";
+import React from 'react';
+import { OverlayProvider } from 'overlay-kit';
+import { MovieItem } from './types/Movie.types';
+import { MovieDetailResponse } from './types/MovieDetail.types';
+import MovieHomePage from './pages/MovieHomePage';
+import MovieDetailPage from './pages/MovieDetailPage';
 
-function App() {
-  return <OverlayProvider>App</OverlayProvider>;
+type Props = {
+  path: string;
+  movies: MovieItem[];
+  movieDetail?: MovieDetailResponse;
+};
+
+function App({ path, movies, movieDetail }: Props) {
+  const [, route, movieId] = path.split('/');
+  return (
+    <OverlayProvider>
+      {path === '/' && <MovieHomePage movies={movies} />}
+      {route === 'detail' && (
+        <MovieDetailPage movies={movies} movieDetail={movieDetail} />
+      )}
+    </OverlayProvider>
+  );
 }
 
 export default App;

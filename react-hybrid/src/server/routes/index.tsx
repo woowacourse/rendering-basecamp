@@ -1,8 +1,10 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response } from 'express';
 
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
+import { renderToString } from 'react-dom/server';
+import App from '../../client/App';
+import React from 'react';
+
+import { moviesApi } from '../api/movies';
 
 const router = Router();
 
@@ -18,7 +20,7 @@ function generateHTML() {
         <!--{OG_TAGS}-->
       </head>
       <body>
-        <div id="root"><!--{BODY_AREA}--></div>
+        <div id ="root"><!--{BODY_AREA}--></div>
         <!--{INIT_DATA_AREA}-->
         <script src="/static/bundle.js"></script>
       </body>
@@ -26,23 +28,27 @@ function generateHTML() {
     `;
 }
 
-router.get("/", (_: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
   const template = generateHTML();
 
-  const renderedApp = renderToString(<App />);
+  const { results: movies } = await moviesApi
+    .getPopular()
+    .then(res => res.data);
+  console.log(movies);
+  const renderedApp = renderToString(<App path={req.path} movies={movies} />);
 
   const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
+    '<!--{INIT_DATA_AREA}-->',
     /*html*/ `
     <script>
       window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+        movies: ${JSON.stringify(movies)}
       }
     </script>
   `
   );
   const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
+    '<!--{BODY_AREA}-->',
     renderedApp
   );
 
