@@ -1,8 +1,7 @@
-import { useMovieDetailModal } from "../hooks/useMovieDetailModal";
-import { useEffect } from "react";
-import MovieHomePage from "./MovieHomePage";
-import { MovieItem } from "../types/Movie.types";
-import { MovieDetailResponse } from "../types/MovieDetail.types";
+import { MovieDetailModal } from '../components/MovieDetailModal';
+import MovieHomePage from './MovieHomePage';
+import type { MovieItem } from '../types/Movie.types';
+import type { MovieDetailResponse } from '../types/MovieDetail.types';
 
 type Props = {
   movies: MovieItem[];
@@ -13,17 +12,12 @@ export default function MovieDetailPage({ movies, movieDetail }: Props) {
   return (
     <>
       <MovieHomePage movies={movies} />
-      <DetailPageOpenModal movieDetail={movieDetail} />
+      {movieDetail && (
+        <MovieDetailModal
+          movie={movieDetail}
+          onClose={() => window.location.replace('/')}
+        />
+      )}
     </>
   );
-}
-
-function DetailPageOpenModal({ movieDetail }) {
-  const { openMovieDetailModal } = useMovieDetailModal();
-
-  useEffect(() => {
-    openMovieDetailModal(movieDetail.data);
-  }, [openMovieDetailModal]);
-
-  return null;
 }

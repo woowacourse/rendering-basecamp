@@ -1,4 +1,3 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
 import { Button } from './common/Button';
 import type { MovieItem } from '../types/Movie.types';
 
@@ -21,7 +20,7 @@ export const FeaturedMovie = ({ movie }: FeaturedMovieProps) => {
       </div>
       <h1 className="text-3xl font-semibold">{movie.title}</h1>
       <Button variant="primary" onClick={handleDetailClick} className="detail">
-        자세히 보기h
+        자세히 보기
       </Button>
     </div>
   );
