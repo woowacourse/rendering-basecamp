@@ -1,11 +1,11 @@
 import { Router, Request, Response } from "express";
-import { moviesApi } from "../../client/api/movies";
+import { tmdbApi } from "../api/tmdb";
 import { renderDocument } from "../renderDocument";
 
 const router = Router();
 
 router.get("/", async (_req: Request, res: Response) => {
-  const { data } = await moviesApi.getPopular();
+  const { data } = await tmdbApi.getPopular();
 
   res.send(renderDocument({ name: "home", props: { movies: data.results } }));
 });
@@ -13,8 +13,8 @@ router.get("/", async (_req: Request, res: Response) => {
 router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) => {
   const movieId = Number(req.params.id);
   const [popular, detail] = await Promise.all([
-    moviesApi.getPopular(),
-    moviesApi.getDetail(movieId),
+    tmdbApi.getPopular(),
+    tmdbApi.getDetail(movieId),
   ]);
 
   res.send(
