@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import axios from 'axios';
 import type { MovieDetailResponse } from '../../client/types/MovieDetail.types';
 import type { MovieResponse } from '../../client/types/Movie.types';
