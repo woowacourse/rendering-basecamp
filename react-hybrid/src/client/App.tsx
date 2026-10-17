@@ -1,5 +1,5 @@
 import { OverlayProvider } from 'overlay-kit';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import type { MovieItem } from './types/Movie.types';
 import type { MovieDetailResponse } from './types/MovieDetail.types';
 import MovieHomePage from './pages/MovieHomePage';
@@ -12,9 +12,12 @@ type Props = {
 };
 
 function App({ path, movies, movieDetail }: Props) {
-  useEffect(() => {
-    performance.mark('hydration effect');
-    performance.measure('hydration effect', 'beforeRender', 'hydration effect');
+  performance.mark('render start');
+
+  useLayoutEffect(() => {
+    performance.mark('hydration end');
+    performance.measure('hydration 실제 작업', 'render start', 'hydration end');
+    performance.measure('hydration 요청~완료', 'beforeRender', 'hydration end');
   }, []);
 
   const [, route, movieId] = path.split('/');
