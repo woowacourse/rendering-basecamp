@@ -1,66 +1,47 @@
 import { Router, Request, Response } from "express";
-
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
-import { getPopularMovies } from "../tmdb";
+import { isAxiosError } from "axios";
+import { homeController } from "../controllers/homeController";
+import { movieDetailController, parseMovieId } from "../controllers/movieDetailController";
+import { notFoundController } from "../controllers/errorController";
+import type { PageResponse } from "../controllers/types";
+import { getMovieDetail } from "../tmdb";
 
 const router = Router();
 
-function generateHTML() {
-  return /*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
-      </head>
-      <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
-}
-
-/**
- * 데이터를 <script> 안에 넣을 때 "</script>" 같은 문자열이 태그를 닫지 않도록 "<"를 이스케이프한다.
- */
-function serialize(data: unknown) {
-  return JSON.stringify(data).replace(/</g, "\\u003c");
-}
+const send = (res: Response, { status, html }: PageResponse) => {
+  res.status(status).type("html").send(html);
+};
 
 router.get("/", async (_: Request, res: Response) => {
-  try {
-    const movies = await getPopularMovies();
-    const template = generateHTML();
+  send(res, await homeController());
+});
 
-    const renderedApp = renderToString(<App movies={movies} />);
+router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) => {
+  send(res, await movieDetailController(req.params.id));
+});
 
-    const renderedHTMLWithInitialData = template.replace(
-      "<!--{INIT_DATA_AREA}-->",
-      /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${serialize(movies)}
-      }
-    </script>
-  `
-    );
-    const renderedHTML = renderedHTMLWithInitialData.replace(
-      "<!--{BODY_AREA}-->",
-      renderedApp
-    );
-
-    res.send(renderedHTML);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("영화 정보를 불러오는 중 문제가 발생했습니다.");
+// 브라우저에서 모달을 열 때 사용한다. 서버의 상세 캐시를 그대로 재사용한다.
+router.get("/api/movies/:id", async (req: Request<{ id: string }>, res: Response) => {
+  const movieId = parseMovieId(req.params.id);
+  if (movieId === null) {
+    res.status(404).json({ message: "영화를 찾을 수 없습니다." });
+    return;
   }
+
+  try {
+    res.json(await getMovieDetail(movieId));
+  } catch (error) {
+    if (isAxiosError(error) && error.response?.status === 404) {
+      res.status(404).json({ message: "영화를 찾을 수 없습니다." });
+      return;
+    }
+    console.error(error);
+    res.status(500).json({ message: "영화 정보를 불러오는 중 문제가 발생했습니다." });
+  }
+});
+
+router.use((_: Request, res: Response) => {
+  send(res, notFoundController());
 });
 
 export default router;
