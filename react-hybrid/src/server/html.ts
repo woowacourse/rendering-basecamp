@@ -55,7 +55,7 @@ export function generateHTML({ meta, body, initialData }: DocumentOptions) {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
+        <link rel="stylesheet" href="/static/styles/bundle.css" />
         <title>${escapeHtml(meta.title)}</title>
         ${generateOgTags(meta)}
       </head>
@@ -77,7 +77,7 @@ export function generateErrorHTML(message: string) {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
+        <link rel="stylesheet" href="/static/styles/bundle.css" />
         <title>${escapeHtml(message)} | 영화 리뷰</title>
       </head>
       <body>
