@@ -9,6 +9,7 @@ import { SITE_NAME } from "../../client/constants/site";
 import { parseMovieId } from "./parseMovieId";
 
 const router = Router();
+const PUBLIC_ORIGIN = process.env.PUBLIC_ORIGIN?.replace(/\/+$/, "");
 
 const getPopularMoviesOrEmpty = async () => {
   try {
@@ -43,7 +44,7 @@ router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) =>
     return;
   }
 
-  const origin = process.env.PUBLIC_ORIGIN ?? `${req.protocol}://${req.get("host")}`;
+  const origin = PUBLIC_ORIGIN || `${req.protocol}://${req.get("host")}`;
   const html = await withServerTiming(res, "render", () =>
     renderDocument(
       {
