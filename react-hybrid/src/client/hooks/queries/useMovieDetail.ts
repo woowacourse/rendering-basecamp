@@ -19,7 +19,7 @@ export const useMovieDetail = (id: number) => {
 
       try {
         const movieDetail = await moviesApi.getDetail(id);
-        setData(movieDetail.data);
+        setData(movieDetail);
       } catch (err) {
         setError(
           err instanceof Error
