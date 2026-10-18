@@ -106,4 +106,21 @@ router.get('/detail/:id', async (req: Request, res: Response) => {
   res.send(renderedHTML);
 });
 
+router.get('/sample', (req: Request, res: Response) => {
+  const renderedApp = renderToString(<App path={req.path} movies={[]} />);
+  const renderedHTML = generateHTML()
+    .replace(
+      '<!--{INIT_DATA_AREA}-->',
+      `<script>window.__INITIAL_DATA__ = { movies: [] }</script>`
+    )
+    .replace('<!--{BODY_AREA}-->', renderedApp);
+
+  res.send(renderedHTML);
+});
+
+router.get('/api/movies/:id', async (req: Request, res: Response) => {
+  const { data } = await moviesApi.getDetail(Number(req.params.id));
+  res.json(data);
+});
+
 export default router;
