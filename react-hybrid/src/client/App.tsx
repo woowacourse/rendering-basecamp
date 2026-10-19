@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { OverlayProvider } from "overlay-kit";
@@ -11,6 +11,12 @@ type Props = {
 };
 
 function App({ movies }: Props) {
+  useEffect(() => {
+    performance.mark("afterHydrate");
+    performance.measure("hydration", "beforeRender", "afterHydrate");
+
+    console.log(performance.getEntriesByName("hydration"));
+  }, []);
   return (
     <OverlayProvider>
       <Routes>
