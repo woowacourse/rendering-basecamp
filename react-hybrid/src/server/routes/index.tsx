@@ -31,10 +31,10 @@ function generateHTML() {
 router.get("/", async (_: Request, res: Response) => {
   const template = generateHTML();
 
-  const renderedApp = renderToString(<App />);
-
   const popularData = await moviesApi.getPopular();
   const movies = popularData.data.results;
+
+  const renderedApp = renderToString(<App movies={movies} />);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
