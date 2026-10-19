@@ -1,10 +1,8 @@
-import type { MovieItem } from "./Movie.types";
+import type { InitialData } from "./InitialData.types";
 
 declare global {
   interface Window {
-    __INITIAL_DATA__: {
-      movies: MovieItem[];
-    };
+    __INITIAL_DATA__: InitialData;
   }
 }
 

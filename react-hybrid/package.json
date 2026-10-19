@@ -9,7 +9,8 @@
     "build": "rm -rf dist && npm run build:client && npm run build:server",
     "start": "npm run build && node dist/server/server.js",
     "dev": "concurrently \"npm run build:client -- --watch\" \"npm run build:server -- --watch\" \"node dist/server/server.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:ssr": "npm run build && node --test tests/ssr.test.cjs"
   },
   "keywords": [],
   "author": "",

@@ -1,19 +1,17 @@
 import React from "react";
 import { OverlayProvider } from "overlay-kit";
-import type { MovieItem } from "./types/Movie.types";
+import MovieHomePage from "./pages/MovieHomePage";
+import MovieDetailPage from "./pages/MovieDetailPage";
+import type { InitialData } from "./types/InitialData.types";
 
-function App({ movies }: { movies: MovieItem[] }) {
+function App({ movies, movieDetail }: InitialData) {
   return (
     <OverlayProvider>
-      <main>
-        <h1>지금 인기 있는 영화</h1>
-        <p>전달받은 영화 개수: {movies.length}</p>
-        <ul>
-          {movies.map((movie) => (
-            <li key={movie.id}>{movie.title}</li>
-          ))}
-        </ul>
-      </main>
+      {movieDetail ? (
+        <MovieDetailPage movies={movies} movieDetail={movieDetail} />
+      ) : (
+        <MovieHomePage movies={movies} />
+      )}
     </OverlayProvider>
   );
 }
