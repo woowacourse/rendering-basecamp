@@ -30,6 +30,8 @@ function generateHTML() {
     `;
 }
 
+const TMDB_IMAGE_URL = "https://image.tmdb.org/t/p";
+
 router.get("/", async (req: Request, res: Response) => {
   const template = generateHTML();
 
@@ -95,7 +97,19 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     renderedApp,
   );
 
-  res.send(renderedHTML);
+  const renderedHTMLWithOGTags = renderedHTML.replace(
+    "<!--{OG_TAGS}-->",
+    /*html*/ `
+    <title>${movie.title}</title>
+    <meta name="description" content="${movie.overview}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="${movie.title}" />
+    <meta property="og:description" content="${movie.overview}" />
+    ${movie.poster_path ? `<meta property="og:image" content="${`${TMDB_IMAGE_URL}/w500${movie.poster_path}`}" />` : ""}
+  `,
+  );
+
+  res.send(renderedHTMLWithOGTags);
 });
 
 export default router;
