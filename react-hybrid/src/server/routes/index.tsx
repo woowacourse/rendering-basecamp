@@ -1,6 +1,8 @@
 import { Router, Request, Response } from "express";
 
 import { renderToString } from "react-dom/server";
+import { StaticRouter } from "react-router-dom";
+
 import App from "../../client/App";
 import React from "react";
 
@@ -28,13 +30,17 @@ function generateHTML() {
     `;
 }
 
-router.get("/", async (_: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   const template = generateHTML();
 
   const popularData = await moviesApi.getPopular();
   const movies = popularData.data.results;
 
-  const renderedApp = renderToString(<App movies={movies} />);
+  const renderedApp = renderToString(
+    <StaticRouter location={req.url}>
+      <App movies={movies} />
+    </StaticRouter>,
+  );
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",

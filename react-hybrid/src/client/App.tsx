@@ -1,4 +1,6 @@
 import React from "react";
+import { Route, Routes } from "react-router-dom";
+
 import { OverlayProvider } from "overlay-kit";
 
 import MovieHomePage from "./pages/MovieHomePage";
@@ -11,7 +13,9 @@ type Props = {
 function App({ movies }: Props) {
   return (
     <OverlayProvider>
-      <MovieHomePage movies={movies} />
+      <Routes>
+        <Route path="/" element={<MovieHomePage movies={movies} />} />
+      </Routes>
     </OverlayProvider>
   );
 }
