@@ -29,21 +29,22 @@ function generateHTML() {
 router.get("/", (_: Request, res: Response) => {
   const template = generateHTML();
 
-  const renderedApp = renderToString(<App />);
+  const initialData = { movies: [] };
+
+  const renderedApp = renderToString(<App movies={initialData.movies} />);
 
   const renderedHTMLWithInitialData = template.replace(
     "<!--{INIT_DATA_AREA}-->",
     /*html*/ `
     <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
-      }
+      window.__INITIAL_DATA__ = ${JSON.stringify(initialData).replace(/</g, "\\u003c")};
     </script>
-  `
+  `,
   );
+
   const renderedHTML = renderedHTMLWithInitialData.replace(
     "<!--{BODY_AREA}-->",
-    renderedApp
+    renderedApp,
   );
 
   res.send(renderedHTML);
