@@ -1,4 +1,5 @@
 import { OverlayProvider } from 'overlay-kit';
+import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import type { MovieItem } from './types/Movie.types';
 import type { MovieDetailResponse } from './types/MovieDetail.types';
@@ -11,6 +12,11 @@ interface AppProps {
 }
 
 function App({ movies, movieDetail }: AppProps) {
+  useEffect(() => {
+    performance.mark('afterHydrate');
+    performance.measure('hydration', 'beforeRender', 'afterHydrate');
+  }, []);
+
   return (
     <OverlayProvider>
       <Routes>
@@ -18,10 +24,7 @@ function App({ movies, movieDetail }: AppProps) {
         <Route
           path="/detail/:movieId"
           element={
-            <MovieDetailPage
-              movies={movies}
-              initialMovieDetail={movieDetail}
-            />
+            <MovieDetailPage movies={movies} initialMovieDetail={movieDetail} />
           }
         />
       </Routes>
