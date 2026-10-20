@@ -4,7 +4,7 @@ import { renderToStaticMarkup, renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
 
-import { moviesApi } from "../../client/api/movies";
+import { moviesApi } from "../api/movies";
 import type { MovieDetailResponse } from "../../client/types/MovieDetail.types";
 
 const router = Router();
@@ -70,5 +70,25 @@ async function renderPage(req: Request, res: Response) {
 
 router.get("/", renderPage);
 router.get("/detail/:id", renderPage);
+
+router.get("/api/movies", async (req: Request, res: Response) => {
+  const page = req.query.page === undefined ? 1 : Number(req.query.page);
+  if (!Number.isSafeInteger(page) || page < 1 || page > 500) {
+    res.status(400).json({ message: "페이지는 1~500 사이의 정수여야 합니다." });
+    return;
+  }
+  const { data } = await moviesApi.getPopular(page);
+  res.json(data);
+});
+
+router.get("/api/movies/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  if (!Number.isSafeInteger(id) || id <= 0) {
+    res.status(400).json({ message: "유효하지 않은 영화 ID입니다." });
+    return;
+  }
+  const { data } = await moviesApi.getDetail(id);
+  res.json(data);
+});
 
 export default router;
