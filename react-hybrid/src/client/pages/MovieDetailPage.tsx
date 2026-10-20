@@ -1,8 +1,8 @@
-import MovieHomePage from './MovieHomePage';
-import { MovieItem } from '../types/Movie.types';
-import { MovieDetailResponse } from '../types/MovieDetail.types';
-import { MovieDetailModal } from '../components/MovieDetailModal';
-import { useState } from 'react';
+import MovieHomePage from "./MovieHomePage";
+import { MovieItem } from "../types/Movie.types";
+import { MovieDetailResponse } from "../types/MovieDetail.types";
+import { MovieDetailModal } from "../components/MovieDetailModal";
+import { useState } from "react";
 
 export default function MovieDetailPage({
   movies,
@@ -21,6 +21,7 @@ export default function MovieDetailPage({
           movie={movieDetail}
           onClose={() => {
             setIsOpen(false);
+            window.history.replaceState(null, "", "/");
           }}
         />
       )}
