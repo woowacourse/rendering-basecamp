@@ -1,8 +1,35 @@
-import React from "react";
-import { OverlayProvider } from "overlay-kit";
+import { OverlayProvider } from 'overlay-kit';
+import { useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import type { MovieItem } from './types/Movie.types';
+import type { MovieDetailResponse } from './types/MovieDetail.types';
+import MovieHomePage from './pages/MovieHomePage';
+import MovieDetailPage from './pages/MovieDetailPage';
 
-function App() {
-  return <OverlayProvider>App</OverlayProvider>;
+interface AppProps {
+  movies: MovieItem[];
+  movieDetail?: MovieDetailResponse;
+}
+
+function App({ movies, movieDetail }: AppProps) {
+  useEffect(() => {
+    performance.mark('afterHydrate');
+    performance.measure('hydration', 'beforeRender', 'afterHydrate');
+  }, []);
+
+  return (
+    <OverlayProvider>
+      <Routes>
+        <Route path="/" element={<MovieHomePage movies={movies} />} />
+        <Route
+          path="/detail/:movieId"
+          element={
+            <MovieDetailPage movies={movies} initialMovieDetail={movieDetail} />
+          }
+        />
+      </Routes>
+    </OverlayProvider>
+  );
 }
 
 export default App;
