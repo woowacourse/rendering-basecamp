@@ -1,33 +1,28 @@
-import { useMovieDetailModal } from '../hooks/useMovieDetailModal';
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 import MovieHomePage from './MovieHomePage';
-import { moviesApi } from '../api/movies';
+import { MovieDetailModal } from '../components/MovieDetailModal';
+import type { MovieItem } from '../types/Movie.types';
+import type { MovieDetailResponse } from '../types/MovieDetail.types';
 
-export default function MovieDetailPage() {
-  return (
-    <>
-      <MovieHomePage />
-      <DetailPageOpenModal />
-    </>
-  );
+interface MovieDetailPageProps {
+  movies: MovieItem[];
+  movieDetail: MovieDetailResponse;
 }
 
-function DetailPageOpenModal() {
-  const { movieId } = useParams();
-  const { openMovieDetailModal } = useMovieDetailModal();
-  const onceRef = useRef(false);
+/**
+ * 홈 화면 위에 상세 모달이 열린 상태로 렌더링한다.
+ * useEffect에서 overlay.open()으로 열면 renderToString 시점에는 모달이 없으므로,
+ * 처음부터 JSX에 포함해 서버 HTML에도 모달이 들어가도록 한다.
+ */
+export default function MovieDetailPage({ movies, movieDetail }: MovieDetailPageProps) {
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
-  useEffect(() => {
-    if (movieId == null || onceRef.current === true) {
-      return;
-    }
-    (async () => {
-      onceRef.current = true;
-      const movieDetail = await moviesApi.getDetail(Number(movieId));
-      openMovieDetailModal(movieDetail.data);
-    })();
-  }, [movieId, openMovieDetailModal]);
-
-  return null;
+  return (
+    <>
+      <MovieHomePage movies={movies} />
+      {isModalOpen && (
+        <MovieDetailModal movie={movieDetail} onClose={() => setIsModalOpen(false)} />
+      )}
+    </>
+  );
 }
