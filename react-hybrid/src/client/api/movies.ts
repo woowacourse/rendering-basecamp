@@ -1,17 +1,16 @@
-import { apiClient } from '../lib/apiClient';
-import type { MovieResponse } from '../types/Movie.types';
 import type { MovieDetailResponse } from '../types/MovieDetail.types';
 
 export const moviesApi = {
   /**
-   * 인기 영화 목록 조회
+   * 영화 상세 정보 조회 (TMDB 토큰을 숨기기 위해 SSR 서버의 API 를 거친다)
    */
-  getPopular: (page: number = 1) =>
-    apiClient.get<MovieResponse>(`/movie/popular?page=${page}&language=ko-KR`),
+  getDetail: async (id: number): Promise<MovieDetailResponse> => {
+    const response = await fetch(`/api/movies/${id}`);
 
-  /**
-   * 영화 상세 정보 조회
-   */
-  getDetail: (id: number) =>
-    apiClient.get<MovieDetailResponse>(`/movie/${id}?language=ko-KR`),
+    if (!response.ok) {
+      throw new Error('영화 상세 정보를 불러오는데 실패했습니다.');
+    }
+
+    return response.json();
+  },
 } as const;
