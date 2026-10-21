@@ -1,8 +1,8 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 
-module.exports = {
-  mode: "development",
+module.exports = (_, argv) => ({
+  mode: argv.mode ?? "production",
   target: "node",
   entry: path.resolve(__dirname, "src/server/main.ts"),
   output: {
@@ -35,4 +35,4 @@ module.exports = {
       },
     ],
   },
-};
+});

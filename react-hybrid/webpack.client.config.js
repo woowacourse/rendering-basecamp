@@ -1,9 +1,9 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
-const Dotenv = require("dotenv-webpack");
 
-module.exports = {
-  mode: "development",
+module.exports = (_, argv) => ({
+  mode: argv.mode ?? "production",
+  devtool: argv.mode === "development" ? "eval-source-map" : false,
   entry: "./src/client/main.tsx",
   output: {
     path: path.resolve("dist/static"),
@@ -47,9 +47,8 @@ module.exports = {
         { from: "public/styles", to: "styles" },
       ],
     }),
-    new Dotenv(),
   ],
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
   },
-};
+});
