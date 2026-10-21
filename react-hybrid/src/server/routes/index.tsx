@@ -3,6 +3,7 @@ import { Router, Request, Response } from "express";
 import { renderToStaticMarkup, renderToString } from "react-dom/server";
 import App from "../../client/App";
 import React from "react";
+import { StaticRouter } from "react-router-dom";
 
 import { moviesApi } from "../api/movies";
 import type { MovieDetailResponse } from "../../client/types/MovieDetail.types";
@@ -54,7 +55,11 @@ async function renderPage(req: Request, res: Response) {
     movieDetail: detailResponse?.data ?? null,
   };
 
-  const renderedApp = renderToString(<App {...initialData} />);
+  const renderedApp = renderToString(
+    <StaticRouter location={req.originalUrl}>
+      <App {...initialData} />
+    </StaticRouter>
+  );
 
   const serializedData = JSON.stringify(initialData).replace(/</g, "\\u003c");
 

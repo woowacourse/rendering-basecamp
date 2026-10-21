@@ -1,6 +1,7 @@
 import React from "react";
 import { hydrateRoot } from "react-dom/client";
 import App from "./App";
+import { BrowserRouter } from "react-router-dom";
 
 const initialData = window.__INITIAL_DATA__;
 const root = document.getElementById("root");
@@ -10,4 +11,9 @@ if (!root) {
 }
 
 performance.mark("beforeRender");
-hydrateRoot(root, <App {...initialData} />);
+hydrateRoot(
+  root,
+  <BrowserRouter>
+    <App {...initialData} />
+  </BrowserRouter>
+);
