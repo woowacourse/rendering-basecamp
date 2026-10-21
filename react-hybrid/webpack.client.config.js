@@ -47,7 +47,7 @@ module.exports = {
         { from: "public/styles", to: "styles" },
       ],
     }),
-    new Dotenv(),
+    new Dotenv({ systemvars: true }), // Render처럼 .env 없는 환경에서도 환경변수를 읽도록
   ],
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
