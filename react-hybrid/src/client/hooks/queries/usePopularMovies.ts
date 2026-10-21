@@ -5,12 +5,16 @@ import { MovieItem } from '../../types/Movie.types';
 /**
  * 영화 상세 정보를 조회하는 훅
  */
-export const usePopularMovies = () => {
-  const [data, setData] = useState<MovieItem[] | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+export const usePopularMovies = (initialMovies: MovieItem[] | null) => {
+  const [data, setData] = useState<MovieItem[] | null>(initialMovies);
+  const [isLoading, setIsLoading] = useState(initialMovies === null);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    if (initialMovies !== null) {
+      return;
+    }
+
     const fetchPopularMovies = async () => {
       setIsLoading(true);
       setError(null);
@@ -30,7 +34,7 @@ export const usePopularMovies = () => {
     };
 
     fetchPopularMovies();
-  }, []);
+  }, [initialMovies]);
 
   return { data, isLoading, error };
 };
