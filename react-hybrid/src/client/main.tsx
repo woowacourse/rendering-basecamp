@@ -11,5 +11,3 @@ if (!root) {
 
 performance.mark("beforeRender");
 hydrateRoot(root, <App {...initialData} />);
-performance.mark("afterHydrate");
-performance.measure("hydration", "beforeRender", "afterHydrate");

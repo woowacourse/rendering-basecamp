@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { OverlayProvider } from "overlay-kit";
 import MovieHomePage from "./pages/MovieHomePage";
 import { MovieDetailModal } from "./components/MovieDetailModal";
@@ -12,6 +12,12 @@ interface AppProps {
 
 function App({ movies, movieDetail = null }: AppProps) {
   const [selectedMovie, setSelectedMovie] = useState(movieDetail);
+
+  useEffect(() => {
+    // 초기 hydration commit 이후 Effect 실행 시점까지 측정한다.
+    performance.mark("afterHydrate");
+    performance.measure("hydration", "beforeRender", "afterHydrate");
+  }, []);
 
   return (
     <OverlayProvider>
