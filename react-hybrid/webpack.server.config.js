@@ -10,6 +10,9 @@ module.exports = {
     path: path.resolve(__dirname, "dist/server"),
   },
   externals: [nodeExternals()],
+  node: {
+    __dirname: false,
+  },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
   },

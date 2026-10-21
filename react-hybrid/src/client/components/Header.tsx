@@ -1,8 +1,8 @@
-import { MovieItem } from '../types/Movie.types';
+import type { MovieSummary } from '../types/Movie.types';
 import { IconButton } from './common/IconButton';
 import { FeaturedMovie } from './FeaturedMovie';
 
-export const Header = ({ featuredMovie }: { featuredMovie: MovieItem }) => {
+export const Header = ({ featuredMovie }: { featuredMovie: MovieSummary }) => {
   const handleLogoClick = () => {
     window.location.reload();
   };

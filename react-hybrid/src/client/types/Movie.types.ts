@@ -21,3 +21,5 @@ export interface MovieResponse {
   total_pages: number;
   total_results: number;
 }
+
+export type MovieSummary = Pick<MovieItem, 'id' | 'title' | 'poster_path' | 'vote_average'>;

@@ -1,52 +1,63 @@
 import { Router, Request, Response } from "express";
-
-import { renderToString } from "react-dom/server";
-import App from "../../client/App";
-import React from "react";
+import { tmdbApi } from "../api/tmdb";
+import { renderDocument } from "../renderDocument";
+import { renderNotFoundPage } from "../errorPages";
+import { pickMovieDetail, pickMovieSummary } from "../movieFields";
+import { renderMovieOpenGraphTags } from "../openGraph";
+import { withServerTiming } from "../serverTiming";
+import { SITE_NAME } from "../../client/constants/site";
+import { parseMovieId } from "./parseMovieId";
 
 const router = Router();
+const PUBLIC_ORIGIN = process.env.PUBLIC_ORIGIN?.replace(/\/+$/, "");
 
-function generateHTML() {
-  return /*html*/ `
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/static/styles/index.css" />
-        <title>영화 리뷰</title>
-        <!--{OG_TAGS}-->
-      </head>
-      <body>
-        <div id="root"><!--{BODY_AREA}--></div>
-        <!--{INIT_DATA_AREA}-->
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
-}
+const getPopularMoviesOrEmpty = async () => {
+  try {
+    return await tmdbApi.getPopularMovies();
+  } catch (error) {
+    console.error("인기 영화 목록을 불러오지 못해 빈 목록으로 그립니다.", error);
+    return [];
+  }
+};
 
-router.get("/", (_: Request, res: Response) => {
-  const template = generateHTML();
+router.get("/", async (_req: Request, res: Response) => {
+  const movies = await withServerTiming(res, "tmdb", () => tmdbApi.getPopularMovies());
 
-  const renderedApp = renderToString(<App />);
+  const html = await withServerTiming(res, "render", () =>
+    renderDocument({ name: "home", props: { movies: movies.map(pickMovieSummary) } })
+  );
+  res.send(html);
+});
 
-  const renderedHTMLWithInitialData = template.replace(
-    "<!--{INIT_DATA_AREA}-->",
-    /*html*/ `
-    <script>
-      window.__INITIAL_DATA__ = {
-        movies: ${JSON.stringify([])}
+router.get("/detail/:id", async (req: Request<{ id: string }>, res: Response) => {
+  const movieId = parseMovieId(req.params.id);
+  if (movieId === null) {
+    res.status(404).send(renderNotFoundPage());
+    return;
+  }
+
+  const [movie, movies] = await withServerTiming(res, "tmdb", () =>
+    Promise.all([tmdbApi.findMovieDetail(movieId), getPopularMoviesOrEmpty()])
+  );
+  if (movie === null) {
+    res.status(404).send(renderNotFoundPage());
+    return;
+  }
+
+  const origin = PUBLIC_ORIGIN || `${req.protocol}://${req.get("host")}`;
+  const html = await withServerTiming(res, "render", () =>
+    renderDocument(
+      {
+        name: "detail",
+        props: { movies: movies.map(pickMovieSummary), movie: pickMovieDetail(movie) },
+      },
+      {
+        title: `${movie.title} | ${SITE_NAME}`,
+        headTags: renderMovieOpenGraphTags(movie, origin),
       }
-    </script>
-  `
+    )
   );
-  const renderedHTML = renderedHTMLWithInitialData.replace(
-    "<!--{BODY_AREA}-->",
-    renderedApp
-  );
-
-  res.send(renderedHTML);
+  res.send(html);
 });
 
 export default router;
